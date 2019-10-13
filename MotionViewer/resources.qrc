@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/lang">
+        <file>res/english.png</file>
+        <file>res/chinese.png</file>
+    </qresource>
+</RCC>
