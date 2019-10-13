@@ -3,4 +3,26 @@
         <file>res/english.png</file>
         <file>res/chinese.png</file>
     </qresource>
+    <qresource prefix="/about">
+        <file>res/zs.jpg</file>
+    </qresource>
+    <qresource prefix="/icon">
+        <file>res/about.ico</file>
+        <file>res/file.ico</file>
+        <file>res/goalpos.ico</file>
+        <file>res/joint.ico</file>
+        <file>res/loc.ico</file>
+        <file>res/plan.ico</file>
+        <file>res/planning.ico</file>
+        <file>res/refresh.ico</file>
+        <file>res/robot_arm.ico</file>
+        <file>res/robot_arm.png</file>
+        <file>res/setting.ico</file>
+        <file>res/settings2.ico</file>
+        <file>res/start.ico</file>
+        <file>res/stop.ico</file>
+        <file>res/switcher.ico</file>
+        <file>res/tools.ico</file>
+        <file>res/viewer.ico</file>
+    </qresource>
 </RCC>

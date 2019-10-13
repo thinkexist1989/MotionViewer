@@ -26,13 +26,21 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    aboutdlg.cpp \
+    ndicomm.cpp \
+    ndiviewer.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    aboutdlg.h \
+    ndicomm.h \
+    ndiviewer.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    aboutdlg.ui \
+    ndiviewer.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
@@ -41,6 +49,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     resources.qrc
+
+RC_ICONS = viewer.ico
 
 # Add OpenCV config
 include(opencv.pri)
