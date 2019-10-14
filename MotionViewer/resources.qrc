@@ -24,5 +24,6 @@
         <file>res/switcher.ico</file>
         <file>res/tools.ico</file>
         <file>res/viewer.ico</file>
+        <file>res/ndi.png</file>
     </qresource>
 </RCC>
