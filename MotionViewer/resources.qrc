@@ -25,5 +25,7 @@
         <file>res/tools.ico</file>
         <file>res/viewer.ico</file>
         <file>res/ndi.png</file>
+        <file>res/vr.ico</file>
+        <file>res/kinect.ico</file>
     </qresource>
 </RCC>

@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "ndiviewer.h"
+#include "ndicomm.h"
+#include "holocomm.h"
+#include "holoviewer.h"
 
 namespace Ui {
 class MainWindow;
@@ -20,6 +24,13 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+
+    NdiViewer  *ndiViewer;
+    NdiComm    *ndiComm;
+
+    HoloComm   *holoComm;
+    HoloViewer *holoViewer;
+
 
     void setStatusMsg(QString msg);
 };

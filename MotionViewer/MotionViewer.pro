@@ -29,18 +29,25 @@ SOURCES += \
         mainwindow.cpp \
     aboutdlg.cpp \
     ndicomm.cpp \
-    ndiviewer.cpp
+    ndiviewer.cpp \
+    holocomm.cpp \
+    holoviewer.cpp
 
 HEADERS += \
         mainwindow.h \
     aboutdlg.h \
     ndicomm.h \
-    ndiviewer.h
+    ndiviewer.h \
+    holocomm.h \
+    holoviewer.h
 
 FORMS += \
         mainwindow.ui \
     aboutdlg.ui \
-    ndiviewer.ui
+    ndiviewer.ui \
+    ndicomm.ui \
+    holocomm.ui \
+    holoviewer.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -1,13 +1,23 @@
 #ifndef NDICOMM_H
 #define NDICOMM_H
 
-#include <QObject>
+#include <QWidget>
+#include <QSerialPort>
+#include <QSerialPortInfo>
 
-class NdiComm : public QObject
+namespace Ui {
+    class NdiComm;
+}
+
+class NdiComm : public QWidget
 {
     Q_OBJECT
 public:
-    explicit NdiComm(QObject *parent = nullptr);
+    explicit NdiComm(QWidget *parent = nullptr);
+    ~NdiComm();
+
+private:
+    Ui::NdiComm *ui;
 
 signals:
 

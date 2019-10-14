@@ -12,5 +12,5 @@ public:
 	~AboutDlg();
 
 private:
-	Ui::AboutDlg ui;
+    Ui::AboutDlg *ui;
 };
