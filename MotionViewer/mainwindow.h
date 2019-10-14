@@ -22,15 +22,18 @@ public:
 private slots:
     void on_actionAbout_triggered();
 
+    void on_actionNdiViewer_toggled(bool arg1);
+
+    void on_actionHoloViewer_toggled(bool arg1);
+
 private:
     Ui::MainWindow *ui;
 
-    NdiViewer  *ndiViewer;
     NdiComm    *ndiComm;
+    NdiViewer  *ndiViewer;
 
     HoloComm   *holoComm;
     HoloViewer *holoViewer;
-
 
     void setStatusMsg(QString msg);
 };

@@ -34,3 +34,27 @@ void MainWindow::setStatusMsg(QString msg)
 {
     ui->statusBar->showMessage(msg,2000);
 }
+
+void MainWindow::on_actionNdiViewer_toggled(bool arg1)
+{
+    if(!arg1) {
+        ui->ndiCommDockWidget->close();
+        ui->ndiViewerDockWidget->close();
+    }
+    else {
+        ui->ndiCommDockWidget->show();
+        ui->ndiViewerDockWidget->show();
+    }
+}
+
+void MainWindow::on_actionHoloViewer_toggled(bool arg1)
+{
+    if(!arg1) {
+        ui->holoCommDockWidget->close();
+        ui->holoViewerDockWidget->close();
+    }
+    else {
+        ui->holoCommDockWidget->show();
+        ui->holoViewerDockWidget->show();
+    }
+}
