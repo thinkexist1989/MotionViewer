@@ -5,6 +5,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
+#include <QByteArray>
 
 #define TCP_SERVER 0
 #define TCP_CLIENT 1
@@ -24,6 +25,8 @@ public:
     ~HoloComm();
 
     void init();
+    bool write(QByteArray ba);
+
 
 private slots:
     void on_cmbProtocol_currentIndexChanged(const QString &arg1);

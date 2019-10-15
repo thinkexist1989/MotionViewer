@@ -36,6 +36,22 @@ void HoloComm::init()
 
 }
 
+bool HoloComm::write(QByteArray ba)
+{
+    switch(connectionType){
+    case TCP_SERVER:
+    case TCP_CLIENT:
+        if(tcpSocket->write(ba) == ba.size())
+            return true;
+        else
+            return false;
+    case UDP:
+        return false;
+    default:
+        return false;
+    }
+}
+
 void HoloComm::on_cmbProtocol_currentIndexChanged(const QString &arg1)
 {
     if(arg1 == "TCP") {
@@ -109,6 +125,7 @@ void HoloComm::tcpNewConnectionProc()
 void HoloComm::tcpRecvDataProc()
 {
     QByteArray buffer = tcpSocket->readAll();
+    //write(buffer);
     emit dataReady(buffer);
 }
 
