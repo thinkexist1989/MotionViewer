@@ -12,11 +12,22 @@ NdiComm::NdiComm(QWidget *parent) :
     initPort();
 
     ndiCommProc = new NdiCommProc(this);
+    qRegisterMetaType<QList<QVector3D>>("Coordinates");
+    connect(ndiCommProc, &NdiCommProc::initFinished, this, [=](QString msg){emit this->initFinished(msg);});
+    connect(ndiCommProc, &NdiCommProc::dataReady, this, [=](QList<QVector3D> data){
+        this->markers = data;
+        emit this->dataReady(markers);});
+
+    ndiThread = new QThread(this);
 }
 
 NdiComm::~NdiComm()
 {
     delete ui;
+
+    ndiThread->terminate(); //Not recommand, but can work
+    delete ndiThread;
+    delete ndiCommProc;
 }
 
 void NdiComm::initPort()
@@ -118,6 +129,11 @@ QSerialPort::FlowControl NdiComm::getFlowCtrl(QString text)
         return QSerialPort::NoFlowControl;
 }
 
+void NdiComm::printThread()
+{
+    qDebug() << "Current Thread is: " << QThread::currentThreadId();
+}
+
 void NdiComm::on_refreshButton_clicked()
 {
     initPort(); //refresh available ports
@@ -159,8 +175,37 @@ void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
         if(isPortOpened){
+            printThread();
+            ndiCommProc->moveToThread(ndiThread);
+            ndiThread->start();
+            timer = new QTimer(this);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
+            timer->start(1000);
 
+            ui->startButton->setText(tr("Stop"));
+            isStarted = true;
         }
+        else {
+            qDebug() << tr("Please Open Serial Port First!");
+        }
+
+        printThread();
+        ndiCommProc->moveToThread(ndiThread);
+        ndiThread->start();
+        timer = new QTimer(this);
+        connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
+        timer->start(1000);
+
+        ui->startButton->setText(tr("Stop"));
+        isStarted = true;
+
+    }
+    else {
+        timer->stop();
+        ndiThread->terminate();
+
+        ui->startButton->setText(tr("Start"));
+        isStarted = false;
     }
 }
 
@@ -170,13 +215,33 @@ void NdiComm::on_startButton_clicked()
  * Processing time consuming operation
  */
 
-NdiCommProc::NdiCommProc(QObject *parent) :
-    QObject (parent)
+NdiCommProc::NdiCommProc(NdiComm *ndi, QObject *parent) :
+    QObject (parent),
+    ndi (ndi)
 {
-    ndi = dynamic_cast<NdiComm*>(parent);
+    //ndi = dynamic_cast<NdiComm*>(parent);
 }
 
 NdiCommProc::~NdiCommProc()
 {
 
+}
+
+void NdiCommProc::printThread()
+{
+    ndi->printThread();
+    QList<QVector3D> markers;
+    markers.push_back(QVector3D(1,2,3));
+    markers.push_back(QVector3D(2,4,5));
+    emit dataReady(markers);
+}
+
+void NdiCommProc::initsensor()
+{
+    //FOR SU SHUN
+}
+
+void NdiCommProc::data_read()
+{
+    //FOR SU SHUN
 }

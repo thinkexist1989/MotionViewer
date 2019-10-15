@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "aboutdlg.h"
 #include <QDockWidget>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -16,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ndiViewerDockWidget->setWidget(ndiViewer);
     ui->holoCommDockWidget->setWidget(holoComm);
     ui->holoViewerDockWidget->setWidget(holoViewer);
+
+    connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
+    connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
 }
 
 MainWindow::~MainWindow()

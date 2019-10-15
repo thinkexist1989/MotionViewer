@@ -4,6 +4,10 @@
 #include <QWidget>
 #include <QSerialPort>
 #include <QSerialPortInfo>
+#include <QTimer>
+#include <QThread>
+#include <QVector3D>
+#include <QList>
 
 namespace Ui {
     class NdiComm;
@@ -20,9 +24,12 @@ public:
 
     void initPort(); //refresh serial ports
 
+    QList<QVector3D> markers; //storage for coordinates of markers
+
 private:
     Ui::NdiComm *ui;
     NdiCommProc *ndiCommProc;
+    QThread *ndiThread;
 
     QSerialPort serialPort; //Serial port
     bool isPortOpened;
@@ -33,9 +40,15 @@ private:
     QSerialPort::StopBits getStopBits(QString text);
     QSerialPort::FlowControl getFlowCtrl(QString text);
 
+    QTimer *timer;
+
+    void printThread(); //Test for thread
+
 signals:
     void serialOpened(); //serial port open signal
     void serialClosed(); //serial port close signal
+    void initFinished(QString);
+    void dataReady(QList<QVector3D>);
 
 public slots:
 
@@ -50,14 +63,22 @@ class NdiCommProc : public QObject
 {
     Q_OBJECT
 public:
-    explicit NdiCommProc(QObject *parent = nullptr);
+    explicit NdiCommProc(NdiComm* ndi, QObject *parent = nullptr);
     ~NdiCommProc();
 
-private:
+
     NdiComm *ndi;
 
+private:
+    void initsensor(); //FOR SU SHUN
+
 signals:
-    void dataReady();
+    void initFinished(QString);
+    void dataReady(QList<QVector3D>);
+
+public slots:
+    void printThread();
+    void data_read(); //FOR SU SHUN
 };
 
 #endif // NDICOMM_H
