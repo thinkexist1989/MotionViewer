@@ -17,6 +17,7 @@ public:
 
 private:
     Ui::HoloViewer *ui;
+
 };
 
 #endif // HOLOVIEWER_H

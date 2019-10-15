@@ -18,8 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->holoCommDockWidget->setWidget(holoComm);
     ui->holoViewerDockWidget->setWidget(holoViewer);
 
-    connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
-    connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
+    //connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
+    //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
+
+    connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc);
 }
 
 MainWindow::~MainWindow()

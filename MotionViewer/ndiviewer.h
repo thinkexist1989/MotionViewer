@@ -2,6 +2,8 @@
 #define NDIVIEWER_H
 
 #include <QWidget>
+#include <QList>
+#include <QVector3D>
 
 namespace Ui {
 class NdiViewer;
@@ -17,6 +19,9 @@ public:
 
 private:
     Ui::NdiViewer *ui;
+
+public slots:
+    void dataProc(QList<QVector3D> data); //Process markers' coordinates
 };
 
 #endif // NDIVIEWER_H

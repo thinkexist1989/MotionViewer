@@ -1,5 +1,6 @@
 #include "ndiviewer.h"
 #include "ui_ndiviewer.h"
+#include <QDebug>
 
 NdiViewer::NdiViewer(QWidget *parent) :
     QWidget(parent),
@@ -11,4 +12,9 @@ NdiViewer::NdiViewer(QWidget *parent) :
 NdiViewer::~NdiViewer()
 {
     delete ui;
+}
+
+void NdiViewer::dataProc(QList<QVector3D> data)
+{
+    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
 }
