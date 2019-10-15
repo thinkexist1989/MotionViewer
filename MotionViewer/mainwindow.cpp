@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
     //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
+    connect(holoComm, &HoloComm::dataReady, this, [=](QString data){qDebug() << "Received data is: " << data;});
+
 
     connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc);
 }

@@ -6,6 +6,11 @@
 #include <QTcpSocket>
 #include <QUdpSocket>
 
+#define TCP_SERVER 0
+#define TCP_CLIENT 1
+#define UDP         2
+#define NO_CONNECTION -1
+
 namespace Ui {
 class HoloComm;
 }
@@ -31,14 +36,18 @@ private:
     QTcpSocket *tcpSocket;
     QUdpSocket *udpSocket;
 
+    int connectionType; // 0->tcp server  1-> tcp client 2-> udp
+
     bool tcpServerInit();
     bool tcpClientInit();
     bool udpInit();
 
+signals:
+    void dataReady(QString);
+
 private slots:
-    void newConnectionProc();
-    void recvDataProc();
-    void disconnectProc();
+    void tcpNewConnectionProc();
+    void tcpRecvDataProc();
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
