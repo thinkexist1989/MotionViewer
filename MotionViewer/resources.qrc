@@ -27,5 +27,6 @@
         <file>res/ndi.png</file>
         <file>res/vr.ico</file>
         <file>res/kinect.ico</file>
+        <file>res/run.ico</file>
     </qresource>
 </RCC>

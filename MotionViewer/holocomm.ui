@@ -100,7 +100,7 @@
      <item>
       <widget class="QPushButton" name="disconnectButton">
        <property name="text">
-        <string>Connect</string>
+        <string>Disconnect</string>
        </property>
        <property name="icon">
         <iconset resource="resources.qrc">

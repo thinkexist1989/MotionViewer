@@ -1,6 +1,3 @@
-#pragma warning(disable:4995)
-#pragma warning(disable:4819)
-
 #include "ndicomm.h"
 #include "ui_ndicomm.h"
 #include <QDebug>
@@ -8,10 +5,13 @@
 NdiComm::NdiComm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NdiComm),
-    isPortOpened(false)
+    isPortOpened(false),
+    isStarted(false)
 {
     ui->setupUi(this);
     initPort();
+
+    ndiCommProc = new NdiCommProc(this);
 }
 
 NdiComm::~NdiComm()
@@ -21,7 +21,7 @@ NdiComm::~NdiComm()
 
 void NdiComm::initPort()
 {
-    //查询当前可用串口，并将其加入选择框之中
+    //query available ports
     foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()) {
         qDebug() << tr("Name: ") << info.portName();
         qDebug() << tr("Description: ") << info.description();
@@ -35,26 +35,26 @@ void NdiComm::initPort()
         }
     }
 
-    //设置波特率选择框
+    //set buadrate combobox
     QStringList baudList;
     baudList << "4800" << "9600" << "19200"
              << "38400" << "57600" << "115200";
     ui->cmbBuadrate->addItems(baudList);
     ui->cmbBuadrate->setCurrentText("9600");
 
-    //设置奇偶校验位
+    //set parity combobox
     QStringList parityList;
     parityList << tr("None") << tr("Odd") << tr("Even");
     ui->cmbParity->addItems(parityList);
     ui->cmbParity->setCurrentText("None");
 
-    //设置数据位
+    //set databits combobox
     QStringList dataBitsList;
     dataBitsList << "5" << "6" << "7" << "8";
     ui->cmbDataBits->addItems(dataBitsList);
     ui->cmbDataBits->setCurrentText("8");
 
-    //设置停止位
+    //set stopbits combobox
     QStringList stopBitsList;
     stopBitsList << "1" << "1.5" << "2";
     ui->cmbStopBits->addItems(stopBitsList);
@@ -75,7 +75,7 @@ QSerialPort::Parity NdiComm::getParity(QString text)
     else if(text == tr("Even"))
         return QSerialPort::EvenParity;
     else
-        return QSerialPort::UnknownParity;
+        return QSerialPort::NoParity;
 }
 
 QSerialPort::DataBits NdiComm::getDataBits(QString text)
@@ -90,7 +90,7 @@ QSerialPort::DataBits NdiComm::getDataBits(QString text)
     case 8:
         return QSerialPort::Data8;
     default:
-        return QSerialPort::UnknownDataBits;
+        return QSerialPort::Data8;
     }
 }
 
@@ -103,7 +103,7 @@ QSerialPort::StopBits NdiComm::getStopBits(QString text)
     else if(text == "2")
         return  QSerialPort::TwoStop;
     else
-        return QSerialPort::UnknownStopBits;
+        return QSerialPort::OneStop;
 }
 
 QSerialPort::FlowControl NdiComm::getFlowCtrl(QString text)
@@ -115,19 +115,19 @@ QSerialPort::FlowControl NdiComm::getFlowCtrl(QString text)
     else if(text == tr("Software"))
         return  QSerialPort::SoftwareControl;
     else
-        return QSerialPort::UnknownFlowControl;
+        return QSerialPort::NoFlowControl;
 }
 
 void NdiComm::on_refreshButton_clicked()
 {
-    initPort(); //重新查看可用串口
+    initPort(); //refresh available ports
 }
 
 void NdiComm::on_openCloseButton_clicked()
 {
     if(!isPortOpened){
         serialPort.setPortName(ui->cmbPortName->currentText());
-        if(serialPort.open(QIODevice::ReadWrite)){ //串口打开成功
+        if(serialPort.open(QIODevice::ReadWrite)){ //open serial port success
             serialPort.setBaudRate(ui->cmbBuadrate->currentText().toInt());
             serialPort.setParity(getParity(ui->cmbParity->currentText()));
             serialPort.setDataBits(getDataBits(ui->cmbDataBits->currentText()));
@@ -135,6 +135,8 @@ void NdiComm::on_openCloseButton_clicked()
             serialPort.setFlowControl(getFlowCtrl(ui->cmbFlowCtrl->currentText()));
 
             isPortOpened = true;
+            ui->openCloseButton->setText(tr("Close"));
+            ui->openCloseButton->setIcon(QIcon(":/icon/res/stop.ico"));
             emit serialOpened();
         }
         else {
@@ -145,8 +147,36 @@ void NdiComm::on_openCloseButton_clicked()
     else {
         serialPort.close();
 
-        emit serialClosed(); //弹出串口关闭信号
+        emit serialClosed(); //emit serialClosed signal;
 
         isPortOpened = false;
+        ui->openCloseButton->setText(tr("Close"));
+        ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
     }
+}
+
+void NdiComm::on_startButton_clicked()
+{
+    if(!isStarted){ //Not start
+        if(isPortOpened){
+
+        }
+    }
+}
+
+
+/********************NdiCommProc*****************************/
+/*
+ * Processing time consuming operation
+ */
+
+NdiCommProc::NdiCommProc(QObject *parent) :
+    QObject (parent)
+{
+    ndi = dynamic_cast<NdiComm*>(parent);
+}
+
+NdiCommProc::~NdiCommProc()
+{
+
 }

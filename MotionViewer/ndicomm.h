@@ -1,6 +1,3 @@
-#pragma warning(disable:4995)
-#pragma warning(disable:4819)
-
 #ifndef NDICOMM_H
 #define NDICOMM_H
 
@@ -19,12 +16,17 @@ public:
     explicit NdiComm(QWidget *parent = nullptr);
     ~NdiComm();
 
-    void initPort(); //初始化串口，当点击刷新时也会调用，重新扫描当前可用串口
+    friend class NdiCommProc; //Declare friend class NdiCommProc
+
+    void initPort(); //refresh serial ports
 
 private:
     Ui::NdiComm *ui;
-    QSerialPort serialPort; //串口
-    bool isPortOpened; //串口是否打开
+    NdiCommProc *ndiCommProc;
+
+    QSerialPort serialPort; //Serial port
+    bool isPortOpened;
+    bool isStarted;
 
     QSerialPort::Parity getParity(QString text);
     QSerialPort::DataBits getDataBits(QString text);
@@ -32,13 +34,30 @@ private:
     QSerialPort::FlowControl getFlowCtrl(QString text);
 
 signals:
-    void serialOpened(); //串口打开信号
-    void serialClosed(); //串口关闭信号
+    void serialOpened(); //serial port open signal
+    void serialClosed(); //serial port close signal
 
 public slots:
+
 private slots:
     void on_refreshButton_clicked();
     void on_openCloseButton_clicked();
+    void on_startButton_clicked();
+};
+
+
+class NdiCommProc : public QObject
+{
+    Q_OBJECT
+public:
+    explicit NdiCommProc(QObject *parent = nullptr);
+    ~NdiCommProc();
+
+private:
+    NdiComm *ndi;
+
+signals:
+    void dataReady();
 };
 
 #endif // NDICOMM_H
