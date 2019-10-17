@@ -1,5 +1,6 @@
 #include "holoviewer.h"
 #include "ui_holoviewer.h"
+#include <QDebug>
 
 HoloViewer::HoloViewer(QWidget *parent) :
     QWidget(parent),
@@ -11,4 +12,9 @@ HoloViewer::HoloViewer(QWidget *parent) :
 HoloViewer::~HoloViewer()
 {
     delete ui;
+}
+
+void HoloViewer::dataProc(QString data)
+{
+    qDebug() << "Received data is: " << data;
 }

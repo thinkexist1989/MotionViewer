@@ -52,6 +52,8 @@ private slots:
     void tcpNewConnectionProc();
     void tcpRecvDataProc();
 
+    void udpRecvDataProc();
+
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
 };

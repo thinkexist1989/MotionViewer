@@ -18,6 +18,9 @@ public:
 private:
     Ui::HoloViewer *ui;
 
+public slots:
+    void dataProc(QString);
+
 };
 
 #endif // HOLOVIEWER_H

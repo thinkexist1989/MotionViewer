@@ -14,6 +14,9 @@ HoloComm::HoloComm(QWidget *parent) :
 HoloComm::~HoloComm()
 {
     delete ui;
+    delete tcpServer;
+    delete tcpSocket;
+    delete udpSocket;
 }
 
 void HoloComm::init()
@@ -46,7 +49,10 @@ bool HoloComm::write(QByteArray ba)
         else
             return false;
     case UDP:
-        return false;
+        if(udpSocket->writeDatagram(ba,QHostAddress(ui->ldtAddress->text()),ui->ldtPort->text().toUShort()) == ba.size())
+            return true;
+        else
+            return false;
     default:
         return false;
     }
@@ -102,18 +108,35 @@ bool HoloComm::tcpServerInit()
 
 bool HoloComm::tcpClientInit()
 {
-    return false;
+    tcpSocket = new QTcpSocket();
+
+    tcpSocket->connectToHost(QHostAddress(ui->ldtAddress->text()),ui->ldtPort->text().toUShort());
+
+    if(tcpSocket->isValid()) {
+        qDebug() << tr("Connected to Server: ") << tcpSocket->peerName();
+        connect(tcpSocket, &QTcpSocket::readyRead, this, &HoloComm::tcpRecvDataProc);
+        return true;
+    }
+    else
+        return false;
 }
 
 bool HoloComm::udpInit()
 {
-    return  false;
+    udpSocket = new QUdpSocket();
+
+    udpSocket->bind(ui->ldtLocalPort->text().toUShort());
+
+    connect(udpSocket, &QUdpSocket::readyRead, this, &HoloComm::udpRecvDataProc);
+
+    return  true
+            ;
 }
 
 void HoloComm::tcpNewConnectionProc()
 {
     tcpSocket = tcpServer->nextPendingConnection();
-    qDebug() << tr("New connection from ") << tcpSocket->peerAddress();
+    qDebug() << tr("New connection from ").toLatin1() << tcpSocket->peerAddress();
 
     connect(tcpSocket, &QTcpSocket::readyRead,
             this, &HoloComm::tcpRecvDataProc);
@@ -127,6 +150,17 @@ void HoloComm::tcpRecvDataProc()
     QByteArray buffer = tcpSocket->readAll();
     //write(buffer);
     emit dataReady(buffer);
+}
+
+void HoloComm::udpRecvDataProc()
+{
+    while(udpSocket->hasPendingDatagrams()){
+        QByteArray datagram;
+        datagram.resize(static_cast<int>(udpSocket->pendingDatagramSize()));
+        udpSocket->readDatagram(datagram.data(),datagram.size());
+        write(datagram);
+        emit dataReady(datagram);
+    }
 }
 
 void HoloComm::on_connectButton_clicked()
@@ -168,5 +202,6 @@ void HoloComm::on_disconnectButton_clicked()
         udpSocket->close();
     }
 
+    connectionType = NO_CONNECTION;
     ui->connectButton->setEnabled(true);
 }

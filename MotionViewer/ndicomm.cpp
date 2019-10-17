@@ -189,15 +189,15 @@ void NdiComm::on_startButton_clicked()
             qDebug() << tr("Please Open Serial Port First!");
         }
 
-        printThread();
-        ndiCommProc->moveToThread(ndiThread);
-        ndiThread->start();
-        timer = new QTimer(this);
-        connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
-        timer->start(1000);
+//        printThread();
+//        ndiCommProc->moveToThread(ndiThread);
+//        ndiThread->start();
+//        timer = new QTimer(this);
+//        connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
+//        timer->start(1000);
 
-        ui->startButton->setText(tr("Stop"));
-        isStarted = true;
+//        ui->startButton->setText(tr("Stop"));
+//        isStarted = true;
 
     }
     else {
