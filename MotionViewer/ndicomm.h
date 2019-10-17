@@ -24,6 +24,11 @@ public:
 
     void initPort(); //refresh serial ports
 
+    //Use to read and write on serialPort.
+    inline void write(QByteArray ba) {if(isPortOpened) serialPort.write(ba);}
+    inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}
+    inline QByteArray readAll(){return serialPort.readAll();}
+
     QList<QVector3D> markers; //storage for coordinates of markers
 
 private:
