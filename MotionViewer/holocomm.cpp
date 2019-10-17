@@ -14,9 +14,9 @@ HoloComm::HoloComm(QWidget *parent) :
 HoloComm::~HoloComm()
 {
     delete ui;
-    delete tcpServer;
-    delete tcpSocket;
-    delete udpSocket;
+//    delete tcpServer;
+//    delete tcpSocket;
+//    delete udpSocket;
 }
 
 void HoloComm::init()
@@ -204,4 +204,14 @@ void HoloComm::on_disconnectButton_clicked()
 
     connectionType = NO_CONNECTION;
     ui->connectButton->setEnabled(true);
+}
+
+void HoloComm::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    else {
+        QWidget::changeEvent(event);
+    }
 }

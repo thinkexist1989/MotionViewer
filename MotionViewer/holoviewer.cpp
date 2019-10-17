@@ -18,3 +18,13 @@ void HoloViewer::dataProc(QString data)
 {
     qDebug() << "Received data is: " << data;
 }
+
+void HoloViewer::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    else {
+        QWidget::changeEvent(event);
+    }
+}

@@ -21,6 +21,9 @@ private:
 public slots:
     void dataProc(QString);
 
+protected:
+    void changeEvent(QEvent *event);
+
 };
 
 #endif // HOLOVIEWER_H

@@ -56,6 +56,9 @@ private slots:
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
+
+protected:
+    void changeEvent(QEvent *event);
 };
 
 #endif // HOLOCOMM_H

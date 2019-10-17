@@ -71,8 +71,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>80</width>
+     <height>38</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -122,7 +122,7 @@
   <action name="actionChinese">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/lang/res/chinese.png</normaloff>:/lang/res/chinese.png</iconset>
+     <normaloff>:/translations/res/chinese.png</normaloff>:/translations/res/chinese.png</iconset>
    </property>
    <property name="text">
     <string>Chinese</string>
@@ -131,7 +131,7 @@
   <action name="actionEnglish">
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/lang/res/english.png</normaloff>:/lang/res/english.png</iconset>
+     <normaloff>:/translations/res/english.png</normaloff>:/translations/res/english.png</iconset>
    </property>
    <property name="text">
     <string>English</string>

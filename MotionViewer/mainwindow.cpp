@@ -3,6 +3,7 @@
 #include "aboutdlg.h"
 #include <QDockWidget>
 #include <QDebug>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -13,6 +14,10 @@ MainWindow::MainWindow(QWidget *parent) :
     holoViewer(new HoloViewer)
 {
     ui->setupUi(this);
+    loadSettings();
+    chineseTranslator = new QTranslator(this);
+    chineseTranslator->load(":/translations/translation_zh.qm");
+
     ui->ndiCommDockWidget->setWidget(ndiComm);
     ui->ndiViewerDockWidget->setWidget(ndiViewer);
     ui->holoCommDockWidget->setWidget(holoComm);
@@ -44,6 +49,42 @@ void MainWindow::setStatusMsg(QString msg)
     ui->statusBar->showMessage(msg,2000);
 }
 
+void MainWindow::loadSettings()
+{
+    QSettings settings("settings.ini", QSettings::IniFormat, this);
+    ui->actionNdiViewer->setChecked(settings.value("NdiViewer",true).toBool());
+    ui->actionHoloViewer->setChecked(settings.value("HoloViewer",true).toBool());
+}
+
+void MainWindow::saveSettings()
+{
+    QSettings settings("settings.ini", QSettings::IniFormat, this);
+    settings.setValue("NdiViewer", ui->actionNdiViewer->isChecked());
+    settings.setValue("HoloViewer", ui->actionHoloViewer->isChecked());
+}
+
+void MainWindow::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    else {
+        QMainWindow::changeEvent(event);
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    int result = QMessageBox::warning(this, tr("Exit"), tr("Are you sure to close this program?"), QMessageBox::Yes, QMessageBox::No);
+    if(result == QMessageBox::Yes) {
+        saveSettings();
+        event->accept();
+    }
+    else {
+        event->ignore();
+    }
+}
+
 void MainWindow::on_actionNdiViewer_toggled(bool arg1)
 {
     if(!arg1) {
@@ -66,4 +107,16 @@ void MainWindow::on_actionHoloViewer_toggled(bool arg1)
         ui->holoCommDockWidget->show();
         ui->holoViewerDockWidget->show();
     }
+}
+
+void MainWindow::on_actionChinese_triggered()
+{
+    setStatusMsg(tr("GUI Language Changed"));
+    qApp->installTranslator(chineseTranslator);
+}
+
+void MainWindow::on_actionEnglish_triggered()
+{
+    setStatusMsg(tr("GUI Language Changed"));
+    qApp->removeTranslator(chineseTranslator);
 }

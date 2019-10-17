@@ -22,6 +22,9 @@ private:
 
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
+
+protected:
+    void changeEvent(QEvent *event);
 };
 
 #endif // NDIVIEWER_H

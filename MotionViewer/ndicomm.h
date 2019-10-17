@@ -61,6 +61,9 @@ private slots:
     void on_refreshButton_clicked();
     void on_openCloseButton_clicked();
     void on_startButton_clicked();
+
+protected:
+    void changeEvent(QEvent *event);
 };
 
 
@@ -75,10 +78,8 @@ public:
 	const char *msg;
 	QByteArray requestData;
 	QString strDisplay;
-	QByteArray requestData1 = NULL; 
-	void initsensor(); //FOR SU SHUN
-private:
-   
+    QByteArray requestData1;
+	void initsensor(); //FOR SU SHUN   
 signals:
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
@@ -87,6 +88,8 @@ public slots:
 	
     void printThread();
     void data_read(); //FOR SU SHUN
+
+private:
 	int ConvertHexQString(QString ch, int i, int j);
 	float Hex_To_Decimal(unsigned char * Byte);
 };

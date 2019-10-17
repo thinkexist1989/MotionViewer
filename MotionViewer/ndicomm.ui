@@ -158,7 +158,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>TextLabel</string>
+        <string>Parity</string>
        </property>
       </widget>
      </item>

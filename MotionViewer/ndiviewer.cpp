@@ -18,3 +18,13 @@ void NdiViewer::dataProc(QList<QVector3D> data)
 {
     qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
 }
+
+void NdiViewer::changeEvent(QEvent *event)
+{
+    if(event->type() == QEvent::LanguageChange) {
+        ui->retranslateUi(this);
+    }
+    else {
+        QWidget::changeEvent(event);
+    }
+}
