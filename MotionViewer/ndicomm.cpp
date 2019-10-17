@@ -1,6 +1,7 @@
 #include "ndicomm.h"
 #include "ui_ndicomm.h"
 #include <QDebug>
+#include <windows.h>
 
 NdiComm::NdiComm(QWidget *parent) :
     QWidget(parent),
@@ -15,7 +16,7 @@ NdiComm::NdiComm(QWidget *parent) :
     qRegisterMetaType<QList<QVector3D>>("Coordinates");
     connect(ndiCommProc, &NdiCommProc::initFinished, this, [=](QString msg){emit this->initFinished(msg);});
     connect(ndiCommProc, &NdiCommProc::dataReady, this, [=](QList<QVector3D> data){
-        this->markers = data;
+	this->markers = data;
         emit this->dataReady(markers);});
 
     ndiThread = new QThread(this);
@@ -175,12 +176,13 @@ void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
         if(isPortOpened){
-            printThread();
+          //  printThread();
             ndiCommProc->moveToThread(ndiThread);
             ndiThread->start();
+			ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
-            timer->start(1000);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
+            timer->start(100);
 
             ui->startButton->setText(tr("Stop"));
             isStarted = true;
@@ -188,16 +190,6 @@ void NdiComm::on_startButton_clicked()
         else {
             qDebug() << tr("Please Open Serial Port First!");
         }
-
-//        printThread();
-//        ndiCommProc->moveToThread(ndiThread);
-//        ndiThread->start();
-//        timer = new QTimer(this);
-//        connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::printThread);
-//        timer->start(1000);
-
-//        ui->startButton->setText(tr("Stop"));
-//        isStarted = true;
 
     }
     else {
@@ -215,11 +207,13 @@ void NdiComm::on_startButton_clicked()
  * Processing time consuming operation
  */
 
+
 NdiCommProc::NdiCommProc(NdiComm *ndi, QObject *parent) :
     QObject (parent),
     ndi (ndi)
 {
     //ndi = dynamic_cast<NdiComm*>(parent);
+	
 }
 
 NdiCommProc::~NdiCommProc()
@@ -239,9 +233,689 @@ void NdiCommProc::printThread()
 void NdiCommProc::initsensor()
 {
     //FOR SU SHUN
+	msg = "1";
+	ndi->write(msg);
+	while (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+	}
+	Sleep(5000);
+
+	msg = "APIREV \r";
+	ndi->write(msg);
+	while (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+
+	}
+	msg = "VER:4A6EF\r";
+	ndi->write(msg);
+	while (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+
+		//ui.textBrowser->insertPlainText(strDisplay);
+	//ui.textBrowser->moveCursor(QTextCursor::End); 
+	//	return strDisplay;
+	//	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	}
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	Sleep(500);
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	msg = "COMM 70001\r";
+	ndi->write(msg);
+	while (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+
+		//ui.textBrowser->insertPlainText(strDisplay);
+	//ui.textBrowser->moveCursor(QTextCursor::End); 
+	//	return strDisplay;
+	//	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	}
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	Sleep(500);
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	msg = "COMM 50001\r";
+	ndi->write(msg);
+	while (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+
+		//ui.textBrowser->insertPlainText(strDisplay);
+	//ui.textBrowser->moveCursor(QTextCursor::End); 
+	//	return strDisplay;
+	//	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	}
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	Sleep(500);
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	msg = "test\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+
+
+
+	}
+	Sleep(5000);
+	//QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+	msg = "VER:5662E\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+	}
+	Sleep(500);
+	msg = "GETINFO:Config.*1110\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+	}
+	Sleep(500);
+	msg = "GET:Device.*722D\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "INIT:E3A5\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GET:Device.*722D\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PHSR:0020FF\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PINIT:0131EA\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PHSR:0020FF\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Param.Tracking.*8D17\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Features.Firmware.Version0492\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Info.Status.Alerts340A\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Info.Status.New Alerts33A3\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Features.Hardware.Serial Number68E4\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "VER:4A6EF\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Features.Tools.*F635\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "SFLIST:03500F\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Param.Tracking.Selected VolumeC200\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PHINF:0100753CAF\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(5000);
+	}
+	Sleep(500);
+	msg = "GETINFO:SCU-0.Info.Status.New AlertsAF34\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:SCU-0.Info.Status.AlertsC917\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Info.Status.New Alerts33A3\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:Info.Status.Alerts340A\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:STB-0.Info.Status.New AlertsCC4F\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "GETINFO:STB-0.Info.Status.Alerts389B\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "TSTART:5423\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "BX:18033D6C\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "TSTOP:2C14\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "SET:Param.Tracking.Illuminator Rate=2237A\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PHRQ:*********1****A4C1\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0200004E444900AF12000001000000000000010000000002DC32355A00000004000000040000000000403F000000000000000000000000000000000000000000000000610B\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0200400000204100000000000000000000000000000000000000001F853D4285EBE74100000000000000003333B24200000000A4700DC2A4700D4200000000000000002B7A\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:020080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005DEA\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0200C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006EF1\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:02010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000803F00000000678F\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:020140000000000000803F00000000000000000000803F00000000000000000000803F00000000000000000000000000000000000000000000000000000000000000008535\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:020180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009DD2\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0201C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AEC9\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203000000000000000000000000000000001F1F1F1FC0FA\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:020240090000004E44490000000000000000003837303034343900000000000000000000000000090101010100000000000000000000000000000000010101010000008755\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:020280000000000000000000000000008000290000000000000000000080BF0000000000000000000000000000000000000000000000000000000000000000000000002FB1\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PVWR:0202C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AE82\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+
+	msg = "PINIT:0230AA\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PHINF:0200753CEB\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "TSTART:5423\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "BX:18033D6C\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "TSTOP:2C14\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+	msg = "PENA:02D9D3B\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		strDisplay = QString(requestData);
+
+
+		Sleep(500);
+	}
+	Sleep(500);
+
+	msg = "TSTART:5423\r";
+	ndi->write(msg);
+	if (this->ndi->waitForReadyRead(50))
+	{
+		requestData += this->ndi->readAll();
+		strDisplay = QString(requestData);
+		Sleep(500);
+	}
+	Sleep(500);
+
+	//QString finish;
+
+	//finish = " You can start collect data!";
+
 }
 
 void NdiCommProc::data_read()
 {
     //FOR SU SHUN
+	this->ndi->clear();
+	msg = "BX:18033D6C\r";
+	//msg = "BX:1000FEAD\r";
+	//
+	ndi->write(msg);
+	int nSpot = 0;
+	//	int numofpoints = 0;
+	int p1 = 0;
+	int p2 = 0;
+	int p3 = 0;
+	int p4 = 0;
+	unsigned    char hexbyte[4];
+	requestData1.clear();
+	strDisplay.clear();
+	while (this->ndi->waitForReadyRead(100))
+	{
+
+		requestData = this->ndi->readAll();
+		requestData1 = requestData1 + requestData;
+	}
+	strDisplay = requestData1.toHex();
+	nSpot += 60;
+	int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
+	if (numofpoints > 8)
+		nSpot += 2;
+	nSpot += 4;
+	float data[1][3];
+	QList<QVector3D> markers;
+	for (int i = 0; i < numofpoints; i++)
+	{
+		p1 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p2 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p3 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p4 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		hexbyte[0] = p1;
+		hexbyte[1] = p2;
+		hexbyte[2] = p3;
+		hexbyte[3] = p4;
+		q = Hex_To_Decimal(hexbyte);
+		data[0][0] = q;
+		p1 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p2 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p3 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p4 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		hexbyte[0] = p1;
+		hexbyte[1] = p2;
+		hexbyte[2] = p3;
+		hexbyte[3] = p4;
+		q = Hex_To_Decimal(hexbyte);
+		data[0][1] = q;
+		p1 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p2 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p3 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		p4 = ConvertHexQString(strDisplay, 2, nSpot);
+		nSpot += 2;
+		hexbyte[0] = p1;
+		hexbyte[1] = p2;
+		hexbyte[2] = p3;
+		hexbyte[3] = p4;
+		q = Hex_To_Decimal(hexbyte);
+		data[0][2] = q;
+
+markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
+
+	}
+emit dataReady(markers);
+	requestData.clear();
+	
+	
+}
+int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
+{
+	int u = 0;
+	for (int n = 0; n < i; n++)
+	{
+		if (ch[j + n] == '0')
+			u = u + (0 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '1')
+			u = u + (1 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '2')
+			u = u + (2 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '3')
+			u = u + (3 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '4')
+			u = u + (4 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '5')
+			u = u + (5 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '6')
+			u = u + (6 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '7')
+			u = u + (7 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '8')
+			u = u + (8 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == '9')
+			u = u + (9 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'a' || ch[j] == 'A')
+			u = u + (10 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'b' || ch[j] == 'B')
+			u = u + (11 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'c' || ch[j] == 'C')
+			u = u + (12 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'd' || ch[j] == 'D')
+			u = u + (13 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'e' || ch[j] == 'E')
+			u = u + (14 * (int)pow(16, i - n - 1));
+		if (ch[j + n] == 'f' || ch[j] == 'F')
+			u = u + (15 * (int)pow(16, i - n - 1));
+	}
+	return u;
+}
+float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//十六进制到浮点数
+{
+
+	return *((float*)Byte);//方法二
 }
