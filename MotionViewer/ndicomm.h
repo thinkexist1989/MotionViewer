@@ -24,19 +24,19 @@ public:
 
     void initPort(); //refresh serial ports
 
-    //Use to read and write on serialPort.
-    inline void write(QByteArray ba) {if(isPortOpened) serialPort.write(ba);}
-    inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}
-    inline QByteArray readAll(){return serialPort.readAll();}
-
     QList<QVector3D> markers; //storage for coordinates of markers
-
+	//Use to read and write on serialPort.    
+	inline void write(QByteArray ba) {if(isPortOpened) serialPort.write(ba);}    
+	inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}    
+	inline QByteArray readAll(){return serialPort.readAll();}
+	inline void clear() { serialPort.clear(); }
 private:
     Ui::NdiComm *ui;
     NdiCommProc *ndiCommProc;
+	NdiComm *ndiComm;
     QThread *ndiThread;
-
     QSerialPort serialPort; //Serial port
+    
     bool isPortOpened;
     bool isStarted;
 
@@ -70,20 +70,25 @@ class NdiCommProc : public QObject
 public:
     explicit NdiCommProc(NdiComm* ndi, QObject *parent = nullptr);
     ~NdiCommProc();
-
-
+	float q;
     NdiComm *ndi;
-
+	const char *msg;
+	QByteArray requestData;
+	QString strDisplay;
+	QByteArray requestData1 = NULL; 
+	void initsensor(); //FOR SU SHUN
 private:
-    void initsensor(); //FOR SU SHUN
-
+   
 signals:
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
 
 public slots:
+	
     void printThread();
     void data_read(); //FOR SU SHUN
+	int ConvertHexQString(QString ch, int i, int j);
+	float Hex_To_Decimal(unsigned char * Byte);
 };
 
 #endif // NDICOMM_H
