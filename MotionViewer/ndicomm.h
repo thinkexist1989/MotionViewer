@@ -76,8 +76,10 @@ public:
 	float q;
     NdiComm *ndi;
 	const char *msg;
-	QByteArray requestData;
-	QString strDisplay;
+
+    QByteArray requestData;
+    QString strDisplay;
+
     QByteArray requestData1;
 	void initsensor(); //FOR SU SHUN   
 signals:
@@ -87,11 +89,13 @@ signals:
 public slots:
 	
     void printThread();
-    void data_read(); //FOR SU SHUN
+    //void data_read(); //FOR SU SHUN
+    void get_data(); // Get data from NDI BY Yang Luo
 
 private:
 	int ConvertHexQString(QString ch, int i, int j);
 	float Hex_To_Decimal(unsigned char * Byte);
+    template<typename T> T getNum(const char* p);
 };
 
 #endif // NDICOMM_H
