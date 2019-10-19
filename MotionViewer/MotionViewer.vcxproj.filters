@@ -133,84 +133,9 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\about.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\chinese.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\english.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\file.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\goalpos.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\joint.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\kinect.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\loc.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\ndi.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\plan.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\planning.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\refresh.ico">
-      <Filter>Resource Files</Filter>
-    </None>
     <QtRcc Include="resources.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <None Include="res\robot_arm.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\robot_arm.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\run.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\setting.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\settings2.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\start.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\stop.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\switcher.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\tools.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="translation_zh.qm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\viewer.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\vr.ico">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\zs.jpg">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\MotionViewer_resource.rc" />

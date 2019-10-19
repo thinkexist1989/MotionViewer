@@ -193,6 +193,9 @@
     </QtRcc>
     <QtUic>
       <ExecutionDescription>Uic'ing %(Identity)...</ExecutionDescription>
+      <QtUicDir>
+      </QtUicDir>
+      <QtUicFileName>.\GeneratedFiles\ui_%(Filename).h</QtUicFileName>
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -206,16 +209,22 @@
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="aboutdlg.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtMoc Include="holocomm.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtMoc Include="holoviewer.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtMoc Include="mainwindow.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtMoc Include="ndicomm.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
     <QtMoc Include="ndiviewer.h">
+      <QtMocDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\$(ConfigurationName)</QtMocDir>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
@@ -244,61 +253,43 @@
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_aboutdlg.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
     <QtUic Include="holocomm.ui">
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_holocomm.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
     <QtUic Include="holoviewer.ui">
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_holoviewer.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
     <QtUic Include="mainwindow.ui">
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_mainwindow.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
     <QtUic Include="ndicomm.ui">
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_ndicomm.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
     <QtUic Include="ndiviewer.ui">
       <QtUicDir>
       </QtUicDir>
       <QtUicFileName>ui_ndiviewer.h</QtUicFileName>
+      <QtUicDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles\</QtUicDir>
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <None Include="res\about.ico" />
-    <None Include="res\chinese.png" />
-    <None Include="res\english.png" />
-    <None Include="res\file.ico" />
-    <None Include="res\goalpos.ico" />
-    <None Include="res\joint.ico" />
-    <None Include="res\kinect.ico" />
-    <None Include="res\loc.ico" />
-    <None Include="res\ndi.png" />
-    <None Include="res\plan.ico" />
-    <None Include="res\planning.ico" />
-    <None Include="res\refresh.ico" />
     <QtRcc Include="resources.qrc">
+      <QtRccDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles</QtRccDir>
     </QtRcc>
-    <None Include="res\robot_arm.ico" />
-    <None Include="res\robot_arm.png" />
-    <None Include="res\run.ico" />
-    <None Include="res\setting.ico" />
-    <None Include="res\settings2.ico" />
-    <None Include="res\start.ico" />
-    <None Include="res\stop.ico" />
-    <None Include="res\switcher.ico" />
-    <None Include="res\tools.ico" />
-    <None Include="translation_zh.qm" />
-    <None Include="res\viewer.ico" />
-    <None Include="res\vr.ico" />
-    <None Include="res\zs.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\MotionViewer_resource.rc" />
