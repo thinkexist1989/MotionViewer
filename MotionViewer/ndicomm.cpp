@@ -20,6 +20,7 @@ NdiComm::NdiComm(QWidget *parent) :
         emit this->dataReady(markers);});
 
     ndiThread = new QThread(this);
+
 }
 
 NdiComm::~NdiComm()
@@ -842,6 +843,7 @@ void NdiCommProc::get_data()
 
         markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
     }
+
     emit dataReady(markers);
 
 }
@@ -850,7 +852,7 @@ template<typename T> T NdiCommProc::getNum(const char *p)
 {
     T temp;
     memcpy_s(&temp, sizeof (T), p, sizeof (T));
-    return qFromBigEndian(temp); //From Big Endian to host byte order(x86 is Little Endian)
+    return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
 }
 
 
