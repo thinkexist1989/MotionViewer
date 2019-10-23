@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QList>
 #include <QVector3D>
+#include <QMatrix4x4>
 
 namespace Ui {
 class NdiViewer;
@@ -19,6 +20,10 @@ public:
 
 private:
     Ui::NdiViewer *ui;
+
+    void refreshMarkersView(QList<QVector3D> data);
+    void refreshMatrixView(QMatrix4x4 mat);
+    void init();
 
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates

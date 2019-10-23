@@ -29,5 +29,6 @@
         <file>res/vr.ico</file>
         <file>res/kinect.ico</file>
         <file>res/run.ico</file>
+        <file>res/coordinates.ico</file>
     </qresource>
 </RCC>
