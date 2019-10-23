@@ -15,8 +15,7 @@ NdiViewer::NdiViewer(QWidget *parent) :
 
     refreshMarkersView(markers);
 
-    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
-    refreshMatrixView(mat);
+    refreshMatrixView(virtualTransformMatrix);
 
 }
 
@@ -33,10 +32,9 @@ void NdiViewer::init()
 
     //set comboBox Functions
     QStringList functionLists;
-    functionLists << tr("1. Tool Current Pose") << tr("2. Tool Adjusted Pose") << tr("3. Update Adjust Matrix");
+    functionLists << tr("1. Virtual Tool Pose") << tr("2. Actual Tool Pose") << tr("3. Update Calibration Matrix");
     ui->cmbSteps->addItems(functionLists);
 }
-
 
 void NdiViewer::refreshMarkersView(QList<QVector3D> data)
 {
@@ -79,4 +77,61 @@ void NdiViewer::changeEvent(QEvent *event)
     else {
         QWidget::changeEvent(event);
     }
+}
+
+void NdiViewer::on_btnExec_clicked()
+{
+    const int index = ui->cmbSteps->currentIndex();
+    switch (index) {
+    case 0://step 1
+        virtualTransformMatrix = getVirtualTransformMatrix();
+        refreshMatrixView(virtualTransformMatrix);
+        break;
+    case 1://step 2
+        realTransformMatrix = getRealTransformMatrix();
+        refreshMatrixView(realTransformMatrix);
+        break;
+    case 2://step 3
+        calibrationMatrix = getCalibrationMatrix();
+        refreshMatrixView(calibrationMatrix);
+        break;
+    default:
+        break;
+    }
+}
+
+void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
+{
+    switch (index) {
+    case 0://step 1
+        refreshMatrixView(virtualTransformMatrix);
+        break;
+    case 1://step 2
+        refreshMatrixView(realTransformMatrix);
+        break;
+    case 2://step 3
+        refreshMatrixView(calibrationMatrix);
+        break;
+    default:
+        break;
+    }
+}
+
+
+QMatrix4x4 NdiViewer::getVirtualTransformMatrix()
+{
+    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    return mat;
+}
+
+QMatrix4x4 NdiViewer::getRealTransformMatrix()
+{
+    QMatrix4x4 mat(1.1,2.2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    return mat;
+}
+
+QMatrix4x4 NdiViewer::getCalibrationMatrix()
+{
+    QMatrix4x4 mat(1.5,2.7,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    return mat;
 }
