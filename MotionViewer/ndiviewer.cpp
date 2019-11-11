@@ -126,13 +126,13 @@ QMap<QString,QList<QVector3D>> NdiViewer::getToolsNumAndPose(QList<QVector3D> da
     QMap<QString,int> toolNameNumber;
     double distance[20];
     int keyvalue;
-    int count = data.count();
-    for (int  i= 0; i< count; i++){
-        for(int j = 0; j< count; i++){
+    int datacount = data.count();
+    for (int  i= 0; i< datacount; i++){
+        for(int j = 0; j< datacount; i++){
             distance[j]= sqrt(pow((data[i].x() - data[j].x()), 2) + pow((data[i].y() - data[j].y()), 2) + pow((data[i].z() - data[j].z()), 2));
         }
         toolname="";
-        toolNameNumber=judgeTool(distance,toolname);
+        toolNameNumber=judgeTool(distance,toolname,datacount);
         if (toolname!="")
         {
            QMap<QString,QList<QVector3D>>::Iterator m;
@@ -152,7 +152,7 @@ QMap<QString,QList<QVector3D>> NdiViewer::getToolsNumAndPose(QList<QVector3D> da
 qmap.insert("tool1",data);
 return qmap;
 }
-QMap<QString,int> NdiViewer::judgeTool(double *dis,  QString &toolName)
+QMap<QString,int> NdiViewer::judgeTool(double *dis,  QString &toolName,int &count)
 {
     QMap<QString,QList<float>> toolNameSize;
     QMap<QString,int> toolNameNumber;
@@ -160,15 +160,14 @@ QMap<QString,int> NdiViewer::judgeTool(double *dis,  QString &toolName)
     int numofpoints;
     bool isToolOrNot;
     double *distance=dis;
-    //double distance[20];
-    //distance=&dis;
-//加一个读取配置的函数，赋值toolNameSize
-    //返回值是QMap<QString,QList<QList<float>>>
+//加一个读取配置的函数，赋值toolNameSize    
+    //toolNameSize=getToolDefination()
+    //返回值是QMap<QString,QList<float>>
     QMapIterator<QString,QList<float>>i(toolNameSize);
     while(i.hasNext()){
         toolSize=i.next().value();
         numofpoints=toolSize.count();
-        isToolOrNot=isTool(distance,toolSize) ;
+        isToolOrNot=isTool(distance,toolSize,count) ;
         if(isToolOrNot)
         {
             toolName=i.next().key();
@@ -178,15 +177,44 @@ QMap<QString,int> NdiViewer::judgeTool(double *dis,  QString &toolName)
 
     return toolNameNumber;
 }
-
-bool NdiViewer::isTool(double *distance,QList<float> toolSize)
+QMap<QString,QList<float>>NdiViewer::getToolDefination()
+{
+    QMap<QString,QList<float>>ToolDefination;
+QList<float> Tool1;
+QList<float> Tool2;
+QList<float> Tool3;
+Tool1.push_back(137);
+Tool1.push_back(103);
+Tool1.push_back(88);
+Tool1.push_back(61);
+Tool1.push_back(56);
+Tool1.push_back(50);
+Tool2.push_back(150);
+Tool2.push_back(117);
+Tool2.push_back(105);
+Tool2.push_back(66);
+Tool2.push_back(59);
+Tool2.push_back(51);
+Tool3.push_back(88);
+Tool3.push_back(73);
+Tool3.push_back(65);
+Tool3.push_back(60);
+Tool3.push_back(54);
+Tool3.push_back(50);
+ToolDefination.insert("CalibrationNeedle",Tool1);
+ToolDefination.insert("HoloLens",Tool2);
+ToolDefination.insert("BoneDrill",Tool3);
+//加一个读取文本的东西
+return ToolDefination;
+}
+bool NdiViewer::isTool(double *distance,QList<float> toolSize,int &count)
 {
     int numberOfMarkers;
     double err=2;
     int q= 0;
     bool istool=false;
     numberOfMarkers=toolSize.count();
-    for(int i=0;i<numberOfMarkers;i++)
+    for(int i=0;i<count;i++)
    {
         QListIterator<float>m(toolSize);
         while(m.hasNext())
@@ -195,11 +223,13 @@ bool NdiViewer::isTool(double *distance,QList<float> toolSize)
           if(((m.next()-err)<distance[i])&&(distance[i]<(m.next()+err)))
           {
                    q=q+1;
+                   break;
           }
         }
         if (q==numberOfMarkers)
         {
             istool=true;
+            break;
         }
     }
 

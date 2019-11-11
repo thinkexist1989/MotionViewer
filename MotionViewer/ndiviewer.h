@@ -29,8 +29,9 @@ private:
     //void judgeTool(QList<QVector3D> data);
     void refreshMatrixView(QMatrix4x4 mat);
     void init();
-    bool NdiViewer::isTool(double *distance,QList<float>);
-    QMap<QString,int> judgeTool(double *dis,  QString &toolname);
+    bool NdiViewer::isTool(double *distance,QList<float>,int &count);
+    QMap<QString,QList<float>>getToolDefination();
+    QMap<QString,int> judgeTool(double *dis,  QString &toolname,int &count);
     QMatrix4x4 getVirtualTransformMatrix(); // Virtual tool pose
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
