@@ -89,7 +89,7 @@ signals:
 public slots:
 	
     void printThread();
-    //void data_read(); //FOR SU SHUN
+    void data_read(); //FOR SU SHUN
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:

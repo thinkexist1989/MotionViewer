@@ -21,18 +21,20 @@ public:
     QMatrix4x4 virtualTransformMatrix;
     QMatrix4x4 realTransformMatrix;
     QMatrix4x4 calibrationMatrix;
-
+    QMap<QString,QList<QVector3D>> ToolsNumAndPose;
 private:
     Ui::NdiViewer *ui;
 
     void refreshMarkersView(QList<QVector3D> data);
+    //void judgeTool(QList<QVector3D> data);
     void refreshMatrixView(QMatrix4x4 mat);
     void init();
-
+    bool NdiViewer::isTool(double *distance,QList<float>);
+    QMap<QString,int> judgeTool(double *dis,  QString &toolname);
     QMatrix4x4 getVirtualTransformMatrix(); // Virtual tool pose
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
-
+    QMap<QString,QList<QVector3D>> getToolsNumAndPose(QList<QVector3D> data);//tool number and pose
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
 

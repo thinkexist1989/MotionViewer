@@ -182,7 +182,7 @@ void NdiComm::on_startButton_clicked()
             ndiThread->start();
             ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
             timer->start(100);
 
             ui->startButton->setText(tr("Stop"));
@@ -856,133 +856,133 @@ template<typename T> T NdiCommProc::getNum(const char *p)
 }
 
 
-//void NdiCommProc::data_read()
-//{
-//    //FOR SU SHUN
-//    this->ndi->clear();
-//    msg = "BX:18033D6C\r";
-//    //msg = "BX:1000FEAD\r";
-//    //
-//    ndi->write(msg);
-//    int nSpot = 0;
-//    //	int numofpoints = 0;
-//    int p1 = 0;
-//    int p2 = 0;
-//    int p3 = 0;
-//    int p4 = 0;
-//    unsigned    char hexbyte[4];
-//    requestData1.clear();
-//    strDisplay.clear();
-//    while (this->ndi->waitForReadyRead(100))
-//    {
+void NdiCommProc::data_read()
+{
+    //FOR SU SHUN
+    this->ndi->clear();
+    msg = "BX:18033D6C\r";
+    //msg = "BX:1000FEAD\r";
+    //
+    ndi->write(msg);
+    int nSpot = 0;
+    //	int numofpoints = 0;
+    int p1 = 0;
+    int p2 = 0;
+    int p3 = 0;
+    int p4 = 0;
+    unsigned    char hexbyte[4];
+    requestData1.clear();
+    strDisplay.clear();
+    while (this->ndi->waitForReadyRead(100))
+    {
 
-//        requestData = this->ndi->readAll();
-//        requestData1 = requestData1 + requestData;
-//    }
-//    strDisplay = requestData1.toHex();
-//    nSpot += 60;
-//    int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
-//    if (numofpoints > 8)
-//        nSpot += 2;
-//    nSpot += 4;
-//    float data[1][3];
-//    QList<QVector3D> markers;
-//    for (int i = 0; i < numofpoints; i++)
-//    {
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][0] = q;
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][1] = q;
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][2] = q;
+        requestData = this->ndi->readAll();
+        requestData1 = requestData1 + requestData;
+    }
+    strDisplay = requestData1.toHex();
+    nSpot += 60;
+    int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
+    if (numofpoints > 8)
+        nSpot += 2;
+    nSpot += 4;
+    float data[1][3];
+    QList<QVector3D> markers;
+    for (int i = 0; i < numofpoints; i++)
+    {
+        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        hexbyte[0] = p1;
+        hexbyte[1] = p2;
+        hexbyte[2] = p3;
+        hexbyte[3] = p4;
+        q = Hex_To_Decimal(hexbyte);
+        data[0][0] = q;
+        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        hexbyte[0] = p1;
+        hexbyte[1] = p2;
+        hexbyte[2] = p3;
+        hexbyte[3] = p4;
+        q = Hex_To_Decimal(hexbyte);
+        data[0][1] = q;
+        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+        nSpot += 2;
+        hexbyte[0] = p1;
+        hexbyte[1] = p2;
+        hexbyte[2] = p3;
+        hexbyte[3] = p4;
+        q = Hex_To_Decimal(hexbyte);
+        data[0][2] = q;
 
-//markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
+markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
 
-//    }
-//emit dataReady(markers);
-//    requestData.clear();
+    }
+emit dataReady(markers);
+    requestData.clear();
 	
 
-//}
+}
 
-//int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
-//{
-//    int u = 0;
-//    for (int n = 0; n < i; n++)
-//    {
-//        if (ch[j + n] == '0')
-//            u = u + (0 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '1')
-//            u = u + (1 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '2')
-//            u = u + (2 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '3')
-//            u = u + (3 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '4')
-//            u = u + (4 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '5')
-//            u = u + (5 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '6')
-//            u = u + (6 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '7')
-//            u = u + (7 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '8')
-//            u = u + (8 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '9')
-//            u = u + (9 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'a' || ch[j] == 'A')
-//            u = u + (10 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'b' || ch[j] == 'B')
-//            u = u + (11 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'c' || ch[j] == 'C')
-//            u = u + (12 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'd' || ch[j] == 'D')
-//            u = u + (13 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'e' || ch[j] == 'E')
-//            u = u + (14 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'f' || ch[j] == 'F')
-//            u = u + (15 * (int)pow(16, i - n - 1));
-//    }
-//    return u;
-//}
-//float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//
-//{
+int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
+{
+    int u = 0;
+    for (int n = 0; n < i; n++)
+    {
+        if (ch[j + n] == '0')
+            u = u + (0 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '1')
+            u = u + (1 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '2')
+            u = u + (2 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '3')
+            u = u + (3 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '4')
+            u = u + (4 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '5')
+            u = u + (5 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '6')
+            u = u + (6 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '7')
+            u = u + (7 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '8')
+            u = u + (8 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == '9')
+            u = u + (9 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'a' || ch[j] == 'A')
+            u = u + (10 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'b' || ch[j] == 'B')
+            u = u + (11 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'c' || ch[j] == 'C')
+            u = u + (12 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'd' || ch[j] == 'D')
+            u = u + (13 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'e' || ch[j] == 'E')
+            u = u + (14 * (int)pow(16, i - n - 1));
+        if (ch[j + n] == 'f' || ch[j] == 'F')
+            u = u + (15 * (int)pow(16, i - n - 1));
+    }
+    return u;
+}
+float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//
+{
 
-//    return *((float*)Byte);//
-//}
+    return *((float*)Byte);//
+}
