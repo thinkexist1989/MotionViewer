@@ -250,7 +250,7 @@ void NdiCommProc::initsensor()
         requestData += this->ndi->readAll();
         strDisplay = QString(requestData);
     }
-    QThread::msleep(5000);
+    QThread::msleep(50);
 
     msg = "APIREV \r";
     ndi->write(msg);
@@ -267,13 +267,10 @@ void NdiCommProc::initsensor()
         requestData += this->ndi->readAll();
         strDisplay = QString(requestData);
 
-        //ui.textBrowser->insertPlainText(strDisplay);
-    //ui.textBrowser->moveCursor(QTextCursor::End);
-    //	return strDisplay;
-    //	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+
     }
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(500);
+    QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "COMM 70001\r";
     ndi->write(msg);
@@ -282,13 +279,10 @@ void NdiCommProc::initsensor()
         requestData += this->ndi->readAll();
         strDisplay = QString(requestData);
 
-        //ui.textBrowser->insertPlainText(strDisplay);
-    //ui.textBrowser->moveCursor(QTextCursor::End);
-    //	return strDisplay;
-    //	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
+
     }
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(500);
+    QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "COMM 50001\r";
     ndi->write(msg);
@@ -297,13 +291,9 @@ void NdiCommProc::initsensor()
         requestData += this->ndi->readAll();
         strDisplay = QString(requestData);
 
-        //ui.textBrowser->insertPlainText(strDisplay);
-    //ui.textBrowser->moveCursor(QTextCursor::End);
-    //	return strDisplay;
-    //	QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     }
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(500);
+    QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "test\r";
     ndi->write(msg);
@@ -342,7 +332,7 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
     QThread::msleep(500);
     msg = "INIT:E3A5\r";
@@ -352,18 +342,18 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GET:Device.*722D\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PHSR:0020FF\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -371,9 +361,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PINIT:0131EA\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -381,9 +371,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PHSR:0020FF\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -391,9 +381,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Param.Tracking.*8D17\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -401,9 +391,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Features.Firmware.Version0492\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -411,9 +401,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Info.Status.Alerts340A\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -421,18 +411,18 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Info.Status.New Alerts33A3\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Features.Hardware.Serial Number68E4\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -440,9 +430,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "VER:4A6EF\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -450,9 +440,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Features.Tools.*F635\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -460,9 +450,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "SFLIST:03500F\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -470,7 +460,7 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
     QThread::msleep(500);
     msg = "GETINFO:Param.Tracking.Selected VolumeC200\r";
@@ -480,9 +470,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PHINF:0100753CAF\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -490,18 +480,18 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(5000);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:SCU-0.Info.Status.New AlertsAF34\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:SCU-0.Info.Status.AlertsC917\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -509,9 +499,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Info.Status.New Alerts33A3\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -519,9 +509,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:Info.Status.Alerts340A\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -529,9 +519,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:STB-0.Info.Status.New AlertsCC4F\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -539,9 +529,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "GETINFO:STB-0.Info.Status.Alerts389B\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -549,9 +539,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "TSTART:5423\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -559,9 +549,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "BX:18033D6C\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -569,9 +559,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "TSTOP:2C14\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -579,9 +569,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "SET:Param.Tracking.Illuminator Rate=2237A\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -589,9 +579,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PHRQ:*********1****A4C1\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -599,9 +589,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0200004E444900AF12000001000000000000010000000002DC32355A00000004000000040000000000403F000000000000000000000000000000000000000000000000610B\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -609,9 +599,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0200400000204100000000000000000000000000000000000000001F853D4285EBE74100000000000000003333B24200000000A4700DC2A4700D4200000000000000002B7A\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -619,9 +609,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:020080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005DEA\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -629,9 +619,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0200C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006EF1\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -639,9 +629,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:02010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000803F00000000678F\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -649,9 +639,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:020140000000000000803F00000000000000000000803F00000000000000000000803F00000000000000000000000000000000000000000000000000000000000000008535\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -659,9 +649,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:020180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009DD2\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -669,9 +659,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0201C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AEC9\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -679,9 +669,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203000000000000000000000000000000001F1F1F1FC0FA\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -689,9 +679,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:020240090000004E44490000000000000000003837303034343900000000000000000000000000090101010100000000000000000000000000000000010101010000008755\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -699,9 +689,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:020280000000000000000000000000008000290000000000000000000080BF0000000000000000000000000000000000000000000000000000000000000000000000002FB1\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -709,9 +699,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PVWR:0202C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AE82\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -719,9 +709,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
 
     msg = "PINIT:0230AA\r";
     ndi->write(msg);
@@ -730,9 +720,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PHINF:0200753CEB\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -740,9 +730,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "TSTART:5423\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -750,9 +740,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "BX:18033D6C\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -760,9 +750,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "TSTOP:2C14\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -770,9 +760,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
     msg = "PENA:02D9D3B\r";
     ndi->write(msg);
     if (this->ndi->waitForReadyRead(50))
@@ -780,9 +770,9 @@ void NdiCommProc::initsensor()
         strDisplay = QString(requestData);
 
 
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
 
     msg = "TSTART:5423\r";
     ndi->write(msg);
@@ -790,9 +780,9 @@ void NdiCommProc::initsensor()
     {
         requestData += this->ndi->readAll();
         strDisplay = QString(requestData);
-        QThread::msleep(500);
+        QThread::msleep(50);
     }
-    QThread::msleep(500);
+    QThread::msleep(50);
 
     //QString finish;
 
