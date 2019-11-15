@@ -205,6 +205,7 @@ QMap<QString,QList<float>>NdiViewer::getToolDefination()
 QList<float> Tool1;
 QList<float> Tool2;
 QList<float> Tool3;
+QList<float> Tool4;
 Tool1.push_back(137);
 Tool1.push_back(103);
 Tool1.push_back(88);
@@ -223,9 +224,16 @@ Tool3.push_back(65);
 Tool3.push_back(60);
 Tool3.push_back(54);
 Tool3.push_back(50);
+Tool4.push_back(150);
+Tool4.push_back(116);
+Tool4.push_back(105);
+Tool4.push_back(66);
+Tool4.push_back(60);
+Tool4.push_back(51);
 ToolDefination.insert("Needle",Tool1);
 ToolDefination.insert("HoloLens",Tool2);
 ToolDefination.insert("BoneDrill",Tool3);
+ToolDefination.insert("Kinect",Tool4);
 //加一个读取文本的东西
 return ToolDefination;
 }
