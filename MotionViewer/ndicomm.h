@@ -13,6 +13,8 @@ namespace Ui {
     class NdiComm;
 }
 
+class NdiCommProc;
+
 class NdiComm : public QWidget
 {
     Q_OBJECT
@@ -73,28 +75,28 @@ class NdiCommProc : public QObject
 public:
     explicit NdiCommProc(NdiComm* ndi, QObject *parent = nullptr);
     ~NdiCommProc();
-	float q;
+    float q;
     NdiComm *ndi;
-	const char *msg;
+    const char *msg;
 
     QByteArray requestData;
     QString strDisplay;
 
     QByteArray requestData1;
-	void initsensor(); //FOR SU SHUN   
+    void initsensor(); //FOR SU SHUN
 signals:
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
 
 public slots:
-	
+
     void printThread();
     void data_read(); //FOR SU SHUN
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:
-	int ConvertHexQString(QString ch, int i, int j);
-	float Hex_To_Decimal(unsigned char * Byte);
+    int ConvertHexQString(QString ch, int i, int j);
+    float Hex_To_Decimal(unsigned char * Byte);
     template<typename T> T getNum(const char* p);
 };
 

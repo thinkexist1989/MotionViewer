@@ -2,6 +2,7 @@
 #include "ui_ndicomm.h"
 #include <QDebug>
 #include <QtEndian>
+#include <stdio.h>
 
 NdiComm::NdiComm(QWidget *parent) :
     QWidget(parent),
@@ -841,7 +842,8 @@ void NdiCommProc::get_data()
 template<typename T> T NdiCommProc::getNum(const char *p)
 {
     T temp;
-    memcpy_s(&temp, sizeof (T), p, sizeof (T));
+    //memcpy_s(&temp, sizeof (T), p, sizeof (T));
+    memcpy(&temp, p, sizeof (T));
     return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
 }
 

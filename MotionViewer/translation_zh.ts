@@ -25,47 +25,47 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>HoloComm</name>
     <message>
-        <location filename="holocomm.ui" line="20"/>
+        <location filename="holocomm.ui" line="26"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="34"/>
+        <location filename="holocomm.ui" line="40"/>
         <source>Protocol</source>
         <translation>协议</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="57"/>
+        <location filename="holocomm.ui" line="63"/>
         <source>Type as</source>
         <translation>类型</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="80"/>
+        <location filename="holocomm.ui" line="86"/>
         <source>IP</source>
         <translation>IP地址</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="103"/>
+        <location filename="holocomm.ui" line="109"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="126"/>
+        <location filename="holocomm.ui" line="132"/>
         <source>Local IP</source>
         <translation>本地IP</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="149"/>
+        <location filename="holocomm.ui" line="155"/>
         <source>Local Port</source>
         <translation>本地端口</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="176"/>
+        <location filename="holocomm.ui" line="182"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="holocomm.ui" line="193"/>
+        <location filename="holocomm.ui" line="199"/>
         <source>Disconnect</source>
         <translation>断开</translation>
     </message>
@@ -134,182 +134,198 @@ p, li { white-space: pre-wrap; }
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="85"/>
+        <location filename="mainwindow.ui" line="73"/>
         <source>NDI Comm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="94"/>
+        <location filename="mainwindow.ui" line="88"/>
         <source>HoloLens Comm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="106"/>
-        <location filename="mainwindow.ui" line="160"/>
+        <location filename="mainwindow.ui" line="100"/>
+        <location filename="mainwindow.ui" line="154"/>
         <source>NDI Viewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="115"/>
-        <location filename="mainwindow.ui" line="178"/>
+        <location filename="mainwindow.ui" line="109"/>
+        <location filename="mainwindow.ui" line="172"/>
         <source>HoloLens Viewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="128"/>
+        <location filename="mainwindow.ui" line="122"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="137"/>
+        <location filename="mainwindow.ui" line="131"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="142"/>
+        <location filename="mainwindow.ui" line="136"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="157"/>
+        <location filename="mainwindow.ui" line="151"/>
         <source>NdiViewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="175"/>
+        <location filename="mainwindow.ui" line="169"/>
         <source>HoloViewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="190"/>
+        <location filename="mainwindow.ui" line="184"/>
         <source>KinectViewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="193"/>
+        <location filename="mainwindow.ui" line="187"/>
         <source>Kinect Viewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="37"/>
+        <location filename="mainwindow.cpp" line="42"/>
         <source>Open About Dialog</source>
         <translation>打开“关于”</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="78"/>
+        <source>Exit</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="78"/>
+        <source>Are you sure to close this program?</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="114"/>
+        <location filename="mainwindow.cpp" line="120"/>
+        <source>GUI Language Changed</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>NdiComm</name>
     <message>
-        <location filename="ndicomm.ui" line="32"/>
+        <location filename="ndicomm.ui" line="26"/>
         <source>NDI COMM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="46"/>
+        <location filename="ndicomm.ui" line="40"/>
         <source>Flow Ctrl</source>
         <translation>流控制</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="69"/>
+        <location filename="ndicomm.ui" line="63"/>
         <source>Data Bits</source>
         <translation>数据位</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="92"/>
+        <location filename="ndicomm.ui" line="86"/>
         <source>Buadrate</source>
         <translation>波特率</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="115"/>
+        <location filename="ndicomm.ui" line="109"/>
         <source>Port Name</source>
         <translation>端口号</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="128"/>
+        <location filename="ndicomm.ui" line="122"/>
         <source>Stop Bits</source>
         <translation>停止位</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="161"/>
+        <location filename="ndicomm.ui" line="155"/>
         <source>Parity</source>
         <translation>校验位</translation>
     </message>
     <message>
-        <location filename="ndicomm.ui" line="181"/>
+        <location filename="ndicomm.ui" line="175"/>
         <source>Open</source>
         <translation>打开串口</translation>
     </message>
     <message>
         <location filename="ndicomm.ui" line="192"/>
-        <location filename="ndicomm.cpp" line="199"/>
+        <location filename="ndicomm.cpp" line="200"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="38"/>
+        <location filename="ndicomm.cpp" line="39"/>
         <source>Name: </source>
         <translation>串口名称： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="39"/>
+        <location filename="ndicomm.cpp" line="40"/>
         <source>Description: </source>
         <translation>串口描述： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="40"/>
+        <location filename="ndicomm.cpp" line="41"/>
         <source>Manufacturer: </source>
         <translation>生产厂商： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="59"/>
-        <location filename="ndicomm.cpp" line="76"/>
-        <location filename="ndicomm.cpp" line="78"/>
-        <location filename="ndicomm.cpp" line="83"/>
-        <location filename="ndicomm.cpp" line="123"/>
+        <location filename="ndicomm.cpp" line="60"/>
+        <location filename="ndicomm.cpp" line="77"/>
+        <location filename="ndicomm.cpp" line="79"/>
+        <location filename="ndicomm.cpp" line="84"/>
+        <location filename="ndicomm.cpp" line="124"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="59"/>
-        <location filename="ndicomm.cpp" line="85"/>
+        <location filename="ndicomm.cpp" line="60"/>
+        <location filename="ndicomm.cpp" line="86"/>
         <source>Odd</source>
         <translation>奇校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="59"/>
-        <location filename="ndicomm.cpp" line="87"/>
+        <location filename="ndicomm.cpp" line="60"/>
+        <location filename="ndicomm.cpp" line="88"/>
         <source>Even</source>
         <translation>偶校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="76"/>
-        <location filename="ndicomm.cpp" line="125"/>
+        <location filename="ndicomm.cpp" line="77"/>
+        <location filename="ndicomm.cpp" line="126"/>
         <source>Hardware</source>
         <translation>硬件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="76"/>
-        <location filename="ndicomm.cpp" line="127"/>
+        <location filename="ndicomm.cpp" line="77"/>
+        <location filename="ndicomm.cpp" line="128"/>
         <source>Software</source>
         <translation>软件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="155"/>
-        <location filename="ndicomm.cpp" line="170"/>
+        <location filename="ndicomm.cpp" line="156"/>
+        <location filename="ndicomm.cpp" line="171"/>
         <source>Close</source>
         <translation>关闭串口</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="160"/>
+        <location filename="ndicomm.cpp" line="161"/>
         <source>Failed to open serial port</source>
         <translation>串口打开失败</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="187"/>
+        <location filename="ndicomm.cpp" line="188"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="191"/>
+        <location filename="ndicomm.cpp" line="192"/>
         <source>Please Open Serial Port First!</source>
         <translation>请先打开串口！</translation>
     </message>
@@ -317,14 +333,99 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>NdiViewer</name>
     <message>
-        <location filename="ndiviewer.ui" line="14"/>
+        <location filename="ndiviewer.ui" line="20"/>
         <source>Form</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="ndiviewer.cpp" line="19"/>
+        <location filename="ndiviewer.ui" line="26"/>
+        <source>Markers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="78"/>
+        <source>X-coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="90"/>
+        <source>Y-coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="103"/>
+        <source>Z-coordinate</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="121"/>
+        <source>Calibration</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="179"/>
+        <source>1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="184"/>
+        <source>2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="189"/>
+        <source>3</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="194"/>
+        <source>4</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="202"/>
+        <source>Functions</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="214"/>
+        <source>Steps:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="230"/>
+        <source>Execute</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="35"/>
+        <source>1. Virtual Tool Pose</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="35"/>
+        <source>2. Actual Tool Pose</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="35"/>
+        <source>3. Update Calibration Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="71"/>
         <source>Coordinate is received by NdiViewer, value is: </source>
         <translation>NdiViewer接收到坐标信息，其值为： </translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="165"/>
+        <source>检测到工具: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.cpp" line="165"/>
+        <source>坐标为: </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

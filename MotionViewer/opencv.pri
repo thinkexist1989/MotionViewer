@@ -1,7 +1,6 @@
+win32:{
 !build_pass:message(OpenCV Directory is $$(OPENCV))
 INCLUDEPATH += $$(OPENCV)/include
-
-win32:{
     Debug:{
         LIBS += -l$$(OPENCV)/lib/opencv_world345d
     }
@@ -12,7 +11,7 @@ win32:{
 
 unix:!macx {
 	CONFIG += link_pkgconfig
-	PKGCONFIG += opencv
+        PKGCONFIG += opencv
 }
 
 unix:macx {
