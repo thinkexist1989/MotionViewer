@@ -5,6 +5,7 @@
 #include <QList>
 #include <QVector3D>
 #include <QMatrix4x4>
+#include <nditool.h>
 
 namespace Ui {
 class NdiViewer;
@@ -21,21 +22,28 @@ public:
     QMatrix4x4 virtualTransformMatrix;
     QMatrix4x4 realTransformMatrix;
     QMatrix4x4 calibrationMatrix;
-    QMap<QString,QList<QVector3D>> ToolsNumAndPose;
+    QMap<QString,QList<QVector3D>> ToolStates;
+    QList<NdiTool> toolInfos;
 private:
     Ui::NdiViewer *ui;
 
-    void refreshMarkersView(QList<QVector3D> data);
-    //void judgeTool(QList<QVector3D> data);
+    void refreshMarkersView(QList<QVector3D> data); //show marker detected by NDI
+    void refreshToolView(QMap<QString,QList<QVector3D>> toolStatus);// show detected tools
+
+    //void showToolName(QStringList );
     void refreshMatrixView(QMatrix4x4 mat);
+
+
     void init();
     bool isTool(double *distance,QList<float>,int &count);
     QMap<QString,QList<float>>getToolDefination();
     QMap<QString,int> judgeTool(double *dis,  QString &toolname,int &count);
+
     QMatrix4x4 getVirtualTransformMatrix(); // Virtual tool pose
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
-    QMap<QString,QList<QVector3D>> getToolsNumAndPose(QList<QVector3D> data);//tool number and pose
+
+    QMap<QString,QList<QVector3D>> getToolStatus(QList<QVector3D> data);//tool name and pose
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
 

@@ -256,76 +256,76 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="ndicomm.ui" line="192"/>
-        <location filename="ndicomm.cpp" line="200"/>
+        <location filename="ndicomm.cpp" line="201"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="39"/>
+        <location filename="ndicomm.cpp" line="40"/>
         <source>Name: </source>
         <translation>串口名称： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="40"/>
+        <location filename="ndicomm.cpp" line="41"/>
         <source>Description: </source>
         <translation>串口描述： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="41"/>
+        <location filename="ndicomm.cpp" line="42"/>
         <source>Manufacturer: </source>
         <translation>生产厂商： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="60"/>
-        <location filename="ndicomm.cpp" line="77"/>
-        <location filename="ndicomm.cpp" line="79"/>
-        <location filename="ndicomm.cpp" line="84"/>
-        <location filename="ndicomm.cpp" line="124"/>
+        <location filename="ndicomm.cpp" line="61"/>
+        <location filename="ndicomm.cpp" line="78"/>
+        <location filename="ndicomm.cpp" line="80"/>
+        <location filename="ndicomm.cpp" line="85"/>
+        <location filename="ndicomm.cpp" line="125"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="60"/>
-        <location filename="ndicomm.cpp" line="86"/>
+        <location filename="ndicomm.cpp" line="61"/>
+        <location filename="ndicomm.cpp" line="87"/>
         <source>Odd</source>
         <translation>奇校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="60"/>
-        <location filename="ndicomm.cpp" line="88"/>
+        <location filename="ndicomm.cpp" line="61"/>
+        <location filename="ndicomm.cpp" line="89"/>
         <source>Even</source>
         <translation>偶校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="77"/>
-        <location filename="ndicomm.cpp" line="126"/>
+        <location filename="ndicomm.cpp" line="78"/>
+        <location filename="ndicomm.cpp" line="127"/>
         <source>Hardware</source>
         <translation>硬件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="77"/>
-        <location filename="ndicomm.cpp" line="128"/>
+        <location filename="ndicomm.cpp" line="78"/>
+        <location filename="ndicomm.cpp" line="129"/>
         <source>Software</source>
         <translation>软件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="156"/>
-        <location filename="ndicomm.cpp" line="171"/>
+        <location filename="ndicomm.cpp" line="157"/>
+        <location filename="ndicomm.cpp" line="172"/>
         <source>Close</source>
         <translation>关闭串口</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="161"/>
+        <location filename="ndicomm.cpp" line="162"/>
         <source>Failed to open serial port</source>
         <translation>串口打开失败</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="188"/>
+        <location filename="ndicomm.cpp" line="189"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="192"/>
+        <location filename="ndicomm.cpp" line="193"/>
         <source>Please Open Serial Port First!</source>
         <translation>请先打开串口！</translation>
     </message>

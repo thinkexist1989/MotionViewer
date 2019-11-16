@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
+    <width>900</width>
     <height>419</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QGridLayout" name="gridLayout_3" columnstretch="3,5">
    <item row="0" column="0">
     <widget class="QGroupBox" name="grpMarkers">
      <property name="title">
@@ -30,7 +30,7 @@
        <widget class="QTableWidget" name="tblMarkersView">
         <property name="minimumSize">
          <size>
-          <width>350</width>
+          <width>0</width>
           <height>0</height>
          </size>
         </property>
@@ -75,7 +75,15 @@
         </attribute>
         <column>
          <property name="text">
-          <string>X-coordinate</string>
+          <string>x</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="textAlignment">
           <set>AlignCenter</set>
@@ -87,7 +95,15 @@
         </column>
         <column>
          <property name="text">
-          <string>Y-coordinate</string>
+          <string>y</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="textAlignment">
           <set>AlignCenter</set>
@@ -100,7 +116,15 @@
         </column>
         <column>
          <property name="text">
-          <string>Z-coordinate</string>
+          <string>z</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
          </property>
          <property name="textAlignment">
           <set>AlignCenter</set>
@@ -120,9 +144,71 @@
      <property name="title">
       <string>Calibration</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2" rowstretch="5,1">
+     <layout class="QGridLayout" name="gridLayout_2" rowstretch="5,1" columnstretch="1,3,0">
       <item row="0" column="0">
-       <widget class="QTableWidget" name="tblMatrixView">
+       <widget class="QListWidget" name="lstToolName"/>
+      </item>
+      <item row="1" column="0" colspan="3">
+       <widget class="QGroupBox" name="grpFunctions">
+        <property name="title">
+         <string>Functions</string>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,5,2">
+         <item>
+          <widget class="QLabel" name="lblSteps">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Steps:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QComboBox" name="cmbSteps">
+           <item>
+            <property name="text">
+             <string>1. Model</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>2. Calibration Needle</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>3. Revise Matrix</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
+             <string>4. Bone Drill</string>
+            </property>
+           </item>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnExec">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text">
+            <string>Execute</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QTableWidget" name="tblToolMarkers">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -172,66 +258,59 @@
          <number>30</number>
         </attribute>
         <attribute name="verticalHeaderStretchLastSection">
-         <bool>true</bool>
+         <bool>false</bool>
         </attribute>
         <column>
          <property name="text">
-          <string>1</string>
+          <string>x</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/res/coordinates.ico</normaloff>:/icon/res/coordinates.ico</iconset>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>2</string>
+          <string>y</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/res/coordinates.ico</normaloff>:/icon/res/coordinates.ico</iconset>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>3</string>
+          <string>z</string>
+         </property>
+         <property name="font">
+          <font>
+           <family>Times New Roman</family>
+           <weight>75</weight>
+           <italic>true</italic>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icon/res/coordinates.ico</normaloff>:/icon/res/coordinates.ico</iconset>
          </property>
         </column>
-        <column>
-         <property name="text">
-          <string>4</string>
-         </property>
-        </column>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QGroupBox" name="grpFunctions">
-        <property name="title">
-         <string>Functions</string>
-        </property>
-        <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,5,2">
-         <item>
-          <widget class="QLabel" name="lblSteps">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Steps:</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="cmbSteps"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btnExec">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Execute</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
       </item>
      </layout>

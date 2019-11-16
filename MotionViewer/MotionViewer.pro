@@ -31,7 +31,8 @@ SOURCES += \
     ndicomm.cpp \
     ndiviewer.cpp \
     holocomm.cpp \
-    holoviewer.cpp
+    holoviewer.cpp \
+    nditool.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     ndicomm.h \
     ndiviewer.h \
     holocomm.h \
-    holoviewer.h
+    holoviewer.h \
+    nditool.h
 
 FORMS += \
         mainwindow.ui \
