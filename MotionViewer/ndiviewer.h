@@ -22,16 +22,17 @@ public:
     QMatrix4x4 virtualTransformMatrix;
     QMatrix4x4 realTransformMatrix;
     QMatrix4x4 calibrationMatrix;
-    QMap<QString,QList<QVector3D>> ToolStates;
+    QMap<QString,QList<QVector3D>> ToolsNumAndPose;
+    QList<NdiTool> ToolStates;
     QList<NdiTool> toolInfos;
 private:
     Ui::NdiViewer *ui;
 
     void refreshMarkersView(QList<QVector3D> data); //show marker detected by NDI
-    void refreshToolView(QMap<QString,QList<QVector3D>> toolStatus);// show detected tools
-
-    //void showToolName(QStringList );
     void refreshMatrixView(QMatrix4x4 mat);
+
+    void refreshToolView(QMap<QString,QList<QVector3D>> toolStatus);// show detected tools
+    void refreshMarkersInTool(NdiTool tool);
 
 
     void init();
@@ -43,7 +44,7 @@ private:
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
 
-    QMap<QString,QList<QVector3D>> getToolStatus(QList<QVector3D> data);//tool name and pose
+    QMap<QString,QList<QVector3D>> getToolsNumAndPose(QList<QVector3D> data);//tool name and pose
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
 

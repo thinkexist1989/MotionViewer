@@ -11,6 +11,8 @@ class NdiTool : public QObject
     Q_OBJECT
 public:
     explicit NdiTool(QObject *parent = nullptr);
+
+    bool operator==(const NdiTool &t); //overload operator== to judge if tool is equal
 private:
     QString name;
     QList<QVector3D> markers;

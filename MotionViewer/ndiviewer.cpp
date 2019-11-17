@@ -70,7 +70,7 @@ void NdiViewer::dataProc(QList<QVector3D> data)
     QMap<QString,QList<QVector3D>>freshtool;
     qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
-    freshtool=getToolStatus(data);
+    freshtool=getToolsNumAndPose(data);
 
 }
 
@@ -122,7 +122,7 @@ void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
     }
 }
 
-QMap<QString,QList<QVector3D>> NdiViewer::getToolStatus(QList<QVector3D> data)
+QMap<QString,QList<QVector3D>> NdiViewer::getToolsNumAndPose(QList<QVector3D> data)
 {
     QString toolname;
     QMap<QString,QList<QVector3D>> detectedTool;
