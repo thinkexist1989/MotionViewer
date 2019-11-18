@@ -14,9 +14,9 @@ HoloComm::HoloComm(QWidget *parent) :
 HoloComm::~HoloComm()
 {
     delete ui;
-//    delete tcpServer;
-//    delete tcpSocket;
-//    delete udpSocket;
+    //    delete tcpServer;
+    //    delete tcpSocket;
+    //    delete udpSocket;
 }
 
 void HoloComm::init()
@@ -129,8 +129,7 @@ bool HoloComm::udpInit()
 
     connect(udpSocket, &QUdpSocket::readyRead, this, &HoloComm::udpRecvDataProc);
 
-    return  true
-            ;
+    return  true;
 }
 
 void HoloComm::tcpNewConnectionProc()

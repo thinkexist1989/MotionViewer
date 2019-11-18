@@ -343,73 +343,61 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="78"/>
-        <source>X-coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.ui" line="90"/>
-        <source>Y-coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.ui" line="103"/>
-        <source>Z-coordinate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.ui" line="121"/>
+        <location filename="ndiviewer.ui" line="145"/>
         <source>Calibration</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="179"/>
-        <source>1</source>
+        <location filename="ndiviewer.ui" line="78"/>
+        <location filename="ndiviewer.ui" line="265"/>
+        <source>x</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="184"/>
-        <source>2</source>
+        <location filename="ndiviewer.ui" line="98"/>
+        <location filename="ndiviewer.ui" line="282"/>
+        <source>y</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="189"/>
-        <source>3</source>
+        <location filename="ndiviewer.ui" line="119"/>
+        <location filename="ndiviewer.ui" line="299"/>
+        <source>z</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="194"/>
-        <source>4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.ui" line="202"/>
+        <location filename="ndiviewer.ui" line="154"/>
         <source>Functions</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="214"/>
+        <location filename="ndiviewer.ui" line="166"/>
         <source>Steps:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="ndiviewer.ui" line="230"/>
+        <location filename="ndiviewer.ui" line="174"/>
+        <source>1. Model</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="179"/>
+        <source>2. Calibration Needle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="184"/>
+        <source>3. Revise Matrix</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="189"/>
+        <source>4. Bone Drill</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="ndiviewer.ui" line="203"/>
         <source>Execute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.cpp" line="35"/>
-        <source>1. Virtual Tool Pose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.cpp" line="35"/>
-        <source>2. Actual Tool Pose</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndiviewer.cpp" line="35"/>
-        <source>3. Update Calibration Matrix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -419,12 +407,12 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="ndiviewer.cpp" line="165"/>
-        <source>检测到工具: </source>
+        <source>Find tools: </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="ndiviewer.cpp" line="165"/>
-        <source>坐标为: </source>
+        <source>Coordinate is: </source>
         <translation type="unfinished"></translation>
     </message>
 </context>

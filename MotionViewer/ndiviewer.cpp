@@ -67,7 +67,7 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-    QMap<QString,QList<QVector3D>>freshtool;
+    QMap<QString,QList<QVector3D>> freshtool;
     qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
     freshtool=getToolsNumAndPose(data);
@@ -88,17 +88,19 @@ void NdiViewer::on_btnExec_clicked()
 {
     const int index = ui->cmbSteps->currentIndex();
     switch (index) {
-    case 0://step 1
+    case 0://step 1:model
         virtualTransformMatrix = getVirtualTransformMatrix();
         refreshMatrixView(virtualTransformMatrix);
         break;
-    case 1://step 2
+    case 1://step 2:calibration needle
         realTransformMatrix = getRealTransformMatrix();
         refreshMatrixView(realTransformMatrix);
         break;
-    case 2://step 3
+    case 2://step 3:revise matrix
         calibrationMatrix = getCalibrationMatrix();
         refreshMatrixView(calibrationMatrix);
+        break;
+    case 3: //step 4:bone drill
         break;
     default:
         break;
