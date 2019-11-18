@@ -7,6 +7,7 @@
 #include <QUdpSocket>
 #include <QByteArray>
 #include <QMatrix4x4>
+#include <transform.h>
 
 #define TCP_SERVER 0
 #define TCP_CLIENT 1
@@ -27,6 +28,8 @@ public:
 
     void init();
     bool write(QByteArray ba);
+
+    bool writeMatrix(int command, QList<QMatrix4x4> matrixList);
 
 
 private slots:

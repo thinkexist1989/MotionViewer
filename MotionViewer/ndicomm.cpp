@@ -183,7 +183,7 @@ void NdiComm::on_startButton_clicked()
             ndiThread->start();
             ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
             timer->start(100);
 
             ui->startButton->setText(tr("Stop"));
@@ -841,10 +841,15 @@ void NdiCommProc::get_data()
 
 template<typename T> T NdiCommProc::getNum(const char *p)
 {
-    T temp;
+    T temp = 0;
+    int len = sizeof(T);
     //memcpy_s(&temp, sizeof (T), p, sizeof (T));
-    memcpy(&temp, p, sizeof (T));
-    return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
+    for (int i = 0;i < len; i++) {
+        memcpy(&((&temp)[i]), &(p[len-i-1]), 1);
+    }
+    //memcpy(&temp, p, sizeof (T));
+    //return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
+    return temp;
 }
 
 

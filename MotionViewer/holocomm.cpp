@@ -58,6 +58,20 @@ bool HoloComm::write(QByteArray ba)
     }
 }
 
+bool HoloComm::writeMatrix(int command, QList<QMatrix4x4> matrixList)
+{
+    QByteArray ba;
+    int dataLen = matrixList.count()*16; //Every Matrix is 4x4
+    ba.resize(dataLen+2);
+    char* p = ba.data();
+    ba[0] = static_cast<char>(command);
+    ba[1] = static_cast<char>(dataLen);
+    for (int i = 0; i< matrixList.count(); i++) {
+        memcpy(&(p[2+i*16]), matrixList.at(i).data(), 16);
+    }
+    return write(ba);
+}
+
 void HoloComm::on_cmbProtocol_currentIndexChanged(const QString &arg1)
 {
     if(arg1 == "TCP") {
@@ -207,7 +221,22 @@ void HoloComm::on_disconnectButton_clicked()
 
 void HoloComm::commandProc(int command, QList<QMatrix4x4> matrixList)
 {
+//    switch(command) {
+//    case HOLO_INFO:
+//        break;
+//    case HOLO_MODEL:
+//        break;
+//    case HOLO_CALI_NEEDLE:
+//        break;
+//    case HOLO_REVISE_MATRIX:
+//        break;
+//    case HOLO_BONE_DRILL:
+//        break;
+//    default:
+//        break;
+//    }
 
+    writeMatrix(command, matrixList);
 }
 
 void HoloComm::changeEvent(QEvent *event)
