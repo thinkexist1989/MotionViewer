@@ -205,6 +205,11 @@ void HoloComm::on_disconnectButton_clicked()
     ui->connectButton->setEnabled(true);
 }
 
+void HoloComm::commandProc(int command, QList<QMatrix4x4> matrixList)
+{
+
+}
+
 void HoloComm::changeEvent(QEvent *event)
 {
     if(event->type() == QEvent::LanguageChange) {

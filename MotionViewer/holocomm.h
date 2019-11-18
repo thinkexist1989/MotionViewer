@@ -6,6 +6,7 @@
 #include <QTcpSocket>
 #include <QUdpSocket>
 #include <QByteArray>
+#include <QMatrix4x4>
 
 #define TCP_SERVER 0
 #define TCP_CLIENT 1
@@ -47,6 +48,7 @@ private:
 
 signals:
     void dataReady(QString);
+    void holoMatrixReady(QMatrix4x4);
 
 private slots:
     void tcpNewConnectionProc();
@@ -56,6 +58,9 @@ private slots:
 
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
+
+public slots:
+    void commandProc(int,QList<QMatrix4x4>);
 
 protected:
     void changeEvent(QEvent *event);

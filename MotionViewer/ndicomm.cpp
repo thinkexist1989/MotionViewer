@@ -20,7 +20,7 @@ NdiComm::NdiComm(QWidget *parent) :
 	this->markers = data;
         emit this->dataReady(markers);});
 
-    ndiThread = new QThread(this);
+    ndiThread = new QThread(nullptr);
 
 }
 

@@ -11,7 +11,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ndiComm(new NdiComm),
     ndiViewer(new NdiViewer),
     holoComm(new HoloComm),
-    holoViewer(new HoloViewer)
+    holoViewer(new HoloViewer),
+    transform(new Transform),
+    transformThread(new QThread)
 {
     ui->setupUi(this);
     loadSettings();
@@ -27,9 +29,14 @@ MainWindow::MainWindow(QWidget *parent) :
     //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
     //connect(holoComm, &HoloComm::dataReady, this, [=](QString data){qDebug() << "Received data is: " << data;});
 
+    transform->moveToThread(transformThread);
+    transformThread->start();
 
     connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc);
     connect(holoComm, &HoloComm::dataReady,holoViewer, &HoloViewer::dataProc);
+
+    connect(ndiViewer, &NdiViewer::readyForTransform, transform, &Transform::transformProc);
+    connect(transform, &Transform::readyForHololens, holoComm, &HoloComm::commandProc);
 }
 
 MainWindow::~MainWindow()

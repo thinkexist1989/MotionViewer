@@ -72,7 +72,7 @@ void NdiViewer::dataProc(QList<QVector3D> data)
     refreshMarkersView(data);
     freshtool=getToolsNumAndPose(data);
 
-    emit readyForRegistrate(freshtool); //emit signal to registrate
+    emit readyForTransform(freshtool); //emit signal to registrate
 
 }
 

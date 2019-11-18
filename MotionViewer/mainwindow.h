@@ -4,11 +4,14 @@
 #include <QMainWindow>
 #include <QTranslator>
 #include <QSettings>
+#include <QThread>
 
 #include "ndiviewer.h"
 #include "ndicomm.h"
 #include "holocomm.h"
 #include "holoviewer.h"
+#include "transform.h"
+#include "nditool.h"
 
 namespace Ui {
 class MainWindow;
@@ -41,6 +44,10 @@ private:
 
     HoloComm   *holoComm;
     HoloViewer *holoViewer;
+
+    Transform  *transform;
+
+    QThread *transformThread;
 
     QTranslator *chineseTranslator;
 
