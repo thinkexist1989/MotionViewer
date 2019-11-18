@@ -45,6 +45,10 @@ private:
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
 
     QMap<QString,QList<QVector3D>> getToolsNumAndPose(QList<QVector3D> data);//tool name and pose
+
+signals:
+    void readyForRegistrate(QMap<QString,QList<QVector3D>>); //signal for registrate
+
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
 
@@ -53,6 +57,7 @@ protected:
 private slots:
     void on_btnExec_clicked();
     void on_cmbSteps_currentIndexChanged(int index);
+
 };
 
 #endif // NDIVIEWER_H

@@ -13,6 +13,8 @@ public:
     explicit NdiTool(QObject *parent = nullptr);
 
     bool operator==(const NdiTool &t); //overload operator== to judge if tool is equal
+
+    QString getName() {return this->name);}
 private:
     QString name;
     QList<QVector3D> markers;

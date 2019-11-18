@@ -33,7 +33,7 @@ SOURCES += \
     holocomm.cpp \
     holoviewer.cpp \
     nditool.cpp \
-    registrationproc.cpp
+    transform.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +43,7 @@ HEADERS += \
     holocomm.h \
     holoviewer.h \
     nditool.h \
-    registrationproc.h
+    transform.h
 
 FORMS += \
         mainwindow.ui \
