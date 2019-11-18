@@ -7,5 +7,5 @@ NdiTool::NdiTool(QObject *parent) : QObject(parent)
 
 bool NdiTool::operator==(const NdiTool &t)
 {
-
+    return true;
 }

@@ -36,7 +36,7 @@ private:
 
 
     void init();
-    bool isTool(double *distance,QList<float>,int &count);
+    bool isTool(double *distance,QList<float> toolSize,int &count);
     QMap<QString,QList<float>>getToolDefination();
     QMap<QString,int> judgeTool(double *dis,  QString &toolname,int &count);
 

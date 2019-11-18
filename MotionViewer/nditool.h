@@ -16,6 +16,7 @@ public:
 private:
     QString name;
     QList<QVector3D> markers;
+    QList<QList<float>> markerDistances;
 
 signals:
 
