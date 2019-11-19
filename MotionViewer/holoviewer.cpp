@@ -16,7 +16,7 @@ HoloViewer::~HoloViewer()
 
 void HoloViewer::dataProc(QString data)
 {
-    qDebug() << "Received data is: " << data;
+    //qDebug() << "Received data is: " << data;
 }
 
 void HoloViewer::changeEvent(QEvent *event)

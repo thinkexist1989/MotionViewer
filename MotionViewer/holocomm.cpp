@@ -61,13 +61,14 @@ bool HoloComm::write(QByteArray ba)
 bool HoloComm::writeMatrix(int command, QList<QMatrix4x4> matrixList)
 {
     QByteArray ba;
-    int dataLen = matrixList.count()*16; //Every Matrix is 4x4
+    int dataLen = matrixList.count()*16*4; //Every Matrix is 4x4
+    qDebug() << "dataLen is:" << dataLen;
     ba.resize(dataLen+2);
     char* p = ba.data();
     ba[0] = static_cast<char>(command);
     ba[1] = static_cast<char>(dataLen);
     for (int i = 0; i< matrixList.count(); i++) {
-        memcpy(&(p[2+i*16]), matrixList.at(i).data(), 16);
+        memcpy(&(p[2+i*16*4]), matrixList.at(i).data(), 16*4); //column-major
     }
     return write(ba);
 }
@@ -146,6 +147,17 @@ bool HoloComm::udpInit()
     return  true;
 }
 
+void HoloComm::dataProc(QByteArray ba)
+{
+    if(ba.count() != 16*4)
+        return;
+
+    QMatrix4x4 mat(reinterpret_cast<float*>(ba.data()));
+
+    emit holoMatrixReady(mat);
+
+}
+
 void HoloComm::tcpNewConnectionProc()
 {
     tcpSocket = tcpServer->nextPendingConnection();
@@ -163,6 +175,8 @@ void HoloComm::tcpRecvDataProc()
     QByteArray buffer = tcpSocket->readAll();
     //write(buffer);
     emit dataReady(buffer);
+
+    dataProc(buffer);
 }
 
 void HoloComm::udpRecvDataProc()
@@ -172,7 +186,8 @@ void HoloComm::udpRecvDataProc()
         datagram.resize(static_cast<int>(udpSocket->pendingDatagramSize()));
         udpSocket->readDatagram(datagram.data(),datagram.size());
         write(datagram);
-        emit dataReady(datagram);
+        emit dataReady(datagram);        
+        dataProc(datagram);
     }
 }
 
@@ -221,21 +236,6 @@ void HoloComm::on_disconnectButton_clicked()
 
 void HoloComm::commandProc(int command, QList<QMatrix4x4> matrixList)
 {
-//    switch(command) {
-//    case HOLO_INFO:
-//        break;
-//    case HOLO_MODEL:
-//        break;
-//    case HOLO_CALI_NEEDLE:
-//        break;
-//    case HOLO_REVISE_MATRIX:
-//        break;
-//    case HOLO_BONE_DRILL:
-//        break;
-//    default:
-//        break;
-//    }
-
     writeMatrix(command, matrixList);
 }
 

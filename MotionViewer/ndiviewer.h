@@ -6,6 +6,8 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <nditool.h>
+#include <transform.h>
+#include <QMetaType>
 
 namespace Ui {
 class NdiViewer;
@@ -45,9 +47,10 @@ private:
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
 
     QMap<QString,QList<QVector3D>> getToolsNumAndPose(QList<QVector3D> data);//tool name and pose
+    QMap<QString,QList<QVector3D>> tools;
 
 signals:
-    void readyForTransform(QMap<QString,QList<QVector3D>>); //signal for registrate
+    void readyForTransform(int,QMap<QString,QList<QVector3D>>); //signal for transform
 
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates

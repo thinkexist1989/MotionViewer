@@ -17,6 +17,13 @@ NdiViewer::NdiViewer(QWidget *parent) :
 
     refreshMatrixView(virtualTransformMatrix);
 
+    QList<QVector3D> list1;
+    list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
+    tools["tool1"] = list1;
+
+    qRegisterMetaType<QMap<QString,QList<QVector3D>>>("QMap<QString,QList<QVector3D>>");
+    qRegisterMetaType<QList<QMatrix4x4>>("QList<QMatrix4x4>");
+
 }
 
 NdiViewer::~NdiViewer()
@@ -67,12 +74,9 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-    QMap<QString,QList<QVector3D>> freshtool;
     qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
-    freshtool=getToolsNumAndPose(data);
-
-    emit readyForTransform(freshtool); //emit signal to registrate
+    tools=getToolsNumAndPose(data);
 
 }
 
@@ -91,18 +95,16 @@ void NdiViewer::on_btnExec_clicked()
     const int index = ui->cmbSteps->currentIndex();
     switch (index) {
     case 0://step 1:model
-        virtualTransformMatrix = getVirtualTransformMatrix();
-        refreshMatrixView(virtualTransformMatrix);
+        emit readyForTransform(HOLO_MODEL,tools);//emit signal to registrate
         break;
     case 1://step 2:calibration needle
-        realTransformMatrix = getRealTransformMatrix();
-        refreshMatrixView(realTransformMatrix);
+        emit readyForTransform(HOLO_CALI_NEEDLE,tools);//emit signal to registrate
         break;
     case 2://step 3:revise matrix
-        calibrationMatrix = getCalibrationMatrix();
-        refreshMatrixView(calibrationMatrix);
+        emit readyForTransform(HOLO_REVISE_MATRIX,tools);//emit signal to registrate
         break;
     case 3: //step 4:bone drill
+        emit readyForTransform(HOLO_BONE_DRILL,tools);//emit signal to registrate
         break;
     default:
         break;

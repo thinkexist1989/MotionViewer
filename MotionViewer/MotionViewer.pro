@@ -33,7 +33,8 @@ SOURCES += \
     holocomm.cpp \
     holoviewer.cpp \
     nditool.cpp \
-    transform.cpp
+    transform.cpp \
+    regiviewer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     holocomm.h \
     holoviewer.h \
     nditool.h \
-    transform.h
+    transform.h \
+    regiviewer.h
 
 FORMS += \
         mainwindow.ui \
@@ -51,7 +53,8 @@ FORMS += \
     ndiviewer.ui \
     ndicomm.ui \
     holocomm.ui \
-    holoviewer.ui
+    holoviewer.ui \
+    regiviewer.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

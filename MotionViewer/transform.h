@@ -21,8 +21,20 @@ public:
 signals:
     void readyForHololens(int, QList<QMatrix4x4>);
 public slots:
-    void transformProc(QMap<QString,QList<QVector3D>>);
+    void transformProc(int, QMap<QString,QList<QVector3D>>);
     void holoMatrixProc(QMatrix4x4);
+    void poindCloudRegiMatProc(QMatrix4x4);
+
+private:
+    int currentCommand;
+    QMatrix4x4 poindCloudRegiMat;
+    QMatrix4x4 holoMat;
+    QMap<QString,QList<QVector3D>> tools;
+    QList<QMatrix4x4> matrixList;
+    void modelCalc();
+    void calibrationNeedleCalc();
+    void reviseMatrixCalc();
+    void boneDrillCalc();
 
 };
 

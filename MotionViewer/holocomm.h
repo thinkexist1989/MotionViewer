@@ -7,6 +7,7 @@
 #include <QUdpSocket>
 #include <QByteArray>
 #include <QMatrix4x4>
+#include <QList>
 #include <transform.h>
 
 #define TCP_SERVER 0
@@ -48,6 +49,8 @@ private:
     bool tcpServerInit();
     bool tcpClientInit();
     bool udpInit();
+
+    void dataProc(QByteArray ba); // process the data from HoloLens
 
 signals:
     void dataReady(QString);

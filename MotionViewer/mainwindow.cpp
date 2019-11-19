@@ -4,6 +4,7 @@
 #include <QDockWidget>
 #include <QDebug>
 #include <QMessageBox>
+#include <QMatrix4x4>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,11 +33,19 @@ MainWindow::MainWindow(QWidget *parent) :
     transform->moveToThread(transformThread);
     transformThread->start();
 
-    connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc);
-    connect(holoComm, &HoloComm::dataReady,holoViewer, &HoloViewer::dataProc);
+    connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc); //ndi msg come
+    connect(holoComm, &HoloComm::dataReady,holoViewer, &HoloViewer::dataProc); //holo
 
-    connect(ndiViewer, &NdiViewer::readyForTransform, transform, &Transform::transformProc);
-    connect(transform, &Transform::readyForHololens, holoComm, &HoloComm::commandProc);
+    connect(ndiViewer, &NdiViewer::readyForTransform, transform, &Transform::transformProc); // transform
+    connect(transform, &Transform::readyForHololens, holoComm, &HoloComm::commandProc);   // send msg to HoloLens
+
+    connect(holoComm, &HoloComm::holoMatrixReady, transform, &Transform::holoMatrixProc); // HoloLens return msg
+
+    //just for test
+//    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+//    qDebug() << "QMatrix is:" <<mat;
+
+//    qDebug() << "QMatrix data 2 is:" << mat.data()[2];
 }
 
 MainWindow::~MainWindow()
