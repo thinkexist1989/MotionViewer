@@ -10,6 +10,7 @@
 #include "ndicomm.h"
 #include "holocomm.h"
 #include "holoviewer.h"
+#include "regiviewer.h"
 #include "transform.h"
 #include "nditool.h"
 
@@ -44,6 +45,8 @@ private:
 
     HoloComm   *holoComm;
     HoloViewer *holoViewer;
+
+    RegiViewer *regiViewer;
 
     Transform  *transform;
 

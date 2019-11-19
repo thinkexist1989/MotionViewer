@@ -7,14 +7,15 @@
 #include <QMatrix4x4>
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    ndiComm(new NdiComm),
-    ndiViewer(new NdiViewer),
-    holoComm(new HoloComm),
-    holoViewer(new HoloViewer),
-    transform(new Transform),
-    transformThread(new QThread)
+                                          QMainWindow(parent),
+                                          ui(new Ui::MainWindow),
+                                          ndiComm(new NdiComm),
+                                          ndiViewer(new NdiViewer),
+                                          holoComm(new HoloComm),
+                                          holoViewer(new HoloViewer),
+                                          regiViewer(new RegiViewer),
+                                          transform(new Transform),
+                                          transformThread(new QThread)
 {
     ui->setupUi(this);
     loadSettings();
@@ -25,6 +26,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ndiViewerDockWidget->setWidget(ndiViewer);
     ui->holoCommDockWidget->setWidget(holoComm);
     ui->holoViewerDockWidget->setWidget(holoViewer);
+    ui->regiDockWidget->setWidget(regiViewer);
+
+    this->tabifyDockWidget(ui->ndiCommDockWidget,ui->holoCommDockWidget);
+    this->tabifyDockWidget(ui->holoCommDockWidget,ui->regiDockWidget);
+    this->tabifyDockWidget(ui->ndiViewerDockWidget,ui->holoViewerDockWidget);
+
+    ui->ndiCommDockWidget->raise();
+    ui->ndiViewerDockWidget->raise();
 
     //connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
     //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
@@ -42,10 +51,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(holoComm, &HoloComm::holoMatrixReady, transform, &Transform::holoMatrixProc); // HoloLens return msg
 
     //just for test
-//    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
-//    qDebug() << "QMatrix is:" <<mat;
+    //    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    //    qDebug() << "QMatrix is:" <<mat;
 
-//    qDebug() << "QMatrix data 2 is:" << mat.data()[2];
+    //    qDebug() << "QMatrix data 2 is:" << mat.data()[2];
 }
 
 MainWindow::~MainWindow()

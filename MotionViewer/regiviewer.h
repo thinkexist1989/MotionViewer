@@ -15,6 +15,9 @@ public:
     explicit RegiViewer(QWidget *parent = nullptr);
     ~RegiViewer();
 
+private slots:
+    void on_btnOpenFile_clicked();
+
 private:
     Ui::RegiViewer *ui;
 };
