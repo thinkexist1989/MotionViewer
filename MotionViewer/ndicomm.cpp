@@ -845,7 +845,7 @@ template<typename T> T NdiCommProc::getNum(const char *p)
     int len = sizeof(T);
     //memcpy_s(&temp, sizeof (T), p, sizeof (T));
     for (int i = 0;i < len; i++) {
-        memcpy(&((&temp)[i]), &(p[len-i-1]), 1);
+        memcpy(&((reinterpret_cast<char*>(&temp))[i]), &(p[len-i-1]), 1);
     }
     //memcpy(&temp, p, sizeof (T));
     //return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)

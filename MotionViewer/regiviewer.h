@@ -18,6 +18,8 @@ public:
 
     void showMatrix(QMatrix4x4 mat);
 
+    QMatrix4x4 poindCloudRegiMat;
+
 private slots:
     void on_btnOpenFile_clicked();
 

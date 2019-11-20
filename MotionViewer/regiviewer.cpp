@@ -1,6 +1,9 @@
 #include "regiviewer.h"
 #include "ui_regiviewer.h"
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QFile>
+#include <QTextStream>
 
 RegiViewer::RegiViewer(QWidget *parent) :
     QWidget(parent),
@@ -34,5 +37,31 @@ void RegiViewer::on_btnOpenFile_clicked()
 
 void RegiViewer::on_btnLoad_clicked()
 {
+    QString fileName = ui->ldtPointCloudRegiMatDir->text();
+    if(!QFile::exists(fileName)){
+        QMessageBox::warning(this,tr("Error File Path"), tr("Please input correct file path!"), QMessageBox::Ok);
+        return;
+    }
 
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly)) {
+        QMessageBox::warning(this,tr("Open File Failed"), tr("Can not open file!"), QMessageBox::Ok);
+        return;
+    }
+
+
+    QByteArray content = file.readAll();
+    int index = content.indexOf("MATRIX");
+    QString matString = content.mid(index);
+    QTextStream in(&matString);
+    in.readLine();
+    QList<float> values;
+    while(!in.atEnd()){
+        QString row = in.readLine();
+        float val;
+        in >> val;
+        values.push_back(val);
+    }
+    if(values.count() == 16)
+        qDebug() << values;
 }
