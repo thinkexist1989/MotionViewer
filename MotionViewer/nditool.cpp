@@ -35,3 +35,8 @@ void NdiTool::insertIndexAndCoordinate(int index, QVector3D coordinate)
 {
     coordinates[index] = coordinate;
 }
+QMap<int,QVector3D> NdiTool::getIndexAndCoordinate()
+{
+    return this->coordinates;
+}
+

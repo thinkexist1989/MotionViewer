@@ -22,7 +22,7 @@ public:
     QMap<int,QVector3D> coordinates;
 
     void insertIndexAndCoordinate(int index, QVector3D coordinate);
-
+    QMap<int,QVector3D> getIndexAndCoordinate();
 private:
     QString name;
     QList<QVector3D> markers;

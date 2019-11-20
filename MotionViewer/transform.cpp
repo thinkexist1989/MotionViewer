@@ -69,21 +69,33 @@ void Transform::poindCloudRegiMatProc(QMatrix4x4 mat)
 
 void Transform::modelCalc()
 {
+    //get the markers' location of Kinect
+    QMap<int,QVector3D> KinectMarkers;
+    if(tools.contains(NdiTool("Kinect"))){
+        int index = tools.indexOf(NdiTool("Kinect"));
+       KinectMarkers=tools[index].getIndexAndCoordinate();
+    }
 
+    //get the markers' location of HoloLens
+
+    //get the matrixs of pointcloud registration
 }
 
 void Transform::calibrationNeedleCalc()
 {
-
+     //get the markers' location of Needle
 }
 
 void Transform::reviseMatrixCalc()
 {
+     //get the markers' location of Needle last time
 
+     //get the markers' location of Needle this time
 }
 
 void Transform::boneDrillCalc()
 {
+    //get the markers' location of boneDrillCalc
 
 }
 

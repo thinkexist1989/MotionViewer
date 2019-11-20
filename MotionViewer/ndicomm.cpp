@@ -183,7 +183,7 @@ void NdiComm::on_startButton_clicked()
             ndiThread->start();
             ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
             timer->start(100);
 
             ui->startButton->setText(tr("Stop"));
@@ -814,18 +814,18 @@ void NdiCommProc::get_data()
 
     index += 30;
 
-    quint16 numofpoints = getNum<quint16>(&(p[index]));
+    unsigned char numofpoints = getNum<unsigned char>(&(p[index]));
 
     if (numofpoints > 8)
-        index += 3;
-    else
-        index += 2;
+        index += 1;
+
+    index += 2;
 
     QList<QVector3D> markers;
 
     for (int i = 0; i < numofpoints; i++)
     {
-        float coordinate[3];
+        float coordinate[3] = {0};
 
         for (int j = 0; j < 3; j++) {
             coordinate[j] = getNum<float>(&(p[index]));
@@ -841,13 +841,12 @@ void NdiCommProc::get_data()
 
 template<typename T> T NdiCommProc::getNum(const char *p)
 {
-    T temp = 0;
-    int len = sizeof(T);
+    T temp;
     //memcpy_s(&temp, sizeof (T), p, sizeof (T));
-    for (int i = 0;i < len; i++) {
-        memcpy(&((reinterpret_cast<char*>(&temp))[i]), &(p[len-i-1]), 1);
-    }
-    //memcpy(&temp, p, sizeof (T));
+//    for (int i = 0;i < len; i++) {
+//        memcpy(&(pt[i]), &(p[len-i-1]), 1);
+//    }
+    memcpy(&temp, p, sizeof (T));
     //return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
     return temp;
 }
