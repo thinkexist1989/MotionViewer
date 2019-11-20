@@ -10,6 +10,9 @@ RegiViewer::RegiViewer(QWidget *parent) :
     ui(new Ui::RegiViewer)
 {
     ui->setupUi(this);
+
+    ui->tblRegiMat->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tblRegiMat->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 }
 
 RegiViewer::~RegiViewer()
@@ -44,24 +47,22 @@ void RegiViewer::on_btnLoad_clicked()
     }
 
     QFile file(fileName);
-    if(!file.open(QIODevice::ReadOnly)) {
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QMessageBox::warning(this,tr("Open File Failed"), tr("Can not open file!"), QMessageBox::Ok);
         return;
     }
-
-
-    QByteArray content = file.readAll();
-    int index = content.indexOf("MATRIX");
-    QString matString = content.mid(index);
-    QTextStream in(&matString);
-    in.readLine();
-    QList<float> values;
-    while(!in.atEnd()){
-        QString row = in.readLine();
-        float val;
-        in >> val;
-        values.push_back(val);
+    QTextStream ts(&file);
+    while(!ts.readLine().contains("MATRIX"));
+    int i = 0;
+    while (!ts.atEnd()) {
+        QStringList baList = ts.readLine().split(' ',QString::SkipEmptyParts);
+        for (int j = 0; j < 4; j++)
+            poindCloudRegiMat(i,j) = baList[j].toFloat();
+        i++;
     }
-    if(values.count() == 16)
-        qDebug() << values;
+
+   // qDebug() << poindCloudRegiMat;
+    showMatrix(poindCloudRegiMat);
+
+    emit poindCloudRegiMatReady(poindCloudRegiMat);
 }

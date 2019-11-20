@@ -27,6 +27,9 @@ private slots:
 
 private:
     Ui::RegiViewer *ui;
+
+signals:
+    void poindCloudRegiMatReady(QMatrix4x4);
 };
 
 #endif // REGIVIEWER_H

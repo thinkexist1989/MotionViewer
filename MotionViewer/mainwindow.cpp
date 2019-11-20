@@ -21,7 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     qRegisterMetaType<QMap<QString,QList<QVector3D>>>("QMap<QString,QList<QVector3D>>"); //register signal type
     qRegisterMetaType<QList<QMatrix4x4>>("QList<QMatrix4x4>");
+    qRegisterMetaType<NdiTool>("NdiTool");
     qRegisterMetaType<QList<NdiTool>>("QList<NdiTool>");
+
 
     loadSettings();
     chineseTranslator = new QTranslator(this);
