@@ -78,6 +78,7 @@ void NdiViewer::refreshToolView(QList<NdiTool> tools)
     for (int i = 0; i < count ; i++){
         toolnames << tools[i].getName();
     }
+    ui->lstToolName->clear();
     ui->lstToolName->addItems(toolnames);
 }
 
@@ -97,9 +98,12 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
+//    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
     tools=getTools(data);
+    refreshToolView(tools);
+    if(!tools.isEmpty())
+        qDebug() << "detected tools name:" << tools.first().getName() << "count:" << tools.first().coordinates.count() << "index" << tools.first().coordinates.firstKey();
 
 }
 
@@ -172,10 +176,17 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
             toolNameIndex=judgeTool(dists);
             if (toolNameIndex.first != "")
             {
+
                 NdiTool tool(toolNameIndex.first);
-                tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
-                detectedTools.push_back(tool);
-                qDebug() << tr("Find tools: ") << tool.getName() <<tr("Coordinate is: ")<< tool.coordinates.last();
+                if(detectedTools.contains(tool)){
+                    int index = detectedTools.indexOf(tool);
+                    detectedTools[index].insertIndexAndCoordinate(toolNameIndex.second, data[i]);
+                }
+                else {
+                    tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
+                    detectedTools.push_back(tool);
+                }
+               // qDebug() << tr("Find tools: ") << tool.getName();
             }
         }
     }
@@ -259,7 +270,7 @@ bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
     float err=2;
     int q= 0;
     bool istool=false;
-    int numberOfMarkers = tool.count();
+    int numberOfFeature = tool.count();
     QList<QList<float>>::iterator i;
     for (i = tool.begin(); i != tool.end(); i++) {
         QList<float> markerDists = *i;
@@ -275,7 +286,7 @@ bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
                     break;
                 }
             }
-            if (q == numberOfMarkers -1)//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
+            if (q == numberOfFeature)//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
             {
                 istool = true;
                 index = i - tool.begin();

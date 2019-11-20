@@ -183,7 +183,7 @@ void NdiComm::on_startButton_clicked()
             ndiThread->start();
             ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
             timer->start(100);
 
             ui->startButton->setText(tr("Stop"));
