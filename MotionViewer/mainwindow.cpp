@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(transform, &Transform::readyForHololens, holoComm, &HoloComm::commandProc);   // send msg to HoloLens
 
     connect(holoComm, &HoloComm::holoMatrixReady, transform, &Transform::holoMatrixProc); // HoloLens return msg
+    connect(regiViewer, &RegiViewer::poindCloudRegiMatReady, transform, &Transform::poindCloudRegiMatProc);
 
     //just for test
     //    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);

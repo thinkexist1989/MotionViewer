@@ -30,13 +30,18 @@ public slots:
 
 private:
     QMatrix4x4 poindCloudRegiMat;
+    QMatrix4x4 calibritionNeedleLastTimeMat;
     QMatrix4x4 holoMat;
+    QMatrix4x4 HoloLensToHoloLensMarkerMatrix;
+    QMatrix4x4 KinectMarkerToKinectMatrix;
     QList<NdiTool> tools;
     QList<QMatrix4x4> matrixList;
     void modelCalc();
+    void LoadCalibrationMatrix();
     void calibrationNeedleCalc();
     void reviseMatrixCalc();
     void boneDrillCalc();
+    QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers);
 
 };
 

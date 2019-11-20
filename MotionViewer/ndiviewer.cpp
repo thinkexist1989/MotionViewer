@@ -221,7 +221,7 @@ QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
 
 QList<NdiTool> NdiViewer::getToolDefination()
 {
-    NdiTool Tool1("Needle");
+    NdiTool Tool1("calibrationNeedle");
     NdiTool Tool2("HoloLens");
     NdiTool Tool3("BoneDrill");
     NdiTool Tool4("Kinect");
@@ -251,11 +251,10 @@ QList<NdiTool> NdiViewer::getToolDefination()
     Tool3.setMarkersDistances(Tool3markerDistances);
 
     QList<QList<float>> Tool4markerDistances;
-    QList<float> Tool4p1; Tool4p1 << 60 << 66 << 105;
-    QList<float> Tool4p2; Tool4p2 << 60 << 116 << 51;
-    QList<float> Tool4p3; Tool4p3 << 66 << 116 << 150;
-    QList<float> Tool4p4; Tool4p4 << 105 << 51 << 150;
-    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 << Tool4p4;
+    QList<float> Tool4p1; Tool4p1 << 76 << 120 ;
+    QList<float> Tool4p2; Tool4p2 << 76 << 192 ;
+    QList<float> Tool4p3; Tool4p3 << 120 <<192 ;
+    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 ;
     Tool4.setMarkersDistances(Tool4markerDistances);
 
     QList<NdiTool> tools;
