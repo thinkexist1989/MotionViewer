@@ -18,6 +18,8 @@ class Transform : public QObject
 public:
     explicit Transform(QObject *parent = nullptr);
 
+    int currentCommand;
+
 signals:
     void readyForHololens(int, QList<QMatrix4x4>);
 public slots:
@@ -26,7 +28,6 @@ public slots:
     void poindCloudRegiMatProc(QMatrix4x4);
 
 private:
-    int currentCommand;
     QMatrix4x4 poindCloudRegiMat;
     QMatrix4x4 holoMat;
     QMap<QString,QList<QVector3D>> tools;

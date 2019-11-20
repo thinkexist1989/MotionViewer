@@ -18,6 +18,8 @@ public:
 private slots:
     void on_btnOpenFile_clicked();
 
+    void on_btnLoad_clicked();
+
 private:
     Ui::RegiViewer *ui;
 };

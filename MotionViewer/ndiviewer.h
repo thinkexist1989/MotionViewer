@@ -7,7 +7,6 @@
 #include <QMatrix4x4>
 #include <nditool.h>
 #include <transform.h>
-#include <QMetaType>
 
 namespace Ui {
 class NdiViewer;

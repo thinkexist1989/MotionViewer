@@ -23,6 +23,7 @@ private:
 signals:
 
 public slots:
+
 };
 
 #endif // NDITOOL_H

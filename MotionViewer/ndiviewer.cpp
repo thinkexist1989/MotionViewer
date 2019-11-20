@@ -15,14 +15,11 @@ NdiViewer::NdiViewer(QWidget *parent) :
 
     refreshMarkersView(markers);
 
-    refreshMatrixView(virtualTransformMatrix);
+    //refreshMatrixView(virtualTransformMatrix);
 
     QList<QVector3D> list1;
     list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
     tools["tool1"] = list1;
-
-    qRegisterMetaType<QMap<QString,QList<QVector3D>>>("QMap<QString,QList<QVector3D>>");
-    qRegisterMetaType<QList<QMatrix4x4>>("QList<QMatrix4x4>");
 
 }
 
@@ -114,15 +111,13 @@ void NdiViewer::on_btnExec_clicked()
 void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
 {
     switch (index) {
-    case 0://step 1
-        refreshMatrixView(virtualTransformMatrix);
+    case 0://step 1:model
         break;
-    case 1://step 2
-        refreshMatrixView(realTransformMatrix);
+    case 1://step 2:calibration needle
         break;
-    case 2://step 3
-        refreshMatrixView(calibrationMatrix);
+    case 2://step 3:revise matrix
         break;
+    case 3://step 4:bone drill
     default:
         break;
     }

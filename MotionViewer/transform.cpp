@@ -56,7 +56,6 @@ void Transform::holoMatrixProc(QMatrix4x4 holoMat)
     case HOLO_BONE_DRILL:
         boneDrillCalc();
         emit readyForHololens(currentCommand, matrixList);
-        currentCommand = HOLO_INFO;
         break;
     default:
         break;

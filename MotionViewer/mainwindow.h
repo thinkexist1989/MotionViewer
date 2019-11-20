@@ -14,6 +14,8 @@
 #include "transform.h"
 #include "nditool.h"
 
+#include <QMetaType> //register the signal type
+
 namespace Ui {
 class MainWindow;
 }

@@ -18,6 +18,10 @@ MainWindow::MainWindow(QWidget *parent) :
                                           transformThread(new QThread)
 {
     ui->setupUi(this);
+
+    qRegisterMetaType<QMap<QString,QList<QVector3D>>>("QMap<QString,QList<QVector3D>>"); //register signal type
+    qRegisterMetaType<QList<QMatrix4x4>>("QList<QMatrix4x4>");
+
     loadSettings();
     chineseTranslator = new QTranslator(this);
     chineseTranslator->load(":/translations/translation_zh.qm");
