@@ -1,6 +1,9 @@
 #include "ndiviewer.h"
 #include "ui_ndiviewer.h"
 #include <QDebug>
+#include <QListIterator>
+#include <QVectorIterator>
+#include <iterator>
 
 NdiViewer::NdiViewer(QWidget *parent) :
     QWidget(parent),
@@ -19,7 +22,6 @@ NdiViewer::NdiViewer(QWidget *parent) :
 
     QList<QVector3D> list1;
     list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
-    tools["tool1"] = list1;
 
 }
 
@@ -69,11 +71,35 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 }
 
+void NdiViewer::refreshToolView(QList<NdiTool> tools)
+{
+    int count = tools.count();
+    QStringList toolnames;
+    for (int i = 0; i < count ; i++){
+        toolnames << tools[i].getName();
+    }
+    ui->lstToolName->addItems(toolnames);
+}
+
+void NdiViewer::refreshMarkersInTool(NdiTool tool)
+{
+    int count = tool.coordinates.count();
+    ui->tblToolMarkers->setRowCount(count);
+    for (int i = 0; i < count; i++) {
+        if(tool.coordinates.contains(i)){
+            QVector3D coordinate = tool.coordinates[i];
+            ui->tblToolMarkers->setItem(i,0, new QTableWidgetItem(QString::number(static_cast<double>(coordinate.x()))));
+            ui->tblToolMarkers->setItem(i,1, new QTableWidgetItem(QString::number(static_cast<double>(coordinate.y()))));
+            ui->tblToolMarkers->setItem(i,2, new QTableWidgetItem(QString::number(static_cast<double>(coordinate.z()))));
+        }
+    }
+}
+
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
     qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
-    tools=getToolsNumAndPose(data);
+    tools=getTools(data);
 
 }
 
@@ -123,13 +149,12 @@ void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
     }
 }
 
-QMap<QString,QList<QVector3D>> NdiViewer::getToolsNumAndPose(QList<QVector3D> data)
+QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
 {
-    QString toolname;
-    QMap<QString,QList<QVector3D>> detectedTool;
-    QList<QVector3D> zuobiao;
-    QMap<QString,int> toolNameNumber;
-    double distance[20];
+    QList<NdiTool> detectedTools;
+    QList<QVector3D> markers;
+    QPair<QString,int> toolNameIndex;
+    QVector<float> dists;
     //    int keyvalue;
     // float a,b,c;
     int datacount = data.count();
@@ -138,136 +163,129 @@ QMap<QString,QList<QVector3D>> NdiViewer::getToolsNumAndPose(QList<QVector3D> da
         for (int  i= 0; i< datacount; i++)
         {
             for(int j = 0; j< datacount; j++)
-            {
-                float a,b,c;
-                a=data[i].x();
-                b=data[i].y();
-
-                c=data[i].z();
-                distance[j]= sqrt(pow((data[i].x() - data[j].x()), 2) + pow((data[i].y() - data[j].y()), 2) + pow((data[i].z() - data[j].z()), 2));
+            {    
+                float dis = sqrt(pow((data[i].x() - data[j].x()), 2)
+                                 + pow((data[i].y() - data[j].y()), 2)
+                                 + pow((data[i].z() - data[j].z()), 2));
+                dists.push_back(dis);
             }
-            toolname="";
-            toolNameNumber=judgeTool(distance,toolname,datacount);
-            if (toolname!="")
+            toolNameIndex=judgeTool(dists);
+            if (toolNameIndex.first != "")
             {
-
-                if(detectedTool.contains(toolname))
-                {
-                    zuobiao=detectedTool[toolname];
-                    zuobiao.push_back(QVector3D(data[i].x(),data[i].y(),data[i].z()));
-                    detectedTool[toolname]=zuobiao;
-                }
-                else
-                {
-                    zuobiao.push_back(QVector3D(data[i].x(),data[i].y(),data[i].z()));
-                    detectedTool.insert(toolname,zuobiao);
-
-                }
-                qDebug() << tr("Find tools: ") << toolname<<tr("Coordinate is: ")<< zuobiao;
+                NdiTool tool(toolNameIndex.first);
+                tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
+                detectedTools.push_back(tool);
+                qDebug() << tr("Find tools: ") << tool.getName() <<tr("Coordinate is: ")<< tool.coordinates.last();
             }
         }
     }
-
-
-    //   else
-    //       detectedTool.insert("wu",data);
-    return detectedTool;
+    return detectedTools;
 }
-QMap<QString,int> NdiViewer::judgeTool(double *dis,  QString &toolName,int &count)
+
+QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
 {
-    QMap<QString,QList<float>> toolNameSize;
-    QMap<QString,int> toolNameNumber;
-    QList<float> toolSize;
-    int numofpoints;
-    bool isToolOrNot;
+    QList<NdiTool> tools;
+    QPair<QString,int> toolNameIndex;
+
     //double *distance=dis;
     //加一个读取配置的函数，赋值toolNameSize
-    toolNameSize=getToolDefination();
+    tools = getToolDefination();
     //返回值是QMap<QString,QList<float>>
-    QMapIterator<QString,QList<float>> qq(toolNameSize);
-    while(qq.hasNext()){
-        toolSize=qq.next().value();
-        numofpoints=toolSize.count();
-        isToolOrNot=isTool(dis,toolSize,count) ;
+    QList<NdiTool>::iterator i;
+    for (i = tools.begin(); i != tools.end(); i++) {
+        NdiTool tool = *i;
+        int index = -1;
+        bool isToolOrNot = isTool(dists, tool, index);
         if(isToolOrNot==true)
         {
-            toolName=qq.key();
-            toolNameNumber.insert(toolName,count);
+            toolNameIndex.first = tool.getName();
+            toolNameIndex.second = index;
             break;
         }
-
     }
 
-    return toolNameNumber;
+    return toolNameIndex;
 }
-QMap<QString,QList<float>>NdiViewer::getToolDefination()
+
+QList<NdiTool> NdiViewer::getToolDefination()
 {
-    QMap<QString,QList<float>>ToolDefination;
-    QList<float> Tool1;
-    QList<float> Tool2;
-    QList<float> Tool3;
-    QList<float> Tool4;
-    Tool1.push_back(137);
-    Tool1.push_back(103);
-    Tool1.push_back(88);
-    Tool1.push_back(61);
-    Tool1.push_back(56);
-    Tool1.push_back(50);
-    Tool2.push_back(150);
-    Tool2.push_back(117);
-    Tool2.push_back(105);
-    Tool2.push_back(66);
-    Tool2.push_back(59);
-    Tool2.push_back(51);
-    Tool3.push_back(88);
-    Tool3.push_back(73);
-    Tool3.push_back(65);
-    Tool3.push_back(60);
-    Tool3.push_back(54);
-    Tool3.push_back(50);
-    Tool4.push_back(150);
-    Tool4.push_back(116);
-    Tool4.push_back(105);
-    Tool4.push_back(66);
-    Tool4.push_back(60);
-    Tool4.push_back(51);
-    ToolDefination.insert("Needle",Tool1);
-    ToolDefination.insert("HoloLens",Tool2);
-    ToolDefination.insert("BoneDrill",Tool3);
-    ToolDefination.insert("Kinect",Tool4);
+    NdiTool Tool1("Needle");
+    NdiTool Tool2("HoloLens");
+    NdiTool Tool3("BoneDrill");
+    NdiTool Tool4("Kinect");
+
+    QList<QList<float>> Tool1markerDistances;
+    QList<float> Tool1p1; Tool1p1 << 137 << 103 << 50;
+    QList<float> Tool1p2; Tool1p2 << 88 << 56 << 50;
+    QList<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
+    QList<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
+    Tool1markerDistances << Tool1p1 << Tool1p2 << Tool1p3 << Tool1p4;
+    Tool1.setMarkersDistances(Tool1markerDistances);
+
+    QList<QList<float>> Tool2markerDistances;
+    QList<float> Tool2p1; Tool2p1 << 66 << 105 << 59;
+    QList<float> Tool2p2; Tool2p2 << 117 << 51 << 59;
+    QList<float> Tool2p3; Tool2p3 << 117 << 66 << 150;
+    QList<float> Tool2p4; Tool2p4 << 150 << 51 << 105;
+    Tool2markerDistances << Tool2p1 << Tool2p2 << Tool2p3 << Tool2p4;
+    Tool2.setMarkersDistances(Tool2markerDistances);
+
+    QList<QList<float>> Tool3markerDistances;
+    QList<float> Tool3p1; Tool3p1 << 60 << 88 << 50;
+    QList<float> Tool3p2; Tool3p2 << 73 << 54 << 50;
+    QList<float> Tool3p3; Tool3p3 << 65 << 88 << 55;
+    QList<float> Tool3p4; Tool3p4 << 60 << 73 << 65;
+    Tool3markerDistances << Tool3p1 << Tool3p2 << Tool3p3 << Tool3p4;
+    Tool3.setMarkersDistances(Tool3markerDistances);
+
+    QList<QList<float>> Tool4markerDistances;
+    QList<float> Tool4p1; Tool4p1 << 60 << 66 << 105;
+    QList<float> Tool4p2; Tool4p2 << 60 << 116 << 51;
+    QList<float> Tool4p3; Tool4p3 << 66 << 116 << 150;
+    QList<float> Tool4p4; Tool4p4 << 105 << 51 << 150;
+    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 << Tool4p4;
+    Tool4.setMarkersDistances(Tool4markerDistances);
+
+    QList<NdiTool> tools;
+    tools << Tool1 << Tool2 << Tool3 << Tool4;
+
     //加一个读取文本的东西
-    return ToolDefination;
+    return tools;
 }
-bool NdiViewer::isTool(double *distance,QList<float> toolSize,int &count)
+
+bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
 {
-    int numberOfMarkers;
-    double err=2;
+    QList<QList<float>> tool = toolx.getMarkersDistances();
+    float err=2;
     int q= 0;
-    double point=0;
     bool istool=false;
-    numberOfMarkers=toolSize.count();
-    for(int i=0;i<count;i++)
-    {
-        QListIterator<float>m(toolSize);
-        while(m.hasNext())
-        {
-            point=m.next();
-            if(((point-err)<distance[i])&&(distance[i]<(point+err)))
+    int numberOfMarkers = tool.count();
+    QList<QList<float>>::iterator i;
+    for (i = tool.begin(); i != tool.end(); i++) {
+        QList<float> markerDists = *i;
+        QList<float>::iterator j;
+        for (j = markerDists.begin(); j != markerDists.end(); j++) {
+            float markerDis = *j;
+            QVector<float>::iterator k;
+            for (k = dists.begin(); k != dists.end(); k++) {
+                float dist = *k;
+                if(((markerDis-err)<dist)&&(dist<(markerDis+err)))
+                {
+                    q=q+1;
+                    break;
+                }
+            }
+            if (q == numberOfMarkers -1)//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
             {
-                q=q+1;
+                istool = true;
+                index = i - tool.begin();
                 break;
             }
         }
-        if (q==3)//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
-        {
-            istool=true;
-            break;
-        }
     }
-
-
     return istool;
 }
+
 QMatrix4x4 NdiViewer::getVirtualTransformMatrix()
 {
     QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
@@ -284,4 +302,13 @@ QMatrix4x4 NdiViewer::getCalibrationMatrix()
 {
     QMatrix4x4 mat(1.5,2.7,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
     return mat;
+}
+
+void NdiViewer::on_lstToolName_currentTextChanged(const QString &currentText)
+{
+    NdiTool temp(currentText);
+    if(tools.contains(temp)){
+        int index = tools.indexOf(temp);
+        refreshMarkersInTool(tools[index]);
+    }
 }

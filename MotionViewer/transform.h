@@ -5,6 +5,7 @@
 #include <QList>
 #include <QMap>
 #include <QMatrix4x4>
+#include "nditool.h"
 
 #define HOLO_INFO          0
 #define HOLO_MODEL         1
@@ -23,14 +24,14 @@ public:
 signals:
     void readyForHololens(int, QList<QMatrix4x4>);
 public slots:
-    void transformProc(int, QMap<QString,QList<QVector3D>>);
+    void transformProc(int, QList<NdiTool>);
     void holoMatrixProc(QMatrix4x4);
     void poindCloudRegiMatProc(QMatrix4x4);
 
 private:
     QMatrix4x4 poindCloudRegiMat;
     QMatrix4x4 holoMat;
-    QMap<QString,QList<QVector3D>> tools;
+    QList<NdiTool> tools;
     QList<QMatrix4x4> matrixList;
     void modelCalc();
     void calibrationNeedleCalc();

@@ -2,6 +2,7 @@
 #define REGIVIEWER_H
 
 #include <QWidget>
+#include <QMatrix4x4>
 
 namespace Ui {
 class RegiViewer;
@@ -14,6 +15,8 @@ class RegiViewer : public QWidget
 public:
     explicit RegiViewer(QWidget *parent = nullptr);
     ~RegiViewer();
+
+    void showMatrix(QMatrix4x4 mat);
 
 private slots:
     void on_btnOpenFile_clicked();

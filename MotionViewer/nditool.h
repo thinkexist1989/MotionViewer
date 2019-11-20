@@ -1,28 +1,33 @@
 #ifndef NDITOOL_H
 #define NDITOOL_H
 
-#include <QObject>
 #include <QList>
 #include <QVector3D>
 #include <QString>
 
-class NdiTool : public QObject
+class NdiTool
 {
-    Q_OBJECT
 public:
-    explicit NdiTool(QObject *parent = nullptr);
+    explicit NdiTool();
+    NdiTool(QString name);
 
     bool operator==(const NdiTool &t); //overload operator== to judge if tool is equal
 
     QString getName() {return this->name;}
+    void setMarkersDistances(QList<QList<float>> markerDistances);
+    QList<QList<float>> getMarkersDistances();
+
+    void setMarkers(QList<QVector3D>);
+
+    QMap<int,QVector3D> coordinates;
+
+    void insertIndexAndCoordinate(int index, QVector3D coordinate);
+
 private:
     QString name;
     QList<QVector3D> markers;
     QList<QList<float>> markerDistances;
-
-signals:
-
-public slots:
+    int count;
 
 };
 

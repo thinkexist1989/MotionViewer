@@ -7,7 +7,7 @@ Transform::Transform(QObject *parent) :
 
 }
 
-void Transform::transformProc(int command, QMap<QString, QList<QVector3D>> tools)
+void Transform::transformProc(int command, QList<NdiTool> tools)
 {
     //TODO: add transform code
     this->tools = tools;
