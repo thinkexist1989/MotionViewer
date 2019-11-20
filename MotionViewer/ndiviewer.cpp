@@ -73,6 +73,8 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 void NdiViewer::refreshToolView(QList<NdiTool> tools)
 {
+    if(tools.count() == 0)
+        return;
     int count = tools.count();
     QStringList toolnames;
     for (int i = 0; i < count ; i++){
@@ -159,13 +161,12 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
     QList<QVector3D> markers;
     QPair<QString,int> toolNameIndex;
     QVector<float> dists;
-    //    int keyvalue;
-    // float a,b,c;
     int datacount = data.count();
     if ((datacount>2)&&(datacount<20))
     {
         for (int  i= 0; i< datacount; i++)
         {
+            dists.clear();
             for(int j = 0; j< datacount; j++)
             {    
                 float dis = sqrt(pow((data[i].x() - data[j].x()), 2)
@@ -268,11 +269,12 @@ bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
 {
     QList<QList<float>> tool = toolx.getMarkersDistances();
     float err=2;
-    int q= 0;
+
     bool istool=false;
-    int numberOfFeature = tool.count();
+    int numberOfMarkers = tool.count();
     QList<QList<float>>::iterator i;
     for (i = tool.begin(); i != tool.end(); i++) {
+        int q= 0;
         QList<float> markerDists = *i;
         QList<float>::iterator j;
         for (j = markerDists.begin(); j != markerDists.end(); j++) {
@@ -286,7 +288,7 @@ bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
                     break;
                 }
             }
-            if (q == numberOfFeature)//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
+            if (q == (numberOfMarkers-1))//这个地方只针对四个点的工具，到时候读tooldefination的时候定义一个类获取点的个数
             {
                 istool = true;
                 index = i - tool.begin();
