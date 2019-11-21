@@ -34,6 +34,8 @@ private:
     QMatrix4x4 holoMat;
     QMatrix4x4 HoloLensToHoloLensMarkerMatrix;
     QMatrix4x4 KinectMarkerToKinectMatrix;
+    QMatrix4x4 modelResultLastTimeMat;
+    QMatrix4x4 calibritionNeedleResultLastTimeMat;
     QList<NdiTool> tools;
     QList<QMatrix4x4> matrixList;
     void modelCalc();
@@ -41,8 +43,9 @@ private:
     void calibrationNeedleCalc();
     void reviseMatrixCalc();
     void boneDrillCalc();
+    bool pCRead;
     QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers);
-
+    QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers);
 };
 
 #endif // TRANSFORM_H
