@@ -183,8 +183,9 @@ void NdiComm::on_startButton_clicked()
             ndiThread->start();
             ndiCommProc->initsensor();
             timer = new QTimer(this);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
-            timer->start(100);
+            //connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
+            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
+            timer->start(200);
 
             ui->startButton->setText(tr("Stop"));
             isStarted = true;
@@ -871,7 +872,6 @@ void NdiCommProc::data_read()
     strDisplay.clear();
     while (this->ndi->waitForReadyRead(100))
     {
-
         requestData = this->ndi->readAll();
         requestData1 = requestData1 + requestData;
     }
@@ -881,6 +881,18 @@ void NdiCommProc::data_read()
     if (numofpoints > 8)
         nSpot += 2;
     nSpot += 4;
+    if(requestData1.length() != nSpot + numofpoints*12)
+    {
+        qDebug()<<"data length wrong,continue get data!";
+        requestData = this->ndi->readAll();
+        requestData1 = requestData1 + requestData;
+        strDisplay = requestData1.toHex();
+    }
+    if(requestData1.length() == nSpot + numofpoints*12)
+    {
+
+        qDebug()<<"data length right!";
+    }
     float data[1][3];
     QList<QVector3D> markers;
     for (int i = 0; i < numofpoints; i++)
@@ -931,10 +943,9 @@ void NdiCommProc::data_read()
 markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
 
     }
-emit dataReady(markers);
-    requestData.clear();
-	
 
+    emit dataReady(markers);
+    requestData.clear();
 }
 
 int NdiCommProc::ConvertHexQString(QString ch, int i, int j)

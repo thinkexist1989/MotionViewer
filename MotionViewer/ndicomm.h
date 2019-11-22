@@ -95,6 +95,7 @@ public slots:
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:
+    bool datawrong=false;
     int ConvertHexQString(QString ch, int i, int j);
     float Hex_To_Decimal(unsigned char * Byte);
     template<typename T> T getNum(const char* p);

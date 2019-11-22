@@ -98,11 +98,12 @@ QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers)
     m23=m23/b;
     m22=m22/b;
     m21=m21/b;
-     QMatrix4x4 mat(m11,m12,m13,m14,
-                    m21,m22,m23,m24,
-                    m31,m32,m33,m34,
-                    m41,m42,m43,m44);
-
+     QMatrix4x4 mat;
+     mat.setRow(0,QVector4D(m11,m12,m13,m14/1000));
+     mat.setRow(1,QVector4D(m21,m22,m23,m24/1000));
+     mat.setRow(2,QVector4D(m31,m32,m33,m34/1000));
+     mat.setRow(3,QVector4D(m41,m42,m43,m44));
+     qDebug()<<"ToolcoordinationMatrix"<<mat;
      return mat;
  }
 QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
@@ -120,23 +121,29 @@ QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
      BB=BB.normalized();
      //QGenericMatrix(QMatrix4x4).
 
-    mat.setColumn(0, QVector4D(AA));
-    mat.setColumn(1, QVector4D(BB));
-    mat.setColumn(2, QVector4D(CC));
-    mat.setColumn(3, QVector4D(markers[0],1));
+    mat.setColumn(0, QVector4D(AA,0));
+    mat.setColumn(1, QVector4D(BB,0));
+    mat.setColumn(2, QVector4D(CC,0));
+    mat.setColumn(3, QVector4D(markers[0]/1000,1));
+    qDebug()<<"Toolcoordination1Matrix"<<mat;
     return mat;
+
 }
 
 
 void Transform::LoadCalibrationMatrix()
-{ QMatrix4x4 HoloLensToHoloLensMarker(0.0975262771988006,-0.0431322212347106,0.994297861179990,0.0705467509747862,
-                                      0.995227668296462,0.00748157594641098,-0.0972929302598390,0.0132814109105393,
-                                      -0.00324245476923128,0.999041359260325,0.0436560302175016,-0.0752293725273258,
-                                      0,0,0,1);
-  QMatrix4x4 KinectMarkerToKinect(0.8169,-0.5766,-0.0114,-0.0521,
-                                  -0.0090,0.0070,-0.9999,-0.0299,
-                                  0.5766,0.8170, 0.0005,-0.0372,
-                                  0,0, 0,1.0000);
+{ QMatrix4x4 HoloLensToHoloLensMarker;
+    HoloLensToHoloLensMarker.setRow(0,QVector4D(0.0975262771988006,-0.0431322212347106,0.994297861179990,0.0705467509747862));
+    HoloLensToHoloLensMarker.setRow(1,QVector4D(0.995227668296462,0.00748157594641098,-0.0972929302598390,0.0132814109105393));
+    HoloLensToHoloLensMarker.setRow(2,QVector4D(-0.00324245476923128,0.999041359260325,0.0436560302175016,-0.0752293725273258));
+    HoloLensToHoloLensMarker.setRow(3,QVector4D(0,0,0,1));
+    qDebug()<<"HoloLensToHoloLensMarker"<<HoloLensToHoloLensMarker;
+  QMatrix4x4 KinectMarkerToKinect;
+  KinectMarkerToKinect.setRow(0,QVector4D(0.8169,-0.5766,-0.0114,-0.0521));
+  KinectMarkerToKinect.setRow(1,QVector4D(-0.0090,0.0070,-0.9999,-0.0299));
+  KinectMarkerToKinect.setRow(2,QVector4D(0.5766,0.8170, 0.0005,-0.0372));
+  KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
+  qDebug()<<"KinectMarkerToKinect"<<KinectMarkerToKinect;
   this->HoloLensToHoloLensMarkerMatrix=HoloLensToHoloLensMarker;
   this->KinectMarkerToKinectMatrix=KinectMarkerToKinect;
 }
@@ -162,6 +169,7 @@ void Transform::modelCalc()
     QMap<int,QVector3D> KinectMarkers;
     QMap<int,QVector3D> HoloLensMarkers;
     //get the markers' location of Kinect
+    LoadCalibrationMatrix();
     if(tools.contains(NdiTool("Kinect"))){
         int index = tools.indexOf(NdiTool("Kinect"));
        KinectMarkers=tools[index].getIndexAndCoordinate();
@@ -172,6 +180,7 @@ void Transform::modelCalc()
         int index = tools.indexOf(NdiTool("HoloLens"));
       HoloLensMarkers=tools[index].getIndexAndCoordinate();
        HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
+       HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
     }
     //get the matrixs of pointcloud registration
     //缺一个判断，如果为空，弹出提示先读取配准结果
@@ -196,11 +205,14 @@ void Transform::modelCalc()
     //result
     result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*KinectMarkerToNDI*KinectMarkerToKinect.inverted();
     //右手系换左手系给HoloLens发送
+    qDebug() << "beforemodelResultMat:" << result;
     result(0,2)=-result(0,2);
     result(1,2)=-result(1,2);
     result(2,0)=-result(2,0);
     result(2,1)=-result(2,1);
     result(2,3)=-result(2,3);
+    qDebug() << "modelResultMat:" << result;
+
     //write last time modelResultMat
     this->modelResultLastTimeMat=result;
     this->matrixList.clear();
@@ -216,6 +228,7 @@ void Transform::calibrationNeedleCalc()
     QMatrix4x4 HoloLensMarkerToNDI;
     QMatrix4x4 HoloLensToHoloLensMarker=HoloLensToHoloLensMarkerMatrix;
    // QMatrix4x4 KinectMarkerToKinect=KinectMarkerToKinectMatrix;
+    LoadCalibrationMatrix();
     // get the HololensLocalToWorld matrix
     HoloLensToWorld=holoMat;
      //get the markers' location of Needle
@@ -242,6 +255,7 @@ void Transform::calibrationNeedleCalc()
      result(2,0)=-result(2,0);
      result(2,1)=-result(2,1);
      result(2,3)=-result(2,3);
+     qDebug() << "calibrationNeedleResultMat:" << result;
      //write last time calibrationNeedleResultMat
      this->calibritionNeedleResultLastTimeMat=result;
      this->matrixList.clear();
@@ -263,6 +277,7 @@ void Transform::reviseMatrixCalc()
      QMatrix4x4 result;
      QMatrix4x4 reviseModel;
      QMatrix4x4 reviseCalibrationNeedle;
+     LoadCalibrationMatrix();
      // get the HololensLocalToWorld matrix
      HoloLensToWorld=holoMat;
      //get the markers' location of Needle last time
@@ -282,17 +297,25 @@ void Transform::reviseMatrixCalc()
      }
      //result
       result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*calibrationNeedleToNDI;
-     //右手系换左手系给HoloLens发送
-      result(0,2)=-result(0,2);
-      result(1,2)=-result(1,2);
-      result(2,0)=-result(2,0);
-      result(2,1)=-result(2,1);
-      result(2,3)=-result(2,3);
+
      //reviseMatrix
      reviseMatrix=result*LastTimeCalibrationNeedleResult.inverted();
      //result of new modelMatrix
      reviseModel=reviseMatrix*LastTimeModelResult;
      reviseCalibrationNeedle=result;
+     //右手系换左手系给HoloLens发送
+      reviseCalibrationNeedle(0,2)=-reviseCalibrationNeedle(0,2);
+      reviseCalibrationNeedle(1,2)=-reviseCalibrationNeedle(1,2);
+      reviseCalibrationNeedle(2,0)=-reviseCalibrationNeedle(2,0);
+      reviseCalibrationNeedle(2,1)=-reviseCalibrationNeedle(2,1);
+      reviseCalibrationNeedle(2,3)=-reviseCalibrationNeedle(2,3);
+      reviseModel(0,2)=-reviseModel(0,2);
+      reviseModel(1,2)=-reviseModel(1,2);
+      reviseModel(2,0)=-reviseModel(2,0);
+      reviseModel(2,1)=-reviseModel(2,1);
+      reviseModel(2,3)=-reviseModel(2,3);
+      qDebug() << "reviseModelResultMat:" << reviseModel;
+      qDebug() << "reviseCalibrationNeedleResultMat:" << reviseCalibrationNeedle;
      this->matrixList.clear();
      this->matrixList.push_back(reviseModel);
      this->matrixList.push_back(reviseCalibrationNeedle);
@@ -307,6 +330,7 @@ void Transform::boneDrillCalc()
     QMatrix4x4 HoloLensToWorld;
     QMatrix4x4 HoloLensMarkerToNDI;
     QMatrix4x4  result;
+    LoadCalibrationMatrix();
     // get the HololensLocalToWorld matrix
     HoloLensToWorld=holoMat;
     //get the markers' location of boneDrillCalc
@@ -331,6 +355,7 @@ void Transform::boneDrillCalc()
      result(2,0)=-result(2,0);
      result(2,1)=-result(2,1);
      result(2,3)=-result(2,3);
+     qDebug() << "boneDrillModelResultMat:" << result;
      this->matrixList.clear();
      this->matrixList.push_back(result);
 }

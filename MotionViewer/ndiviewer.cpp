@@ -105,7 +105,13 @@ void NdiViewer::dataProc(QList<QVector3D> data)
     tools=getTools(data);
     refreshToolView(tools);
     if(!tools.isEmpty())
-        qDebug() << "detected tools name:" << tools.first().getName() << "count:" << tools.first().coordinates.count() << "index" << tools.first().coordinates.firstKey();
+    {
+        qDebug() <<"total detect"<<tools.length()<<"tool";
+        for (int i=0;i<tools.length();i++) {
+                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
+                   }
+    }
+
 
 }
 
@@ -162,7 +168,7 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
     QPair<QString,int> toolNameIndex;
     QVector<float> dists;
     int datacount = data.count();
-    if ((datacount>2)&&(datacount<20))
+    if ((datacount>2)&&(datacount<50))
     {
         for (int  i= 0; i< datacount; i++)
         {
@@ -187,7 +193,7 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
                     tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
                     detectedTools.push_back(tool);
                 }
-               // qDebug() << tr("Find tools: ") << tool.getName();
+                qDebug() << tr("Find tools: ") << tool.getName();
             }
         }
     }
