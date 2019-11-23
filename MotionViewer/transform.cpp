@@ -1,11 +1,11 @@
 #include "transform.h"
+#include <QFileDialog>
 
 Transform::Transform(QObject *parent) :
     QObject(parent),
     currentCommand(0),
     pCRead(false)
 {
-
 }
 
 void Transform::transformProc(int command, QList<NdiTool> tools)
@@ -130,6 +130,14 @@ QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
 
 }
 
+void Transform::getRegiMat()
+{
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
+    if(QFile::exists(fileName)){
+        emit needRegiMat(fileName);
+    }
+}
+
 
 void Transform::LoadCalibrationMatrix()
 { QMatrix4x4 HoloLensToHoloLensMarker;
@@ -183,9 +191,11 @@ void Transform::modelCalc()
        HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
     }
     //get the matrixs of pointcloud registration
-    //缺一个判断，如果为空，弹出提示先读取配准结果
     if(pCRead==true)
          Registration=poindCloudRegiMat;
+    else {
+        getRegiMat();
+    }
     // get the HololensLocalToWorld matrix
     HoloLensToWorld=holoMat;
 

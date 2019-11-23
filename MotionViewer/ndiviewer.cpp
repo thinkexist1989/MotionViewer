@@ -4,6 +4,7 @@
 #include <QListIterator>
 #include <QVectorIterator>
 #include <iterator>
+#include <QFileDialog>
 
 NdiViewer::NdiViewer(QWidget *parent) :
     QWidget(parent),
@@ -198,6 +199,14 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
         }
     }
     return detectedTools;
+}
+
+void NdiViewer::getRegiMat()
+{
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
+    if(QFile::exists(fileName)){
+        emit needRegiMat(fileName);
+    }
 }
 
 QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)

@@ -20,6 +20,9 @@ public:
 
     QMatrix4x4 poindCloudRegiMat;
 
+public slots:
+    void needRegiMatProc(QString fileName);
+
 private slots:
     void on_btnOpenFile_clicked();
 
