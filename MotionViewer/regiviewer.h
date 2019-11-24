@@ -18,7 +18,7 @@ public:
 
     void showMatrix(QMatrix4x4 mat);
 
-    QMatrix4x4 poindCloudRegiMat;
+    QMatrix4x4 pointCloudRegiMat;
 
 public slots:
     void needRegiMatProc(QString fileName);

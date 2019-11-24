@@ -64,12 +64,12 @@ void RegiViewer::on_btnLoad_clicked()
     while (!ts.atEnd()) {
         QStringList baList = ts.readLine().split(' ',QString::SkipEmptyParts);
         for (int j = 0; j < 4; j++)
-            poindCloudRegiMat(i,j) = baList[j].toFloat();
+            pointCloudRegiMat(i,j) = baList[j].toFloat();
         i++;
     }
 
    // qDebug() << poindCloudRegiMat;
-    showMatrix(poindCloudRegiMat);
+    showMatrix(pointCloudRegiMat);
 
-    emit poindCloudRegiMatReady(poindCloudRegiMat);
+    emit poindCloudRegiMatReady(pointCloudRegiMat);
 }

@@ -27,17 +27,13 @@ public:
     void initPort(); //refresh serial ports
 
     QList<QVector3D> markers; //storage for coordinates of markers
-	//Use to read and write on serialPort.    
-	inline void write(QByteArray ba) {if(isPortOpened) serialPort.write(ba);}    
-	inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}    
-    inline QByteArray readAll(){return serialPort.readAll();}
-	inline void clear() { serialPort.clear(); }
+
 private:
     Ui::NdiComm *ui;
     NdiCommProc *ndiCommProc;
 	NdiComm *ndiComm;
     QThread *ndiThread;
-    QSerialPort serialPort; //Serial port
+//    QSerialPort serialPort; //Serial port
     
     bool isPortOpened;
     bool isStarted;
@@ -50,6 +46,13 @@ private:
     QTimer *timer;
 
     void printThread(QString front); //Test for thread
+
+public:
+    //Use to read and write on serialPort.
+//    inline void write(QByteArray ba) {if(isPortOpened) ndiCommProc->serialPort.write(ba);}
+//    inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}
+//    inline QByteArray readAll(){return serialPort.readAll();}
+//    inline void clear() { serialPort.clear(); }
 
 signals:
     void serialOpened(); //serial port open signal
@@ -74,10 +77,9 @@ class NdiCommProc : public QObject
 {
     Q_OBJECT
 public:
-    explicit NdiCommProc(NdiComm* ndi, QObject *parent = nullptr);
+    explicit NdiCommProc(QObject *parent = nullptr);
     ~NdiCommProc();
     float q;
-    NdiComm *ndi;
     const char *msg;
 
     QByteArray requestData;
@@ -88,6 +90,8 @@ public:
     QByteArray recvbuf;
 
     bool isRunning;
+
+    QSerialPort serialPort;
 
 signals:
     void initFinished(QString);

@@ -12,17 +12,17 @@ NdiViewer::NdiViewer(QWidget *parent) :
 {
     ui->setupUi(this);
     init();
-    QList<QVector3D> markers;
-    markers.push_back(QVector3D(1.1,2.1,3.1));
-    markers.push_back(QVector3D(2.2,4.4,5.9));
-    markers.push_back(QVector3D(5.6,7.8,5.4));
+//    QList<QVector3D> markers;
+//    markers.push_back(QVector3D(1.1,2.1,3.1));
+//    markers.push_back(QVector3D(2.2,4.4,5.9));
+//    markers.push_back(QVector3D(5.6,7.8,5.4));
 
-    refreshMarkersView(markers);
+    //refreshMarkersView(markers);
 
     //refreshMatrixView(virtualTransformMatrix);
 
-    QList<QVector3D> list1;
-    list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
+//    QList<QVector3D> list1;
+//    list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
 
 }
 
@@ -101,18 +101,22 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-//    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
-    refreshMarkersView(data);
-    tools=getTools(data);
-    refreshToolView(tools);
-    if(!tools.isEmpty())
-    {
-        qDebug() <<"total detect"<<tools.length()<<"tool";
-        for (int i=0;i<tools.length();i++) {
-                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
-                   }
-    }
+    try {
+        //    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
+            refreshMarkersView(data);
+            tools=getTools(data);
+            refreshToolView(tools);
+            if(!tools.isEmpty())
+            {
+                qDebug() <<"total detect"<<tools.length()<<"tool";
+                for (int i=0;i<tools.length();i++) {
+                                 qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
+                           }
+            }
 
+    } catch (...) {
+        qDebug() << "Exception catched!";
+    }
 
 }
 

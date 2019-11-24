@@ -13,7 +13,7 @@ NdiComm::NdiComm(QWidget *parent) :
     ui->setupUi(this);
     initPort();
 
-    ndiCommProc = new NdiCommProc(this);
+    ndiCommProc = new NdiCommProc();
     qRegisterMetaType<QList<QVector3D>>("Coordinates");
     connect(ndiCommProc, &NdiCommProc::initFinished, this, [=](QString msg){emit this->initFinished(msg);});
     connect(ndiCommProc, &NdiCommProc::dataReady, this, [=](QList<QVector3D> data){
@@ -148,19 +148,19 @@ void NdiComm::on_refreshButton_clicked()
 void NdiComm::on_openCloseButton_clicked()
 {
     if(!isPortOpened){
-        serialPort.setPortName(ui->cmbPortName->currentText());
-        if(serialPort.open(QIODevice::ReadWrite)){ //open serial port success
-            serialPort.setBaudRate(ui->cmbBuadrate->currentText().toInt());
-            serialPort.setParity(getParity(ui->cmbParity->currentText()));
-            serialPort.setDataBits(getDataBits(ui->cmbDataBits->currentText()));
-            serialPort.setStopBits(getStopBits(ui->cmbStopBits->currentText()));
-            serialPort.setFlowControl(getFlowCtrl(ui->cmbFlowCtrl->currentText()));
+        ndiCommProc->serialPort.setPortName(ui->cmbPortName->currentText());
+        if(ndiCommProc->serialPort.open(QIODevice::ReadWrite)){ //open serial port success
+            ndiCommProc->serialPort.setBaudRate(ui->cmbBuadrate->currentText().toInt());
+            ndiCommProc->serialPort.setParity(getParity(ui->cmbParity->currentText()));
+            ndiCommProc->serialPort.setDataBits(getDataBits(ui->cmbDataBits->currentText()));
+            ndiCommProc->serialPort.setStopBits(getStopBits(ui->cmbStopBits->currentText()));
+            ndiCommProc->serialPort.setFlowControl(getFlowCtrl(ui->cmbFlowCtrl->currentText()));
 
             isPortOpened = true;
             ui->openCloseButton->setText(tr("Close"));
             ui->openCloseButton->setIcon(QIcon(":/icon/res/stop.ico"));
 
-            connect(&serialPort, &QSerialPort::readyRead, this, &NdiComm::recvProc);
+            //connect(&ndiCommProc->serialPort, &QSerialPort::readyRead, this, &NdiComm::recvProc);
             emit serialOpened();
         }
         else {
@@ -169,7 +169,7 @@ void NdiComm::on_openCloseButton_clicked()
 
     }
     else {
-        serialPort.close();
+        ndiCommProc->serialPort.close();
 
         emit serialClosed(); //emit serialClosed signal;
 
@@ -222,9 +222,8 @@ void NdiComm::changeEvent(QEvent *event)
  */
 
 
-NdiCommProc::NdiCommProc(NdiComm *ndi, QObject *parent) :
+NdiCommProc::NdiCommProc(QObject *parent) :
     QObject (parent),
-    ndi (ndi),
     isRunning(true)
 {
     //ndi = dynamic_cast<NdiComm*>(parent);
@@ -240,6 +239,7 @@ void NdiCommProc::ndiCommStart()
 {
     initsensor(); //init Ndi
     while (isRunning) {
+//        data_read();
         get_data();
 //        printThread("NdiComm");
     }
@@ -247,7 +247,7 @@ void NdiCommProc::ndiCommStart()
 
 void NdiCommProc::printThread(QString front)
 {
-    ndi->printThread(front);
+    //serialPort.printThread(front);
     QList<QVector3D> markers;
     markers.push_back(QVector3D(1,2,3));
     markers.push_back(QVector3D(2,4,5));
@@ -258,27 +258,27 @@ void NdiCommProc::initsensor()
 {
     //FOR SU SHUN
     msg = "1";
-    ndi->write(msg);
-    while (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    while (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
     }
     QThread::msleep(50);
 
     msg = "APIREV \r";
-    ndi->write(msg);
-    while (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    while (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
 
     }
     msg = "VER:4A6EF\r";
-    ndi->write(msg);
-    while (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    while (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
 
 
@@ -287,10 +287,10 @@ void NdiCommProc::initsensor()
     QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "COMM 70001\r";
-    ndi->write(msg);
-    while (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    while (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
 
 
@@ -299,10 +299,10 @@ void NdiCommProc::initsensor()
     QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "COMM 50001\r";
-    ndi->write(msg);
-    while (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    while (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
 
     }
@@ -310,10 +310,10 @@ void NdiCommProc::initsensor()
     QThread::msleep(50);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "test\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
 
 
@@ -322,8 +322,8 @@ void NdiCommProc::initsensor()
     QThread::msleep(5000);
     //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
     msg = "VER:5662E\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -331,8 +331,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(500);
     msg = "GETINFO:Config.*1110\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -340,8 +340,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(500);
     msg = "GET:Device.*722D\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -350,8 +350,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(500);
     msg = "INIT:E3A5\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -360,8 +360,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GET:Device.*722D\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -369,8 +369,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PHSR:0020FF\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -379,8 +379,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PINIT:0131EA\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -389,8 +389,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PHSR:0020FF\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -399,8 +399,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Param.Tracking.*8D17\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -409,8 +409,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Features.Firmware.Version0492\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -419,8 +419,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Info.Status.Alerts340A\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -429,8 +429,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Info.Status.New Alerts33A3\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -438,8 +438,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Features.Hardware.Serial Number68E4\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -448,8 +448,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "VER:4A6EF\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -458,8 +458,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Features.Tools.*F635\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -468,8 +468,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "SFLIST:03500F\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -478,8 +478,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(500);
     msg = "GETINFO:Param.Tracking.Selected VolumeC200\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -488,8 +488,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PHINF:0100753CAF\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -498,8 +498,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:SCU-0.Info.Status.New AlertsAF34\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -507,8 +507,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:SCU-0.Info.Status.AlertsC917\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -517,8 +517,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Info.Status.New Alerts33A3\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -527,8 +527,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:Info.Status.Alerts340A\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -537,8 +537,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:STB-0.Info.Status.New AlertsCC4F\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -547,8 +547,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "GETINFO:STB-0.Info.Status.Alerts389B\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -557,8 +557,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "TSTART:5423\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -567,8 +567,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "BX:18033D6C\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -577,8 +577,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "TSTOP:2C14\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -587,8 +587,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "SET:Param.Tracking.Illuminator Rate=2237A\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -597,8 +597,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PHRQ:*********1****A4C1\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -607,8 +607,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0200004E444900AF12000001000000000000010000000002DC32355A00000004000000040000000000403F000000000000000000000000000000000000000000000000610B\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -617,8 +617,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0200400000204100000000000000000000000000000000000000001F853D4285EBE74100000000000000003333B24200000000A4700DC2A4700D4200000000000000002B7A\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -627,8 +627,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:020080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005DEA\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -637,8 +637,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0200C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006EF1\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -647,8 +647,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:02010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000803F00000000678F\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -657,8 +657,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:020140000000000000803F00000000000000000000803F00000000000000000000803F00000000000000000000000000000000000000000000000000000000000000008535\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -667,8 +667,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:020180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009DD2\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -677,8 +677,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0201C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AEC9\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -687,8 +687,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203000000000000000000000000000000001F1F1F1FC0FA\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -697,8 +697,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:020240090000004E44490000000000000000003837303034343900000000000000000000000000090101010100000000000000000000000000000000010101010000008755\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -707,8 +707,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:020280000000000000000000000000008000290000000000000000000080BF0000000000000000000000000000000000000000000000000000000000000000000000002FB1\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -717,8 +717,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PVWR:0202C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AE82\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -728,8 +728,8 @@ void NdiCommProc::initsensor()
     QThread::msleep(50);
 
     msg = "PINIT:0230AA\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -738,8 +738,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PHINF:0200753CEB\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -748,8 +748,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "TSTART:5423\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -758,8 +758,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "BX:18033D6C\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -768,8 +768,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "TSTOP:2C14\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -778,8 +778,8 @@ void NdiCommProc::initsensor()
     }
     QThread::msleep(50);
     msg = "PENA:02D9D3B\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
         strDisplay = QString(requestData);
 
@@ -789,10 +789,10 @@ void NdiCommProc::initsensor()
     QThread::msleep(50);
 
     msg = "TSTART:5423\r";
-    ndi->write(msg);
-    if (this->ndi->waitForReadyRead(50))
+    serialPort.write(msg);
+    if (this->serialPort.waitForReadyRead(50))
     {
-        requestData += this->ndi->readAll();
+        requestData += this->serialPort.readAll();
         strDisplay = QString(requestData);
         QThread::msleep(50);
     }
@@ -807,60 +807,62 @@ void NdiCommProc::initsensor()
 
 void NdiCommProc::get_data()
 {
-    this->ndi->clear();
-    msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
+    try {
+        this->serialPort.clear();
+        msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
 
-    ndi->write(msg);
-    int index = 0;
+        serialPort.write(msg);
+        int index = 0;
 
-    recvbuf.clear();
+        recvbuf.clear();
 
-    if(this->ndi->waitForReadyRead(100))
-        return;
+        while(this->serialPort.waitForReadyRead(100))
+            recvbuf.append(this->serialPort.readAll());
 
-    QThread::msleep(100);
-
-//    QByteArray temp = this->ndi->readAll();
-//    recvbuf += temp;
-    recvbuf.append(this->ndi->readAll());
+    //    QByteArray temp = this->serialPort.readAll();
+    //    recvbuf += temp;
 
 
-    const char* p = recvbuf.data(); //get a pointer to received data
 
-    index += 30;
+        const char* p = recvbuf.data(); //get a pointer to received data
 
-    unsigned char numofpoints = getNum<unsigned char>(&(p[index]));
+        index += 30;
 
-    if (numofpoints > 8)
-        index += 1;
+        unsigned char numofpoints = getNum<unsigned char>(&(p[index]));
 
-    index += 2;
+        if (numofpoints > 8)
+            index += 1;
 
-    if(recvbuf.size() < (index + numofpoints*12)){
-        if(this->ndi->waitForReadyRead(50))
-            return;
-        recvbuf.append(this->ndi->readAll());
+        index += 2;
+
         if(recvbuf.size() < (index + numofpoints*12)){
-            qDebug() <<"NdiCommProc: received data length is wrong!";
-            return;
-        }
-    }
-
-    QList<QVector3D> markers;
-
-    for (int i = 0; i < numofpoints; i++)
-    {
-        float coordinate[3] = {0};
-
-        for (int j = 0; j < 3; j++) {
-            coordinate[j] = getNum<float>(&(p[index]));
-            index += 4;
+            if(this->serialPort.waitForReadyRead(50))
+                return;
+            recvbuf.append(this->serialPort.readAll());
+            if(recvbuf.size() < (index + numofpoints*12)){
+                qDebug() <<"NdiCommProc: received data length is wrong!";
+                return;
+            }
         }
 
-        markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
-    }
+        QList<QVector3D> markers;
 
-    emit dataReady(markers);
+        for (int i = 0; i < numofpoints; i++)
+        {
+            float coordinate[3] = {0};
+
+            for (int j = 0; j < 3; j++) {
+                coordinate[j] = getNum<float>(&(p[index]));
+                index += 4;
+            }
+
+            markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
+        }
+
+        emit dataReady(markers);
+    } catch (...) {
+        qDebug() << "NdiCommProc exception catched!";
+    }
 
 }
 
@@ -875,11 +877,11 @@ template<typename T> T NdiCommProc::getNum(const char *p)
 void NdiCommProc::data_read()
 {
     //FOR SU SHUN
-    this->ndi->clear();
+    this->serialPort.clear();
     msg = "BX:18033D6C\r";
     //msg = "BX:1000FEAD\r";
     //
-    ndi->write(msg);
+    serialPort.write(msg);
     int nSpot = 0;
     //	int numofpoints = 0;
     int p1 = 0;
@@ -889,9 +891,9 @@ void NdiCommProc::data_read()
     unsigned    char hexbyte[4];
     requestData1.clear();
     strDisplay.clear();
-    while (this->ndi->waitForReadyRead(100))
+    while (this->serialPort.waitForReadyRead(100))
     {
-        requestData = this->ndi->readAll();
+        requestData = this->serialPort.readAll();
         requestData1 = requestData1 + requestData;
     }
     strDisplay = requestData1.toHex();
@@ -903,7 +905,7 @@ void NdiCommProc::data_read()
     if(requestData1.length() != nSpot + numofpoints*12)
     {
         qDebug()<<"data length wrong,continue get data!";
-        requestData = this->ndi->readAll();
+        requestData = this->serialPort.readAll();
         requestData1 = requestData1 + requestData;
         strDisplay = requestData1.toHex();
     }
