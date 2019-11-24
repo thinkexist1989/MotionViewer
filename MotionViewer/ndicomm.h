@@ -30,7 +30,7 @@ public:
 	//Use to read and write on serialPort.    
 	inline void write(QByteArray ba) {if(isPortOpened) serialPort.write(ba);}    
 	inline bool waitForReadyRead(int msecs) {return serialPort.waitForReadyRead(msecs);}    
-	inline QByteArray readAll(){return serialPort.readAll();}
+    inline QByteArray readAll(){return serialPort.readAll();}
 	inline void clear() { serialPort.clear(); }
 private:
     Ui::NdiComm *ui;
@@ -49,7 +49,7 @@ private:
 
     QTimer *timer;
 
-    void printThread(); //Test for thread
+    void printThread(QString front); //Test for thread
 
 signals:
     void serialOpened(); //serial port open signal
@@ -58,6 +58,7 @@ signals:
     void dataReady(QList<QVector3D>);
 
 public slots:
+    void recvProc();
 
 private slots:
     void on_refreshButton_clicked();
@@ -83,18 +84,25 @@ public:
     QString strDisplay;
 
     QByteArray requestData1;
-    void initsensor(); //FOR SU SHUN
+
+    QByteArray recvbuf;
+
+    bool isRunning;
+
 signals:
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
 
 public slots:
+    void ndiCommStart(); //start to communicate with Ndi
 
-    void printThread();
+    void printThread(QString front);
     void data_read(); //FOR SU SHUN
+
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:
+    void initsensor(); //FOR SU SHUN
     bool datawrong=false;
     int ConvertHexQString(QString ch, int i, int j);
     float Hex_To_Decimal(unsigned char * Byte);

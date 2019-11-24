@@ -20,17 +20,15 @@ NdiComm::NdiComm(QWidget *parent) :
 	this->markers = data;
         emit this->dataReady(markers);});
 
-    ndiThread = new QThread(nullptr);
-
+    ndiThread = new QThread;
 }
 
 NdiComm::~NdiComm()
 {
     delete ui;
 
-    ndiThread->terminate(); //Not recommand, but can work
-    delete ndiThread;
-    delete ndiCommProc;
+    ndiCommProc->isRunning = false;
+    ndiThread->quit(); //Not recommand, but can work
 }
 
 void NdiComm::initPort()
@@ -132,9 +130,14 @@ QSerialPort::FlowControl NdiComm::getFlowCtrl(QString text)
         return QSerialPort::NoFlowControl;
 }
 
-void NdiComm::printThread()
+void NdiComm::printThread(QString front)
 {
-    qDebug() << "Current Thread is: " << QThread::currentThreadId();
+    qDebug()<< front << tr(" Thread is: ") << QThread::currentThreadId();
+}
+
+void NdiComm::recvProc()
+{
+
 }
 
 void NdiComm::on_refreshButton_clicked()
@@ -156,6 +159,8 @@ void NdiComm::on_openCloseButton_clicked()
             isPortOpened = true;
             ui->openCloseButton->setText(tr("Close"));
             ui->openCloseButton->setIcon(QIcon(":/icon/res/stop.ico"));
+
+            connect(&serialPort, &QSerialPort::readyRead, this, &NdiComm::recvProc);
             emit serialOpened();
         }
         else {
@@ -178,14 +183,11 @@ void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
         if(isPortOpened){
-          //  printThread();
+
             ndiCommProc->moveToThread(ndiThread);
+            connect(ndiThread, &QThread::started, ndiCommProc, &NdiCommProc::ndiCommStart);
+            connect(ndiThread, &QThread::finished, ndiThread, &QThread::deleteLater);
             ndiThread->start();
-            ndiCommProc->initsensor();
-            timer = new QTimer(this);
-            //connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::get_data);
-            connect(timer, &QTimer::timeout, ndiCommProc, &NdiCommProc::data_read);
-            timer->start(200);
 
             ui->startButton->setText(tr("Stop"));
             isStarted = true;
@@ -222,7 +224,8 @@ void NdiComm::changeEvent(QEvent *event)
 
 NdiCommProc::NdiCommProc(NdiComm *ndi, QObject *parent) :
     QObject (parent),
-    ndi (ndi)
+    ndi (ndi),
+    isRunning(true)
 {
     //ndi = dynamic_cast<NdiComm*>(parent);
 	
@@ -233,9 +236,18 @@ NdiCommProc::~NdiCommProc()
 
 }
 
-void NdiCommProc::printThread()
+void NdiCommProc::ndiCommStart()
 {
-    ndi->printThread();
+    initsensor(); //init Ndi
+    while (isRunning) {
+        get_data();
+//        printThread("NdiComm");
+    }
+}
+
+void NdiCommProc::printThread(QString front)
+{
+    ndi->printThread(front);
     QList<QVector3D> markers;
     markers.push_back(QVector3D(1,2,3));
     markers.push_back(QVector3D(2,4,5));
@@ -795,23 +807,25 @@ void NdiCommProc::initsensor()
 
 void NdiCommProc::get_data()
 {
-    //FOR SU SHUN
     this->ndi->clear();
     msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
 
     ndi->write(msg);
     int index = 0;
 
-    requestData1.clear();
+    recvbuf.clear();
 
-    while (this->ndi->waitForReadyRead(100))
-    {
+    if(this->ndi->waitForReadyRead(100))
+        return;
 
-        QByteArray temp = this->ndi->readAll();
-        requestData1 += temp;
-    }
+    QThread::msleep(100);
 
-    const char* p = requestData1.data(); //get a pointer to received data
+//    QByteArray temp = this->ndi->readAll();
+//    recvbuf += temp;
+    recvbuf.append(this->ndi->readAll());
+
+
+    const char* p = recvbuf.data(); //get a pointer to received data
 
     index += 30;
 
@@ -821,6 +835,16 @@ void NdiCommProc::get_data()
         index += 1;
 
     index += 2;
+
+    if(recvbuf.size() < (index + numofpoints*12)){
+        if(this->ndi->waitForReadyRead(50))
+            return;
+        recvbuf.append(this->ndi->readAll());
+        if(recvbuf.size() < (index + numofpoints*12)){
+            qDebug() <<"NdiCommProc: received data length is wrong!";
+            return;
+        }
+    }
 
     QList<QVector3D> markers;
 
@@ -843,12 +867,7 @@ void NdiCommProc::get_data()
 template<typename T> T NdiCommProc::getNum(const char *p)
 {
     T temp;
-    //memcpy_s(&temp, sizeof (T), p, sizeof (T));
-//    for (int i = 0;i < len; i++) {
-//        memcpy(&(pt[i]), &(p[len-i-1]), 1);
-//    }
     memcpy(&temp, p, sizeof (T));
-    //return qFromBigEndian<T>(temp); //From Big Endian to host byte order(x86 is Little Endian)
     return temp;
 }
 

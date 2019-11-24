@@ -23,6 +23,7 @@ public:
 
 signals:
     void readyForHololens(int, QList<QMatrix4x4>);
+    void needRegiMat(QString fileName);
 public slots:
     void transformProc(int, QList<NdiTool>);
     void holoMatrixProc(QMatrix4x4);
@@ -44,8 +45,10 @@ private:
     void reviseMatrixCalc();
     void boneDrillCalc();
     bool pCRead;
-    QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers);
-    QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers);
+    QMatrix4x4 SetCoordination(QMap<int,QVector3D> markers);
+    QMatrix4x4 SetCoordination1(QMap<int,QVector3D> markers);
+
+    void getRegiMat();
 };
 
 #endif // TRANSFORM_H

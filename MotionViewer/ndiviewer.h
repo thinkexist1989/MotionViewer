@@ -48,9 +48,11 @@ private:
 
     QList<NdiTool> getTools(QList<QVector3D> data);//tool name and pose
     QList<NdiTool> tools;
+    void getRegiMat();
 
 signals:
     void readyForTransform(int,QList<NdiTool>); //signal for transform
+    void needRegiMat(QString fileName);
 
 public slots:
     void dataProc(QList<QVector3D> data); //Process markers' coordinates
