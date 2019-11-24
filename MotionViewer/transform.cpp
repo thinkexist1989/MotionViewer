@@ -110,8 +110,11 @@ QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
 {
      QMatrix4x4 mat;
      QVector3D A=markers[0];
+     qDebug()<<"vector A"<<A;
      QVector3D B=markers[1];
+     qDebug()<<"vector B"<<B;
      QVector3D C=markers[2];
+     qDebug()<<"vector C"<<C;
      QVector3D AA=(B+C)/2-A;
      QVector3D BB=B-A;
      QVector3D CC=QVector3D::normal(A,B);
@@ -144,6 +147,7 @@ void Transform::LoadCalibrationMatrix()
   KinectMarkerToKinect.setRow(2,QVector4D(0.5766,0.8170, 0.0005,-0.0372));
   KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
   qDebug()<<"KinectMarkerToKinect"<<KinectMarkerToKinect;
+
   this->HoloLensToHoloLensMarkerMatrix=HoloLensToHoloLensMarker;
   this->KinectMarkerToKinectMatrix=KinectMarkerToKinect;
 }
@@ -174,12 +178,13 @@ void Transform::modelCalc()
         int index = tools.indexOf(NdiTool("Kinect"));
        KinectMarkers=tools[index].getIndexAndCoordinate();
        KinectMarkerToNDI=SetCoordination(KinectMarkers);
+       qDebug()<<"kinectMarkertoNdi"<<KinectMarkerToNDI;
     }
     //get the markers' location of HoloLens
     if(tools.contains(NdiTool("HoloLens"))){
         int index = tools.indexOf(NdiTool("HoloLens"));
       HoloLensMarkers=tools[index].getIndexAndCoordinate();
-       HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
+      // HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
        HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
     }
     //get the matrixs of pointcloud registration
