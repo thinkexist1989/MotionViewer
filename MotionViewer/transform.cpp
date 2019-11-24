@@ -217,6 +217,7 @@ void Transform::modelCalc()
 
     //result
     result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*KinectMarkerToNDI*KinectMarkerToKinect.inverted();
+    this->modelResultLastTimeMat=result;
     //右手系换左手系给HoloLens发送
     qDebug() << "beforemodelResultMat:" << result;
     result(0,2)=-result(0,2);
@@ -227,7 +228,7 @@ void Transform::modelCalc()
     qDebug() << "modelResultMat:" << result;
 
     //write last time modelResultMat
-    this->modelResultLastTimeMat=result;
+
     this->matrixList.clear();
     this->matrixList.push_back(result);
 }
@@ -255,7 +256,7 @@ void Transform::calibrationNeedleCalc()
     if(tools.contains(NdiTool("calibrationNeedle"))){
         int index = tools.indexOf(NdiTool("calibrationNeedle"));
        calibrationNeedleMarkers=tools[index].getIndexAndCoordinate();
-       calibrationNeedleToNDI=SetCoordination(calibrationNeedleMarkers);
+       calibrationNeedleToNDI=SetCoordination1(calibrationNeedleMarkers);
     }
     this->calibritionNeedleLastTimeMat=calibrationNeedleToNDI;
 
@@ -264,11 +265,12 @@ void Transform::calibrationNeedleCalc()
     if(tools.contains(NdiTool("HoloLens"))){
         int index = tools.indexOf(NdiTool("HoloLens"));
       HoloLensMarkers=tools[index].getIndexAndCoordinate();
-       HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
+       HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
     }
      //result
      result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*calibrationNeedleToNDI;
-    //右手系换左手系给HoloLens发送
+     this->calibritionNeedleResultLastTimeMat=result;
+     //右手系换左手系给HoloLens发送
      result(0,2)=-result(0,2);
      result(1,2)=-result(1,2);
      result(2,0)=-result(2,0);
@@ -276,7 +278,7 @@ void Transform::calibrationNeedleCalc()
      result(2,3)=-result(2,3);
      qDebug() << "calibrationNeedleResultMat:" << result;
      //write last time calibrationNeedleResultMat
-     this->calibritionNeedleResultLastTimeMat=result;
+
      this->matrixList.clear();
      this->matrixList.push_back(result);
 }
@@ -311,13 +313,13 @@ void Transform::reviseMatrixCalc()
      if(tools.contains(NdiTool("HoloLens"))){
           int index = tools.indexOf(NdiTool("HoloLens"));
         HoloLensMarkers=tools[index].getIndexAndCoordinate();
-        HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
+        HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
      }
      //get the markers' location of Needle this time
      if(tools.contains(NdiTool("calibrationNeedle"))){
          int index = tools.indexOf(NdiTool("calibrationNeedle"));
         calibrationNeedleMarkers=tools[index].getIndexAndCoordinate();
-        calibrationNeedleToNDI=SetCoordination(calibrationNeedleMarkers);
+        calibrationNeedleToNDI=SetCoordination1(calibrationNeedleMarkers);
      }
      //result
       result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*calibrationNeedleToNDI;
@@ -367,14 +369,14 @@ void Transform::boneDrillCalc()
     if(tools.contains(NdiTool("BoneDrill"))){
         int index = tools.indexOf(NdiTool("BoneDrill"));
        BoneDrillMarkers=tools[index].getIndexAndCoordinate();
-       boneDrillToNDI=SetCoordination(BoneDrillMarkers);
+       boneDrillToNDI=SetCoordination1(BoneDrillMarkers);
     }
     //get the markers' location of HoloLens
     QMap<int,QVector3D> HoloLensMarkers;
     if(tools.contains(NdiTool("HoloLens"))){
          int index = tools.indexOf(NdiTool("HoloLens"));
         HoloLensMarkers=tools[index].getIndexAndCoordinate();
-        HoloLensMarkerToNDI=SetCoordination(HoloLensMarkers);
+        HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
      }
      //result
      result=HoloLensToWorld*HoloLensToHoloLensMarker.inverted()*HoloLensMarkerToNDI.inverted()*boneDrillToNDI;
