@@ -76,6 +76,7 @@ void NdiViewer::refreshToolView(QList<NdiTool> tools)
 {
     if(tools.count() == 0)
         return;
+
     int count = tools.count();
     QStringList toolnames;
     for (int i = 0; i < count ; i++){
@@ -83,6 +84,15 @@ void NdiViewer::refreshToolView(QList<NdiTool> tools)
     }
     ui->lstToolName->clear();
     ui->lstToolName->addItems(toolnames);
+
+    if(ui->lstToolName->currentRow() != -1){
+        QString toolName = ui->lstToolName->currentItem()->text();
+        on_lstToolName_currentTextChanged(toolName);
+    }
+    else {
+        ui->lstToolName->setCurrentRow(0);
+    }
+
 }
 
 void NdiViewer::refreshMarkersInTool(NdiTool tool)
@@ -101,22 +111,19 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-    try {
-        //    qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
-            refreshMarkersView(data);
-            tools=getTools(data);
-            refreshToolView(tools);
-            if(!tools.isEmpty())
-            {
-                qDebug() <<"total detect"<<tools.length()<<"tool";
-                for (int i=0;i<tools.length();i++) {
-                                 qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
-                           }
-            }
 
-    } catch (...) {
-        qDebug() << "Exception catched!";
+    //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
+    refreshMarkersView(data);
+    tools=getTools(data);
+    refreshToolView(tools);
+    if(!tools.isEmpty())
+    {
+        qDebug() <<"total detect"<<tools.length()<<"tool";
+        for (int i=0;i<tools.length();i++) {
+                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
+                   }
     }
+
 
 }
 
@@ -198,7 +205,7 @@ QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
                     tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
                     detectedTools.push_back(tool);
                 }
-                qDebug() << tr("Find tools: ") << tool.getName();
+                //qDebug() << tr("Find tools: ") << tool.getName();
             }
         }
     }

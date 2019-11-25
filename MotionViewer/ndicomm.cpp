@@ -21,6 +21,10 @@ NdiComm::NdiComm(QWidget *parent) :
         emit this->dataReady(markers);});
 
     ndiThread = new QThread;
+
+    ndiCommProc->moveToThread(ndiThread);
+    connect(ndiThread, &QThread::started, ndiCommProc, &NdiCommProc::ndiCommStart);
+    connect(ndiThread, &QThread::finished, ndiThread, &QThread::deleteLater);
 }
 
 NdiComm::~NdiComm()
@@ -159,8 +163,6 @@ void NdiComm::on_openCloseButton_clicked()
             isPortOpened = true;
             ui->openCloseButton->setText(tr("Close"));
             ui->openCloseButton->setIcon(QIcon(":/icon/res/stop.ico"));
-
-            //connect(&ndiCommProc->serialPort, &QSerialPort::readyRead, this, &NdiComm::recvProc);
             emit serialOpened();
         }
         else {
@@ -169,13 +171,17 @@ void NdiComm::on_openCloseButton_clicked()
 
     }
     else {
-        ndiCommProc->serialPort.close();
+        if(isStarted){
+            qDebug() << tr("Please stop running first!");
+        }
+        else {
+            ndiCommProc->serialPort.close();
+            emit serialClosed(); //emit serialClosed signal;
 
-        emit serialClosed(); //emit serialClosed signal;
-
-        isPortOpened = false;
-        ui->openCloseButton->setText(tr("Close"));
-        ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
+            isPortOpened = false;
+            ui->openCloseButton->setText(tr("Close"));
+            ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
+        }
     }
 }
 
@@ -183,10 +189,6 @@ void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
         if(isPortOpened){
-
-            ndiCommProc->moveToThread(ndiThread);
-            connect(ndiThread, &QThread::started, ndiCommProc, &NdiCommProc::ndiCommStart);
-            connect(ndiThread, &QThread::finished, ndiThread, &QThread::deleteLater);
             ndiThread->start();
 
             ui->startButton->setText(tr("Stop"));
@@ -198,11 +200,12 @@ void NdiComm::on_startButton_clicked()
 
     }
     else {
-        timer->stop();
-        ndiThread->terminate();
+        ndiCommProc->isRunning = false;
+        ndiThread->quit();
+        connect(ndiThread, &QThread::finished, this, [=](){
+            ui->startButton->setText(tr("Start"));
+            isStarted = false;});
 
-        ui->startButton->setText(tr("Start"));
-        isStarted = false;
     }
 }
 
@@ -254,616 +257,132 @@ void NdiCommProc::printThread(QString front)
     emit dataReady(markers);
 }
 
+void NdiCommProc::writeReadMsg(QByteArray msg)
+{
+    if(isRunning){
+        serialPort.write(msg);
+        while (this->serialPort.waitForReadyRead(50))
+        {
+            this->serialPort.readAll();
+        }
+    }
+    else {
+        return;
+    }
+}
+
 void NdiCommProc::initsensor()
 {
     //FOR SU SHUN
-    msg = "1";
-    serialPort.write(msg);
-    while (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
+    qDebug() << "Initializing~~";
+    QList<QByteArray> msgList;
+
+    msgList << "1" << "APIREV \r" << "COMM 70001\r" << "COMM 50001\r" << "test\r";
+
+    foreach(const QByteArray msg, msgList){
+        writeReadMsg(msg);
+        QThread::msleep(50);
     }
-    QThread::msleep(50);
 
-    msg = "APIREV \r";
-    serialPort.write(msg);
-    while (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-
-    }
-    msg = "VER:4A6EF\r";
-    serialPort.write(msg);
-    while (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-
-
-    }
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(50);
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    msg = "COMM 70001\r";
-    serialPort.write(msg);
-    while (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-
-
-    }
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(50);
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    msg = "COMM 50001\r";
-    serialPort.write(msg);
-    while (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-
-    }
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    QThread::msleep(50);
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    msg = "test\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-
-
-
-    }
     QThread::msleep(5000);
-    //QMessageBox::warning(NULL, "warning", "12", QMessageBox::Abort);
-    msg = "VER:5662E\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
 
+    msgList.clear();
+    msgList << "VER:5662E\r" << "GETINFO:Config.*1110\r" << "GET:Device.*722D\r";
 
+    foreach(const QByteArray msg, msgList){
+        writeReadMsg(msg);
+        QThread::msleep(500);
     }
-    QThread::msleep(500);
-    msg = "GETINFO:Config.*1110\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
 
+    msgList.clear();
+    msgList << "INIT:E3A5\r" << "GET:Device.*722D\r" << "PHSR:0020FF\r" << "PINIT:0131EA\r"
+            << "PHSR:0020FF\r" << "GETINFO:Param.Tracking.*8D17\r" << "GETINFO:Features.Firmware.Version0492\r"
+            << "GETINFO:Info.Status.Alerts340A\r" << "GETINFO:Info.Status.New Alerts33A3\r" << "GETINFO:Features.Hardware.Serial Number68E4\r"
+            << "VER:4A6EF\r" << "GETINFO:Features.Tools.*F635\r" << "SFLIST:03500F\r" << "GETINFO:Param.Tracking.Selected VolumeC200\r"
+            << "PHINF:0100753CAF\r" << "GETINFO:SCU-0.Info.Status.New AlertsAF34\r" << "GETINFO:SCU-0.Info.Status.AlertsC917\r"
+            << "GETINFO:Info.Status.New Alerts33A3\r" << "GETINFO:Info.Status.Alerts340A\r" << "GETINFO:STB-0.Info.Status.New AlertsCC4F\r"
+            << "GETINFO:STB-0.Info.Status.Alerts389B\r" << "TSTART:5423\r" << "BX:18033D6C\r" << "TSTOP:2C14\r" << "SET:Param.Tracking.Illuminator Rate=2237A\r"
+            << "PHRQ:*********1****A4C1\r"
+            << "PVWR:0200004E444900AF12000001000000000000010000000002DC32355A00000004000000040000000000403F000000000000000000000000000000000000000000000000610B\r"
+            << "PVWR:0200400000204100000000000000000000000000000000000000001F853D4285EBE74100000000000000003333B24200000000A4700DC2A4700D4200000000000000002B7A\r"
+            << "PVWR:020080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005DEA\r"
+            << "PVWR:0200C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006EF1\r"
+            << "PVWR:02010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000803F00000000678F\r"
+            << "PVWR:020140000000000000803F00000000000000000000803F00000000000000000000803F00000000000000000000000000000000000000000000000000000000000000008535\r"
+            << "PVWR:020180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009DD2\r"
+            << "PVWR:0201C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AEC9\r"
+            << "PVWR:0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203000000000000000000000000000000001F1F1F1FC0FA\r"
+            << "PVWR:020240090000004E44490000000000000000003837303034343900000000000000000000000000090101010100000000000000000000000000000000010101010000008755\r"
+            << "PVWR:020280000000000000000000000000008000290000000000000000000080BF0000000000000000000000000000000000000000000000000000000000000000000000002FB1\r"
+            << "PVWR:0202C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AE82\r"
+            << "PINIT:0230AA\r"
+            << "PHINF:0200753CEB\r"
+            << "TSTART:5423\r"
+            << "BX:18033D6C\r"
+            << "TSTOP:2C14\r"
+            << "PENA:02D9D3B\r"
+            << "TSTART:5423\r"
+            << "BX:18033D6C\r";
 
-    }
-    QThread::msleep(500);
-    msg = "GET:Device.*722D\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
+    foreach(const QByteArray msg, msgList){
+        writeReadMsg(msg);
         QThread::msleep(50);
     }
-    QThread::msleep(500);
-    msg = "INIT:E3A5\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
 
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GET:Device.*722D\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PHSR:0020FF\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PINIT:0131EA\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PHSR:0020FF\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Param.Tracking.*8D17\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Features.Firmware.Version0492\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Info.Status.Alerts340A\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Info.Status.New Alerts33A3\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Features.Hardware.Serial Number68E4\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "VER:4A6EF\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Features.Tools.*F635\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "SFLIST:03500F\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(500);
-    msg = "GETINFO:Param.Tracking.Selected VolumeC200\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PHINF:0100753CAF\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:SCU-0.Info.Status.New AlertsAF34\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:SCU-0.Info.Status.AlertsC917\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Info.Status.New Alerts33A3\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:Info.Status.Alerts340A\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:STB-0.Info.Status.New AlertsCC4F\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "GETINFO:STB-0.Info.Status.Alerts389B\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "TSTART:5423\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "BX:18033D6C\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "TSTOP:2C14\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "SET:Param.Tracking.Illuminator Rate=2237A\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PHRQ:*********1****A4C1\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0200004E444900AF12000001000000000000010000000002DC32355A00000004000000040000000000403F000000000000000000000000000000000000000000000000610B\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0200400000204100000000000000000000000000000000000000001F853D4285EBE74100000000000000003333B24200000000A4700DC2A4700D4200000000000000002B7A\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:020080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000005DEA\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0200C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006EF1\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:02010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000803F00000000678F\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:020140000000000000803F00000000000000000000803F00000000000000000000803F00000000000000000000000000000000000000000000000000000000000000008535\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:020180000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009DD2\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0201C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AEC9\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0202000000000000000000000000000000000000000000000000000000000000000000000000000000000000010203000000000000000000000000000000001F1F1F1FC0FA\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:020240090000004E44490000000000000000003837303034343900000000000000000000000000090101010100000000000000000000000000000000010101010000008755\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:020280000000000000000000000000008000290000000000000000000080BF0000000000000000000000000000000000000000000000000000000000000000000000002FB1\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PVWR:0202C000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000AE82\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-
-    msg = "PINIT:0230AA\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PHINF:0200753CEB\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "TSTART:5423\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "BX:18033D6C\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "TSTOP:2C14\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-    msg = "PENA:02D9D3B\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        strDisplay = QString(requestData);
-
-
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-
-    msg = "TSTART:5423\r";
-    serialPort.write(msg);
-    if (this->serialPort.waitForReadyRead(50))
-    {
-        requestData += this->serialPort.readAll();
-        strDisplay = QString(requestData);
-        QThread::msleep(50);
-    }
-    QThread::msleep(50);
-
-    //QString finish;
-
-    //finish = " You can start collect data!";
-
+    qDebug() << "Init OK!";
 }
 
 
 void NdiCommProc::get_data()
 {
-    try {
-        this->serialPort.clear();
-        msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
+    this->serialPort.clear();
+    msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
 
-        serialPort.write(msg);
-        int index = 0;
+    serialPort.write(msg);
+    int index = 0;
 
-        recvbuf.clear();
+    recvbuf.clear();
 
-        while(this->serialPort.waitForReadyRead(100))
-            recvbuf.append(this->serialPort.readAll());
-
-    //    QByteArray temp = this->serialPort.readAll();
-    //    recvbuf += temp;
-
-
-
-        const char* p = recvbuf.data(); //get a pointer to received data
-
-        index += 30;
-
-        unsigned char numofpoints = getNum<unsigned char>(&(p[index]));
-
-        if (numofpoints > 8)
-            index += 1;
-
-        index += 2;
-
-        if(recvbuf.size() < (index + numofpoints*12)){
-            if(this->serialPort.waitForReadyRead(50))
-                return;
-            recvbuf.append(this->serialPort.readAll());
-            if(recvbuf.size() < (index + numofpoints*12)){
-                qDebug() <<"NdiCommProc: received data length is wrong!";
-                return;
-            }
-        }
-
-        QList<QVector3D> markers;
-
-        for (int i = 0; i < numofpoints; i++)
-        {
-            float coordinate[3] = {0};
-
-            for (int j = 0; j < 3; j++) {
-                coordinate[j] = getNum<float>(&(p[index]));
-                index += 4;
-            }
-
-            markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
-        }
-
-        emit dataReady(markers);
-    } catch (...) {
-        qDebug() << "NdiCommProc exception catched!";
+    while(this->serialPort.waitForReadyRead(50)){
+        recvbuf.append(this->serialPort.readAll());
     }
 
+    const char* p = recvbuf.data(); //get a pointer to received data
+
+    index += 30;
+
+    unsigned char numofpoints = getNum<unsigned char>(&(p[index]));
+
+    if (numofpoints > 8)
+        index += 1;
+
+    index += 2;
+
+    if(recvbuf.size() < (index + numofpoints*12)){
+        if(this->serialPort.waitForReadyRead(50))
+            return;
+        recvbuf.append(this->serialPort.readAll());
+        if(recvbuf.size() < (index + numofpoints*12)){
+            qDebug() <<"NdiCommProc: received data length is wrong!";
+            return;
+        }
+    }
+
+    QList<QVector3D> markers;
+
+    for (int i = 0; i < numofpoints; i++)
+    {
+        float coordinate[3] = {0};
+
+        for (int j = 0; j < 3; j++) {
+            coordinate[j] = getNum<float>(&(p[index]));
+            index += 4;
+        }
+
+        markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
+    }
+
+    emit dataReady(markers);
 }
 
 template<typename T> T NdiCommProc::getNum(const char *p)
