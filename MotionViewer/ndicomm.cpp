@@ -2,7 +2,16 @@
 #include "ui_ndicomm.h"
 #include <QDebug>
 #include <QtEndian>
-#include <stdio.h>
+
+QString serialName = "COM1";
+int baudRate = 9600;
+QSerialPort::Parity parity = QSerialPort::NoParity;
+QSerialPort::StopBits stopBits = QSerialPort::OneStop;
+QSerialPort::DataBits dataBits = QSerialPort::Data8;
+QSerialPort::FlowControl flowControl = QSerialPort::NoFlowControl;
+
+bool openSuccess = false;
+
 
 NdiComm::NdiComm(QWidget *parent) :
     QWidget(parent),
@@ -20,11 +29,8 @@ NdiComm::NdiComm(QWidget *parent) :
 	this->markers = data;
         emit this->dataReady(markers);});
 
-    ndiThread = new QThread;
-
-    ndiCommProc->moveToThread(ndiThread);
-    connect(ndiThread, &QThread::started, ndiCommProc, &NdiCommProc::ndiCommStart);
-    connect(ndiThread, &QThread::finished, ndiThread, &QThread::deleteLater);
+    connect(this, &NdiComm::serialOpened, ndiCommProc, &NdiCommProc::openSerial, Qt::BlockingQueuedConnection);
+    connect(this, &NdiComm::commStarted, ndiCommProc, &NdiCommProc::ndiCommStart);
 }
 
 NdiComm::~NdiComm()
@@ -32,7 +38,7 @@ NdiComm::~NdiComm()
     delete ui;
 
     ndiCommProc->isRunning = false;
-    ndiThread->quit(); //Not recommand, but can work
+    //ndiThread->quit(); //Not recommand, but can work
 }
 
 void NdiComm::initPort()
@@ -151,36 +157,42 @@ void NdiComm::on_refreshButton_clicked()
 
 void NdiComm::on_openCloseButton_clicked()
 {
-    if(!isPortOpened){
-        ndiCommProc->serialPort.setPortName(ui->cmbPortName->currentText());
-        if(ndiCommProc->serialPort.open(QIODevice::ReadWrite)){ //open serial port success
-            ndiCommProc->serialPort.setBaudRate(ui->cmbBuadrate->currentText().toInt());
-            ndiCommProc->serialPort.setParity(getParity(ui->cmbParity->currentText()));
-            ndiCommProc->serialPort.setDataBits(getDataBits(ui->cmbDataBits->currentText()));
-            ndiCommProc->serialPort.setStopBits(getStopBits(ui->cmbStopBits->currentText()));
-            ndiCommProc->serialPort.setFlowControl(getFlowCtrl(ui->cmbFlowCtrl->currentText()));
+    if(!isPortOpened){ // serial not open
+        serialName = ui->cmbPortName->currentText();
+        baudRate = ui->cmbBuadrate->currentText().toInt();
+        parity = getParity(ui->cmbParity->currentText());
+        dataBits = getDataBits(ui->cmbDataBits->currentText());
+        stopBits = getStopBits(ui->cmbStopBits->currentText());
+        flowControl = getFlowCtrl(ui->cmbFlowCtrl->currentText());
 
+        emit serialOpened(true);
+
+        if(openSuccess){ // serial open success
             isPortOpened = true;
             ui->openCloseButton->setText(tr("Close"));
             ui->openCloseButton->setIcon(QIcon(":/icon/res/stop.ico"));
-            emit serialOpened();
+            qDebug() << "Open serial port success!";
         }
-        else {
-            qDebug() << tr("Failed to open serial port");
+        else { // serial open failed
+            qDebug() << "Open serial port failed!";
         }
-
     }
-    else {
-        if(isStarted){
+    else { // serial is already open
+        if(isStarted){ // is communicating with ndi
             qDebug() << tr("Please stop running first!");
         }
-        else {
-            ndiCommProc->serialPort.close();
-            emit serialClosed(); //emit serialClosed signal;
+        else { // not communicating with ndi
+            emit serialOpened(false);
 
-            isPortOpened = false;
-            ui->openCloseButton->setText(tr("Close"));
-            ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
+            if(!openSuccess){ // serial close success
+                isPortOpened = false;
+                ui->openCloseButton->setText(tr("Close"));
+                ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
+                qDebug() << "Close serial port success!";
+            }
+            else {
+                qDebug() << "Close serial port failed!";
+            }
         }
     }
 }
@@ -188,23 +200,22 @@ void NdiComm::on_openCloseButton_clicked()
 void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
-        if(isPortOpened){
-            ndiThread->start();
-
+        if(isPortOpened){ // serial is already opened
+            emit commStarted();
             ui->startButton->setText(tr("Stop"));
             isStarted = true;
         }
-        else {
+        else { // serial not open
             qDebug() << tr("Please Open Serial Port First!");
         }
 
     }
-    else {
+    else { // is already start
         ndiCommProc->isRunning = false;
-        ndiThread->quit();
-        connect(ndiThread, &QThread::finished, this, [=](){
-            ui->startButton->setText(tr("Start"));
-            isStarted = false;});
+//        ndiThread->quit();
+//        connect(ndiThread, &QThread::finished, this, [=](){
+//            ui->startButton->setText(tr("Start"));
+//            isStarted = false;});
 
     }
 }
@@ -221,15 +232,31 @@ void NdiComm::changeEvent(QEvent *event)
 
 /********************NdiCommProc*****************************/
 /*
- * Processing time consuming operation
- */
+ *
+ *
+ *  Processing time consuming operation
+ *
+ *
+ ************************************************************/
 
 
 NdiCommProc::NdiCommProc(QObject *parent) :
     QObject (parent),
     isRunning(true)
 {
-    //ndi = dynamic_cast<NdiComm*>(parent);
+    ndiThread = new QThread();
+
+
+    this->moveToThread(ndiThread);
+
+    serialPort = new QSerialPort();
+
+    serialPort->moveToThread(ndiThread);
+
+    //connect(ndiThread, &QThread::started, this, &NdiCommProc::ndiCommStart);
+   // connect(ndiThread, &QThread::finished, ndiThread, &QThread::deleteLater);
+
+    ndiThread->start();
 	
 }
 
@@ -238,19 +265,51 @@ NdiCommProc::~NdiCommProc()
 
 }
 
+void NdiCommProc::openSerial(bool open)
+{
+    if(open){
+        serialPort->setPortName(serialName);
+        if(serialPort->open(QIODevice::ReadWrite)){ //open serial port success
+            serialPort->setBaudRate(baudRate);
+            serialPort->setParity(parity);
+            serialPort->setDataBits(dataBits);
+            serialPort->setStopBits(stopBits);
+            serialPort->setFlowControl(flowControl);
+            openSuccess = true;
+        }
+        else {
+            openSuccess = false;
+        }
+    }
+    else {
+        if(isRunning == false){
+            serialPort->close();
+        }
+        else {
+            qDebug() << tr("Please Open Serial Port First!");
+        }
+
+    }
+}
+
 void NdiCommProc::ndiCommStart()
 {
     initsensor(); //init Ndi
+    isRunning = true;
     while (isRunning) {
 //        data_read();
         get_data();
-//        printThread("NdiComm");
     }
+}
+
+void NdiCommProc::ndiCommStop()
+{
+    isRunning = false;
 }
 
 void NdiCommProc::printThread(QString front)
 {
-    //serialPort.printThread(front);
+    qDebug()<< front << tr(" Thread is: ") << QThread::currentThreadId();
     QList<QVector3D> markers;
     markers.push_back(QVector3D(1,2,3));
     markers.push_back(QVector3D(2,4,5));
@@ -260,10 +319,10 @@ void NdiCommProc::printThread(QString front)
 void NdiCommProc::writeReadMsg(QByteArray msg)
 {
     if(isRunning){
-        serialPort.write(msg);
-        while (this->serialPort.waitForReadyRead(50))
+        serialPort->write(msg);
+        while (this->serialPort->waitForReadyRead(50))
         {
-            this->serialPort.readAll();
+            this->serialPort->readAll();
         }
     }
     else {
@@ -335,16 +394,16 @@ void NdiCommProc::initsensor()
 
 void NdiCommProc::get_data()
 {
-    this->serialPort.clear();
+    this->serialPort->clear();
     msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
 
-    serialPort.write(msg);
+    serialPort->write(msg);
     int index = 0;
 
     recvbuf.clear();
 
-    while(this->serialPort.waitForReadyRead(50)){
-        recvbuf.append(this->serialPort.readAll());
+    while(this->serialPort->waitForReadyRead(50)){
+        recvbuf.append(this->serialPort->readAll());
     }
 
     const char* p = recvbuf.data(); //get a pointer to received data
@@ -359,9 +418,9 @@ void NdiCommProc::get_data()
     index += 2;
 
     if(recvbuf.size() < (index + numofpoints*12)){
-        if(this->serialPort.waitForReadyRead(50))
+        if(this->serialPort->waitForReadyRead(50))
             return;
-        recvbuf.append(this->serialPort.readAll());
+        recvbuf.append(this->serialPort->readAll());
         if(recvbuf.size() < (index + numofpoints*12)){
             qDebug() <<"NdiCommProc: received data length is wrong!";
             return;
@@ -396,11 +455,11 @@ template<typename T> T NdiCommProc::getNum(const char *p)
 void NdiCommProc::data_read()
 {
     //FOR SU SHUN
-    this->serialPort.clear();
+    this->serialPort->clear();
     msg = "BX:18033D6C\r";
     //msg = "BX:1000FEAD\r";
     //
-    serialPort.write(msg);
+    serialPort->write(msg);
     int nSpot = 0;
     //	int numofpoints = 0;
     int p1 = 0;
@@ -410,9 +469,9 @@ void NdiCommProc::data_read()
     unsigned    char hexbyte[4];
     requestData1.clear();
     strDisplay.clear();
-    while (this->serialPort.waitForReadyRead(100))
+    while (this->serialPort->waitForReadyRead(100))
     {
-        requestData = this->serialPort.readAll();
+        requestData = this->serialPort->readAll();
         requestData1 = requestData1 + requestData;
     }
     strDisplay = requestData1.toHex();
@@ -424,7 +483,7 @@ void NdiCommProc::data_read()
     if(requestData1.length() != nSpot + numofpoints*12)
     {
         qDebug()<<"data length wrong,continue get data!";
-        requestData = this->serialPort.readAll();
+        requestData = this->serialPort->readAll();
         requestData1 = requestData1 + requestData;
         strDisplay = requestData1.toHex();
     }

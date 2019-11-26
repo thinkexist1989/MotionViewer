@@ -9,6 +9,14 @@
 #include <QVector3D>
 #include <QList>
 
+extern QString                  serialName;
+extern int                      baudRate;
+extern QSerialPort::Parity      parity;
+extern QSerialPort::StopBits    stopBits;
+extern QSerialPort::DataBits    dataBits;
+extern QSerialPort::FlowControl flowControl;
+extern bool                     openSuccess;
+
 namespace Ui {
     class NdiComm;
 }
@@ -32,7 +40,7 @@ private:
     Ui::NdiComm *ui;
     NdiCommProc *ndiCommProc;
 	NdiComm *ndiComm;
-    QThread *ndiThread;
+//    QThread *ndiThread;
 //    QSerialPort serialPort; //Serial port
     
     bool isPortOpened;
@@ -53,8 +61,9 @@ public:
 //    inline void clear() { serialPort.clear(); }
 
 signals:
-    void serialOpened(); //serial port open signal
-    void serialClosed(); //serial port close signal
+    void serialOpened(bool); //serial port open or close signal
+    void commStarted(); //start with ndi signal
+
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
 
@@ -70,6 +79,12 @@ protected:
     void changeEvent(QEvent *event);
 };
 
+/**********************************/
+/*
+ * NdiComProc
+ *
+ *
+ * ********************************/
 
 class NdiCommProc : public QObject
 {
@@ -89,13 +104,16 @@ public:
 
     bool isRunning;
 
-    QSerialPort serialPort;
+    QSerialPort* serialPort;
+    QThread *ndiThread;
 
 signals:
     void initFinished(QString);
     void dataReady(QList<QVector3D>);
 
 public slots:
+    void openSerial(bool open);
+
     void ndiCommStart(); //start to communicate with Ndi
 
     void printThread(QString front);
