@@ -136,7 +136,36 @@ QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
     return mat;
 
 }
+QMatrix4x4 Transform::SetCoordination2(QMap<int,QVector3D> markers)
+{
+     QMatrix4x4 mat;
+     QVector3D A=markers[0];
+    // qDebug()<<"vector A"<<A;
+     QVector3D B=markers[1];
+    // qDebug()<<"vector B"<<B;
+     QVector3D C=markers[2];
+    // qDebug()<<"vector C"<<C;
+     QVector3D AA=A-B;
+     //qDebug()<<"vector AA"<<AA;
+     QVector3D BB=C-A;
+     //qDebug()<<"vector BB"<<BB;
+     QVector3D CC=QVector3D::crossProduct(AA,BB);
+     CC=CC.normalized();
+     //qDebug()<<"CC"<<CC;
+     AA=AA.normalized();
+     //BB=QVector3D::normal(C,A);
+     BB=QVector3D::crossProduct(CC,AA);
+     BB=BB.normalized();
+     //QGenericMatrix(QMatrix4x4).
 
+    mat.setColumn(0, QVector4D(AA,0));
+    mat.setColumn(1, QVector4D(BB,0));
+    mat.setColumn(2, QVector4D(CC,0));
+    mat.setColumn(3, QVector4D(markers[0]/1000,1));
+    qDebug()<<"Toolcoordination1Matrix"<<mat;
+    return mat;
+
+}
 void Transform::getRegiMat()
 {
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
@@ -256,7 +285,7 @@ void Transform::calibrationNeedleCalc()
     if(tools.contains(NdiTool("calibrationNeedle"))){
         int index = tools.indexOf(NdiTool("calibrationNeedle"));
        calibrationNeedleMarkers=tools[index].getIndexAndCoordinate();
-       calibrationNeedleToNDI=SetCoordination1(calibrationNeedleMarkers);
+       calibrationNeedleToNDI=SetCoordination2(calibrationNeedleMarkers);
     }
     this->calibritionNeedleLastTimeMat=calibrationNeedleToNDI;
 

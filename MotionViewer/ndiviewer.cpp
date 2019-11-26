@@ -246,8 +246,8 @@ QList<NdiTool> NdiViewer::getToolDefination()
     NdiTool Tool4("Kinect");
 
     QList<QList<float>> Tool1markerDistances;
-    QList<float> Tool1p1; Tool1p1 << 137 << 103 << 50;
-    QList<float> Tool1p2; Tool1p2 << 88 << 56 << 50;
+    QList<float> Tool1p1; Tool1p1 << 88 << 56 << 50;
+    QList<float> Tool1p2; Tool1p2 << 137 << 103 << 50;
     QList<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
     QList<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
     Tool1markerDistances << Tool1p1 << Tool1p2 << Tool1p3 << Tool1p4;

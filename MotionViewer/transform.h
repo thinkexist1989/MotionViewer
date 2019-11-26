@@ -47,7 +47,7 @@ private:
     bool pCRead;
     QMatrix4x4 SetCoordination(QMap<int,QVector3D> markers);
     QMatrix4x4 SetCoordination1(QMap<int,QVector3D> markers);
-
+    QMatrix4x4 SetCoordination2(QMap<int,QVector3D> markers);
     void getRegiMat();
 };
 
