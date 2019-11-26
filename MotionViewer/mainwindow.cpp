@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QMatrix4x4>
+#include <QLineEdit>
+#include <QComboBox>
 
 MainWindow::MainWindow(QWidget *parent) :
                                           QMainWindow(parent),
@@ -53,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(holoComm, &HoloComm::dataReady,holoViewer, &HoloViewer::dataProc); //holo
 
     connect(ndiViewer, &NdiViewer::readyForTransform, transform, &Transform::transformProc); // transform
+    connect(ndiViewer, &NdiViewer::toolsReady, transform, &Transform::toolsProc); // transform
     connect(transform, &Transform::readyForHololens, holoComm, &HoloComm::commandProc);   // send msg to HoloLens
 
     connect(holoComm, &HoloComm::holoMatrixReady, transform, &Transform::holoMatrixProc); // HoloLens return msg
@@ -89,6 +92,15 @@ void MainWindow::loadSettings()
     QSettings settings("settings.ini", QSettings::IniFormat, this);
     ui->actionNdiViewer->setChecked(settings.value("NdiViewer",true).toBool());
     ui->actionHoloViewer->setChecked(settings.value("HoloViewer",true).toBool());
+
+//    QLineEdit* ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtAddress");
+//    ldt->setText(settings.value("HoloLens IP", "192.168.0.1").toString());
+
+//    ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtPort");
+//    ldt->setText(settings.value("HoloLens IP", "192.168.0.1").toString());
+
+//    QComboBox* cmbBox = ui->holoCommDockWidget->findChild<QComboBox*>("cmbType");
+//    settings.setValue("Connection Type", cmbBox->currentText());
 }
 
 void MainWindow::saveSettings()
@@ -96,6 +108,17 @@ void MainWindow::saveSettings()
     QSettings settings("settings.ini", QSettings::IniFormat, this);
     settings.setValue("NdiViewer", ui->actionNdiViewer->isChecked());
     settings.setValue("HoloViewer", ui->actionHoloViewer->isChecked());
+
+    QLineEdit* ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtAddress");
+    settings.setValue("HoloLens IP", ldt->text());
+
+    ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtPort");
+    settings.setValue("HoloLens Port", ldt->text());
+
+    QComboBox* cmbBox = ui->holoCommDockWidget->findChild<QComboBox*>("cmbType");
+    settings.setValue("Connection Type", cmbBox->currentText());
+
+
 }
 
 void MainWindow::changeEvent(QEvent *event)

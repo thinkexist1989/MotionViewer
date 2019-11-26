@@ -116,14 +116,16 @@ void NdiViewer::dataProc(QList<QVector3D> data)
     refreshMarkersView(data);
     tools=getTools(data);
     refreshToolView(tools);
-    if(!tools.isEmpty())
-    {
-        qDebug() <<"total detect"<<tools.length()<<"tool";
-        for (int i=0;i<tools.length();i++) {
-                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
-                   }
-    }
 
+    emit toolsReady(tools);
+
+//    if(!tools.isEmpty())
+//    {
+//        qDebug() <<"total detect"<<tools.length()<<"tool";
+//        for (int i=0;i<tools.length();i++) {
+//                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
+//                   }
+//    }
 
 }
 

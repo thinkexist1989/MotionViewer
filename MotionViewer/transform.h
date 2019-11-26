@@ -26,6 +26,7 @@ signals:
     void needRegiMat(QString fileName);
 public slots:
     void transformProc(int, QList<NdiTool>);
+    void toolsProc(QList<NdiTool>);
     void holoMatrixProc(QMatrix4x4);
     void poindCloudRegiMatProc(QMatrix4x4);
 

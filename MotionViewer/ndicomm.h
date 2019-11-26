@@ -122,7 +122,7 @@ public slots:
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:
-    void writeReadMsg(QByteArray msg);
+    bool writeReadMsg(QByteArray msg);
     void initsensor(); //FOR SU SHUN
     bool datawrong=false;
     int ConvertHexQString(QString ch, int i, int j);

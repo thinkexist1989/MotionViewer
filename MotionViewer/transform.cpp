@@ -11,7 +11,7 @@ Transform::Transform(QObject *parent) :
 void Transform::transformProc(int command, QList<NdiTool> tools)
 {
     //TODO: add transform code
-    this->tools = tools;
+    //this->tools = tools;
 
     QList<QMatrix4x4> matrixList;
     switch(command) {
@@ -34,6 +34,11 @@ void Transform::transformProc(int command, QList<NdiTool> tools)
     default:
         break;
     }
+}
+
+void Transform::toolsProc(QList<NdiTool> tools)
+{
+    this->tools = tools;
 }
 
 void Transform::holoMatrixProc(QMatrix4x4 holoMat)
