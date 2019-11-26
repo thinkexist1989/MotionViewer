@@ -43,8 +43,6 @@ private:
     QSerialPort::StopBits getStopBits(QString text);
     QSerialPort::FlowControl getFlowCtrl(QString text);
 
-    QTimer *timer;
-
     void printThread(QString front); //Test for thread
 
 public:
@@ -106,6 +104,7 @@ public slots:
     void get_data(); // Get data from NDI BY Yang Luo
 
 private:
+    void writeReadMsg(QByteArray msg);
     void initsensor(); //FOR SU SHUN
     bool datawrong=false;
     int ConvertHexQString(QString ch, int i, int j);

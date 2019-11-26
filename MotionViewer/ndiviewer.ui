@@ -146,7 +146,11 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2" rowstretch="5,1" columnstretch="1,3,0">
       <item row="0" column="0">
-       <widget class="QListWidget" name="lstToolName"/>
+       <widget class="QListWidget" name="lstToolName">
+        <property name="currentRow">
+         <number>-1</number>
+        </property>
+       </widget>
       </item>
       <item row="1" column="0" colspan="3">
        <widget class="QGroupBox" name="grpFunctions">
