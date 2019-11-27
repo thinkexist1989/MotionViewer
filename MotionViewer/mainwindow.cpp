@@ -26,8 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<NdiTool>("NdiTool");
     qRegisterMetaType<QList<NdiTool>>("QList<NdiTool>");
 
-
-    loadSettings();
     chineseTranslator = new QTranslator(this);
     chineseTranslator->load(":/translations/translation_zh.qm");
 
@@ -68,6 +66,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //    qDebug() << "QMatrix data 2 is:" << mat.data()[2];
 //    QPair<QString, int> a;
 //    qDebug() << "a is:" << a.first << a.second;
+
+    loadSettings();
 }
 
 MainWindow::~MainWindow()
@@ -93,14 +93,17 @@ void MainWindow::loadSettings()
     ui->actionNdiViewer->setChecked(settings.value("NdiViewer",true).toBool());
     ui->actionHoloViewer->setChecked(settings.value("HoloViewer",true).toBool());
 
-//    QLineEdit* ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtAddress");
-//    ldt->setText(settings.value("HoloLens IP", "192.168.0.1").toString());
+    QLineEdit* ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtAddress");
+    ldt->setText(settings.value("HoloLens IP", "192.168.0.1").toString());
 
-//    ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtPort");
-//    ldt->setText(settings.value("HoloLens IP", "192.168.0.1").toString());
+    ldt = ui->holoCommDockWidget->findChild<QLineEdit*>("ldtPort");
+    ldt->setText(settings.value("HoloLens Port", "12345").toString());
 
-//    QComboBox* cmbBox = ui->holoCommDockWidget->findChild<QComboBox*>("cmbType");
-//    settings.setValue("Connection Type", cmbBox->currentText());
+    ldt = ui->regiDockWidget->findChild<QLineEdit*>("ldtPointCloudRegiMatDir");
+    ldt->setText(settings.value("RegiMat Dir", "../").toString());
+
+    QComboBox* cmbBox = ui->holoCommDockWidget->findChild<QComboBox*>("cmbType");
+    cmbBox->setCurrentText(settings.value("Connection Type", "Server").toString());
 }
 
 void MainWindow::saveSettings()
@@ -118,6 +121,8 @@ void MainWindow::saveSettings()
     QComboBox* cmbBox = ui->holoCommDockWidget->findChild<QComboBox*>("cmbType");
     settings.setValue("Connection Type", cmbBox->currentText());
 
+    ldt = ui->regiDockWidget->findChild<QLineEdit*>("ldtPointCloudRegiMatDir");
+    settings.setValue("RegiMat Dir", ldt->text());
 
 }
 

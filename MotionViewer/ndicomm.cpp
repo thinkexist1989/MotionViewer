@@ -4,11 +4,11 @@
 #include <QElapsedTimer>
 
 QString serialName = "COM1";
-int baudRate = 9600;
+int baudRate = 1228739;
 QSerialPort::Parity parity = QSerialPort::NoParity;
 QSerialPort::StopBits stopBits = QSerialPort::OneStop;
 QSerialPort::DataBits dataBits = QSerialPort::Data8;
-QSerialPort::FlowControl flowControl = QSerialPort::NoFlowControl;
+QSerialPort::FlowControl flowControl = QSerialPort::HardwareControl;
 
 bool openSuccess = false;
 
@@ -59,10 +59,10 @@ void NdiComm::initPort()
 
     //set buadrate combobox
     QStringList baudList;
-    baudList << "4800" << "9600" << "19200"
-             << "38400" << "57600" << "115200";
+    baudList << "9600" << "14400" << "38400"
+             << "57600" << "115200" << "921600" << "1228739";
     ui->cmbBuadrate->addItems(baudList);
-    ui->cmbBuadrate->setCurrentText("9600");
+    ui->cmbBuadrate->setCurrentText("1228739");
 
     //set parity combobox
     QStringList parityList;
@@ -85,7 +85,7 @@ void NdiComm::initPort()
     QStringList flowCtrlList;
     flowCtrlList << tr("None") << tr("Hardware") << tr("Software");
     ui->cmbFlowCtrl->addItems(flowCtrlList);
-    ui->cmbFlowCtrl->setCurrentText(tr("None"));
+    ui->cmbFlowCtrl->setCurrentText(tr("Hardware"));
 }
 
 QSerialPort::Parity NdiComm::getParity(QString text)
@@ -274,11 +274,11 @@ void NdiCommProc::openSerial(bool open)
     if(open){
         serialPort->setPortName(serialName);
         if(serialPort->open(QIODevice::ReadWrite)){ //open serial port success
-            serialPort->setBaudRate(baudRate);
-            serialPort->setParity(parity);
-            serialPort->setDataBits(dataBits);
-            serialPort->setStopBits(stopBits);
-            serialPort->setFlowControl(flowControl);
+            serialPort->setBaudRate(9600);
+            serialPort->setParity(QSerialPort::NoParity);
+            serialPort->setDataBits(QSerialPort::Data8);
+            serialPort->setStopBits(QSerialPort::OneStop);
+            serialPort->setFlowControl(QSerialPort::NoFlowControl);
             openSuccess = true;
         }
         else {
@@ -299,7 +299,10 @@ void NdiCommProc::openSerial(bool open)
 
 void NdiCommProc::ndiCommStart()
 {
-    initsensor(); //init Ndi
+    if(!initsensor()){ //init Ndi
+        qDebug() << tr("Init NDI failed!");
+        return;
+    }
     while (isRunning) {
 //        data_read();
         get_data();
@@ -315,51 +318,84 @@ void NdiCommProc::printThread(QString front)
     emit dataReady(markers);
 }
 
-bool NdiCommProc::writeReadMsg(QByteArray msg)
+//bool NdiCommProc::writeReadMsg(QByteArray msg)
+//{
+//    if(isRunning){
+//        serialPort->write(msg);
+//        while (this->serialPort->waitForReadyRead(50))
+//        {
+//            this->serialPort->readAll();
+//        }
+//        return  true;
+//    }
+//    else {
+//        return false;
+//    }
+//}
+
+bool NdiCommProc::writeReadMsg(QByteArray sendmsg, QByteArray recvmsg, int delay_ms, int read_ms)
 {
     if(isRunning){
-        serialPort->write(msg);
-        while (this->serialPort->waitForReadyRead(50))
+        serialPort->write(sendmsg);
+        QThread::msleep(static_cast<unsigned long>(delay_ms));
+        QByteArray recvbuf;
+        while (this->serialPort->waitForReadyRead(read_ms))
         {
-            this->serialPort->readAll();
+            recvbuf.append(this->serialPort->readAll());
         }
-        return  true;
+        if(recvbuf.contains(recvmsg)){
+            return  true;
+        }
+        else{
+            qDebug() << "Response error!";
+            return false;
+        }
     }
     else {
         return false;
     }
 }
 
-void NdiCommProc::initsensor()
+bool NdiCommProc::initsensor()
 {
     //FOR SU SHUN
     qDebug() << "Initializing~~";
     QList<QByteArray> msgList;
 
-    msgList << "1" << "APIREV \r" << "COMM 70001\r" << "COMM 50001\r" << "test\r";
+    if(!writeReadMsg("VER 4\r", "Northern Digital Inc.",0,50)){
+        qDebug() << "Waiting for reset...";
+        writeReadMsg("RESET 0", "RESET", 8000, 50);
+    }
+
+    //QThread::msleep(5000);
+
+    msgList << "APIREV \r" << "COMM 70001\r";
 
     foreach(const QByteArray msg, msgList){
-        if(!writeReadMsg(msg))
-            return;
+        if(!writeReadMsg(msg,"",0,50))
+            return false;
         QThread::msleep(50);
     }
 
-    QThread::msleep(5000);
+    QThread::msleep(60);
+
+    serialPort->setBaudRate(baudRate);
+    serialPort->setFlowControl(flowControl);
 
     msgList.clear();
-    msgList << "VER:5662E\r" << "GETINFO:Config.*1110\r" << "GET:Device.*722D\r";
+    msgList << "VER 5\r" << "GETINFO:Config.*1110\r" << "GET:Device.*722D\r";
 
     foreach(const QByteArray msg, msgList){
-        if(!writeReadMsg(msg))
-            return;
-        QThread::msleep(500);
+        if(!writeReadMsg(msg, "" , 0, 50))
+            return false;
+        QThread::msleep(50);
     }
 
     msgList.clear();
     msgList << "INIT:E3A5\r" << "GET:Device.*722D\r" << "PHSR:0020FF\r" << "PINIT:0131EA\r"
             << "PHSR:0020FF\r" << "GETINFO:Param.Tracking.*8D17\r" << "GETINFO:Features.Firmware.Version0492\r"
             << "GETINFO:Info.Status.Alerts340A\r" << "GETINFO:Info.Status.New Alerts33A3\r" << "GETINFO:Features.Hardware.Serial Number68E4\r"
-            << "VER:4A6EF\r" << "GETINFO:Features.Tools.*F635\r" << "SFLIST:03500F\r" << "GETINFO:Param.Tracking.Selected VolumeC200\r"
+            << "VER 4\r" << "GETINFO:Features.Tools.*F635\r" << "SFLIST:03500F\r" << "GETINFO:Param.Tracking.Selected VolumeC200\r"
             << "PHINF:0100753CAF\r" << "GETINFO:SCU-0.Info.Status.New AlertsAF34\r" << "GETINFO:SCU-0.Info.Status.AlertsC917\r"
             << "GETINFO:Info.Status.New Alerts33A3\r" << "GETINFO:Info.Status.Alerts340A\r" << "GETINFO:STB-0.Info.Status.New AlertsCC4F\r"
             << "GETINFO:STB-0.Info.Status.Alerts389B\r" << "TSTART:5423\r" << "BX:18033D6C\r" << "TSTOP:2C14\r" << "SET:Param.Tracking.Illuminator Rate=2237A\r"
@@ -386,12 +422,13 @@ void NdiCommProc::initsensor()
             << "BX:18033D6C\r";
 
     foreach(const QByteArray msg, msgList){
-        if(!writeReadMsg(msg))
-            return;
+        if(!writeReadMsg(msg, "", 0, 50))
+            return false;
         QThread::msleep(50);
     }
 
     qDebug() << "Init OK!";
+    return true;
 }
 
 
@@ -401,14 +438,14 @@ void NdiCommProc::get_data()
     timer.start();
 
     this->serialPort->clear();
-    msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
+    QByteArray msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
 
     serialPort->write(msg);
     int index = 0;
 
     recvbuf.clear();
 
-    while(this->serialPort->waitForReadyRead(50)){
+    while(this->serialPort->waitForReadyRead(10)){
         recvbuf.append(this->serialPort->readAll());
     }
 
@@ -459,144 +496,143 @@ template<typename T> T NdiCommProc::getNum(const char *p)
     return temp;
 }
 
+//void NdiCommProc::data_read()
+//{
+//    //FOR SU SHUN
+//    this->serialPort->clear();
+//    QByteArray msg = "BX:18033D6C\r";
+//    //msg = "BX:1000FEAD\r";
+//    //
+//    serialPort->write(msg);
+//    int nSpot = 0;
+//    //	int numofpoints = 0;
+//    int p1 = 0;
+//    int p2 = 0;
+//    int p3 = 0;
+//    int p4 = 0;
+//    unsigned    char hexbyte[4];
+//    requestData1.clear();
+//    strDisplay.clear();
+//    while (this->serialPort->waitForReadyRead(100))
+//    {
+//        requestData = this->serialPort->readAll();
+//        requestData1 = requestData1 + requestData;
+//    }
+//    strDisplay = requestData1.toHex();
+//    nSpot += 60;
+//    int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
+//    if (numofpoints > 8)
+//        nSpot += 2;
+//    nSpot += 4;
+//    if(requestData1.length() != nSpot + numofpoints*12)
+//    {
+//        qDebug()<<"data length wrong,continue get data!";
+//        requestData = this->serialPort->readAll();
+//        requestData1 = requestData1 + requestData;
+//        strDisplay = requestData1.toHex();
+//    }
+//    if(requestData1.length() == nSpot + numofpoints*12)
+//    {
 
-void NdiCommProc::data_read()
-{
-    //FOR SU SHUN
-    this->serialPort->clear();
-    msg = "BX:18033D6C\r";
-    //msg = "BX:1000FEAD\r";
-    //
-    serialPort->write(msg);
-    int nSpot = 0;
-    //	int numofpoints = 0;
-    int p1 = 0;
-    int p2 = 0;
-    int p3 = 0;
-    int p4 = 0;
-    unsigned    char hexbyte[4];
-    requestData1.clear();
-    strDisplay.clear();
-    while (this->serialPort->waitForReadyRead(100))
-    {
-        requestData = this->serialPort->readAll();
-        requestData1 = requestData1 + requestData;
-    }
-    strDisplay = requestData1.toHex();
-    nSpot += 60;
-    int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
-    if (numofpoints > 8)
-        nSpot += 2;
-    nSpot += 4;
-    if(requestData1.length() != nSpot + numofpoints*12)
-    {
-        qDebug()<<"data length wrong,continue get data!";
-        requestData = this->serialPort->readAll();
-        requestData1 = requestData1 + requestData;
-        strDisplay = requestData1.toHex();
-    }
-    if(requestData1.length() == nSpot + numofpoints*12)
-    {
+//        qDebug()<<"data length right!";
+//    }
+//    float data[1][3];
+//    QList<QVector3D> markers;
+//    for (int i = 0; i < numofpoints; i++)
+//    {
+//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        hexbyte[0] = p1;
+//        hexbyte[1] = p2;
+//        hexbyte[2] = p3;
+//        hexbyte[3] = p4;
+//        q = Hex_To_Decimal(hexbyte);
+//        data[0][0] = q;
+//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        hexbyte[0] = p1;
+//        hexbyte[1] = p2;
+//        hexbyte[2] = p3;
+//        hexbyte[3] = p4;
+//        q = Hex_To_Decimal(hexbyte);
+//        data[0][1] = q;
+//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
+//        nSpot += 2;
+//        hexbyte[0] = p1;
+//        hexbyte[1] = p2;
+//        hexbyte[2] = p3;
+//        hexbyte[3] = p4;
+//        q = Hex_To_Decimal(hexbyte);
+//        data[0][2] = q;
 
-        qDebug()<<"data length right!";
-    }
-    float data[1][3];
-    QList<QVector3D> markers;
-    for (int i = 0; i < numofpoints; i++)
-    {
-        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        hexbyte[0] = p1;
-        hexbyte[1] = p2;
-        hexbyte[2] = p3;
-        hexbyte[3] = p4;
-        q = Hex_To_Decimal(hexbyte);
-        data[0][0] = q;
-        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        hexbyte[0] = p1;
-        hexbyte[1] = p2;
-        hexbyte[2] = p3;
-        hexbyte[3] = p4;
-        q = Hex_To_Decimal(hexbyte);
-        data[0][1] = q;
-        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-        nSpot += 2;
-        hexbyte[0] = p1;
-        hexbyte[1] = p2;
-        hexbyte[2] = p3;
-        hexbyte[3] = p4;
-        q = Hex_To_Decimal(hexbyte);
-        data[0][2] = q;
+//markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
 
-markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
+//    }
 
-    }
+//    emit dataReady(markers);
+//    requestData.clear();
+//}
 
-    emit dataReady(markers);
-    requestData.clear();
-}
+//int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
+//{
+//    int u = 0;
+//    for (int n = 0; n < i; n++)
+//    {
+//        if (ch[j + n] == '0')
+//            u = u + (0 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '1')
+//            u = u + (1 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '2')
+//            u = u + (2 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '3')
+//            u = u + (3 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '4')
+//            u = u + (4 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '5')
+//            u = u + (5 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '6')
+//            u = u + (6 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '7')
+//            u = u + (7 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '8')
+//            u = u + (8 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == '9')
+//            u = u + (9 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'a' || ch[j] == 'A')
+//            u = u + (10 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'b' || ch[j] == 'B')
+//            u = u + (11 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'c' || ch[j] == 'C')
+//            u = u + (12 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'd' || ch[j] == 'D')
+//            u = u + (13 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'e' || ch[j] == 'E')
+//            u = u + (14 * (int)pow(16, i - n - 1));
+//        if (ch[j + n] == 'f' || ch[j] == 'F')
+//            u = u + (15 * (int)pow(16, i - n - 1));
+//    }
+//    return u;
+//}
+//float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//
+//{
 
-int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
-{
-    int u = 0;
-    for (int n = 0; n < i; n++)
-    {
-        if (ch[j + n] == '0')
-            u = u + (0 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '1')
-            u = u + (1 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '2')
-            u = u + (2 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '3')
-            u = u + (3 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '4')
-            u = u + (4 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '5')
-            u = u + (5 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '6')
-            u = u + (6 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '7')
-            u = u + (7 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '8')
-            u = u + (8 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == '9')
-            u = u + (9 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'a' || ch[j] == 'A')
-            u = u + (10 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'b' || ch[j] == 'B')
-            u = u + (11 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'c' || ch[j] == 'C')
-            u = u + (12 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'd' || ch[j] == 'D')
-            u = u + (13 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'e' || ch[j] == 'E')
-            u = u + (14 * (int)pow(16, i - n - 1));
-        if (ch[j + n] == 'f' || ch[j] == 'F')
-            u = u + (15 * (int)pow(16, i - n - 1));
-    }
-    return u;
-}
-float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//
-{
-
-    return *((float*)Byte);//
-}
+//    return *((float*)Byte);//
+//}

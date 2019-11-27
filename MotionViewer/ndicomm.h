@@ -93,7 +93,7 @@ public:
     explicit NdiCommProc(QObject *parent = nullptr);
     ~NdiCommProc();
     float q;
-    const char *msg;
+    //const char *msg;
 
     QByteArray requestData;
     QString strDisplay;
@@ -117,17 +117,21 @@ public slots:
     void ndiCommStart(); //start to communicate with Ndi
 
     void printThread(QString front);
-    void data_read(); //FOR SU SHUN
 
     void get_data(); // Get data from NDI BY Yang Luo
 
+//    void data_read(); //FOR SU SHUN
+
 private:
-    bool writeReadMsg(QByteArray msg);
-    void initsensor(); //FOR SU SHUN
-    bool datawrong=false;
-    int ConvertHexQString(QString ch, int i, int j);
-    float Hex_To_Decimal(unsigned char * Byte);
+    bool writeReadMsg(QByteArray sendmsg, QByteArray recvmsg = "", int delay_ms = 0, int read_ms = 10);
+    bool initsensor();
     template<typename T> T getNum(const char* p);
+
+//    bool writeReadMsg(QByteArray msg);
+//    bool datawrong=false;
+//    int ConvertHexQString(QString ch, int i, int j);
+//    float Hex_To_Decimal(unsigned char * Byte);
+
 };
 
 #endif // NDICOMM_H
