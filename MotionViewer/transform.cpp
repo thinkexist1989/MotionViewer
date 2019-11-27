@@ -12,6 +12,8 @@ void Transform::transformProc(int command, QList<NdiTool> tools)
 {
     //TODO: add transform code
     //this->tools = tools;
+    if(!pCRead)
+        getRegiMat();
 
     QList<QMatrix4x4> matrixList;
     switch(command) {
@@ -173,10 +175,7 @@ QMatrix4x4 Transform::SetCoordination2(QMap<int,QVector3D> markers)
 }
 void Transform::getRegiMat()
 {
-    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
-    if(QFile::exists(fileName)){
-        emit needRegiMat(fileName);
-    }
+    emit needRegiMat();
 }
 
 

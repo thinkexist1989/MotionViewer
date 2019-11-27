@@ -30,9 +30,12 @@ void RegiViewer::showMatrix(QMatrix4x4 mat)
     }
 }
 
-void RegiViewer::needRegiMatProc(QString fileName)
+void RegiViewer::needRegiMatProc()
 {
-    ui->ldtPointCloudRegiMatDir->setText(fileName);
+    QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
+    if(QFile::exists(fileName)){
+        ui->ldtPointCloudRegiMatDir->setText(fileName);
+    }
     on_btnLoad_clicked();
 }
 

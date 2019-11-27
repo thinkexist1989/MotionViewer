@@ -21,7 +21,7 @@ public:
     QMatrix4x4 pointCloudRegiMat;
 
 public slots:
-    void needRegiMatProc(QString fileName);
+    void needRegiMatProc();
 
 private slots:
     void on_btnOpenFile_clicked();

@@ -23,7 +23,7 @@ public:
 
 signals:
     void readyForHololens(int, QList<QMatrix4x4>);
-    void needRegiMat(QString fileName);
+    void needRegiMat();
 public slots:
     void transformProc(int, QList<NdiTool>);
     void toolsProc(QList<NdiTool>);
