@@ -64,7 +64,8 @@ void Transform::holoMatrixProc(QMatrix4x4 holoMat)
         currentCommand = HOLO_INFO;
         break;
     case HOLO_BONE_DRILL:
-        boneDrillCalc();
+         calibrationNeedleCalc();
+        //boneDrillCalc();
         emit readyForHololens(currentCommand, matrixList);
         break;
     default:
@@ -187,13 +188,29 @@ void Transform::LoadCalibrationMatrix()
     HoloLensToHoloLensMarker.setRow(3,QVector4D(0,0,0,1));
     qDebug()<<"HoloLensToHoloLensMarker"<<HoloLensToHoloLensMarker;
   QMatrix4x4 KinectMarkerToKinect;
-  KinectMarkerToKinect.setRow(0,QVector4D(0.8169,-0.5766,-0.0114,-0.0521));
-  KinectMarkerToKinect.setRow(1,QVector4D(-0.0090,0.0070,-0.9999,-0.0299));
-  KinectMarkerToKinect.setRow(2,QVector4D(0.5766,0.8170, 0.0005,-0.0372));
-  KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
+//  KinectMarkerToKinect.setRow(0,QVector4D(0.8169,-0.5766,-0.0114,-0.0521));
+//  KinectMarkerToKinect.setRow(1,QVector4D(-0.0090,0.0070,-0.9999,-0.0299));
+//  KinectMarkerToKinect.setRow(2,QVector4D(0.5766,0.8170, 0.0005,-0.0372));
+//  KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
+//  KinectMarkerToKinect.setRow(0,QVector4D(0.805047667579374	,0.0242791253042955	,-0.592713064643818	,0.0414454673757110));
+//  KinectMarkerToKinect.setRow(1,QVector4D(-0.593098936442153,0.0135986281423361,-0.805014738314669,-0.0215208694997023));
+//  KinectMarkerToKinect.setRow(2,QVector4D(-0.0114849691421504,0.999612725702863,0.0253474672639905,-0.0367470357651656));
+//  KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
+    KinectMarkerToKinect.setRow(0,QVector4D(0.805047667579375	,-0.593098936442152	,-0.0114849691421508	,-0.0465516202259655));
+    KinectMarkerToKinect.setRow(1,QVector4D(0.0242791253042953	,0.0135986281423364	,0.999612725702861	,0.0360191991886339));
+    KinectMarkerToKinect.setRow(2,QVector4D(-0.592713064643818	,-0.805014738314668	,0.0253474672639903	,0.00817209714135227));
+    KinectMarkerToKinect.setRow(3,QVector4D(0,0,0,1));
   qDebug()<<"KinectMarkerToKinect"<<KinectMarkerToKinect;
+ QMatrix4x4 HoloLensCameratoHoloLens;
+ HoloLensCameratoHoloLens.setRow(0,QVector4D(0.999773739057218,	0.0210033940735367,	0.00561886502047147,-0.00991192830221874));
+ HoloLensCameratoHoloLens.setRow(1,QVector4D(0.0213648747610139,-0.997427839881842,-0.0684774762115394,0.00326366088660478));
+ HoloLensCameratoHoloLens.setRow(2,QVector4D(0.00421721391800663,0.0684935369659415,-0.997624078482386,0.0625722174495811));
+ HoloLensCameratoHoloLens.setRow(3,QVector4D(0,0,0,1));
+qDebug()<<"HoloLensCameratoHoloLens"<<HoloLensCameratoHoloLens;
 
-  this->HoloLensToHoloLensMarkerMatrix=HoloLensToHoloLensMarker;
+
+
+ this->HoloLensToHoloLensMarkerMatrix=HoloLensToHoloLensMarker;
   this->KinectMarkerToKinectMatrix=KinectMarkerToKinect;
 }
 void Transform::poindCloudRegiMatProc(QMatrix4x4 mat)
@@ -402,7 +419,7 @@ void Transform::boneDrillCalc()
     if(tools.contains(NdiTool("BoneDrill"))){
         int index = tools.indexOf(NdiTool("BoneDrill"));
        BoneDrillMarkers=tools[index].getIndexAndCoordinate();
-       boneDrillToNDI=SetCoordination1(BoneDrillMarkers);
+       boneDrillToNDI=SetCoordination2(BoneDrillMarkers);
     }
     //get the markers' location of HoloLens
     QMap<int,QVector3D> HoloLensMarkers;
