@@ -18,6 +18,7 @@ public:
     QList<QList<float>> getMarkersDistances();
 
     void setMarkers(QList<QVector3D>);
+    void addMarker(QVector3D marker);
 
     QMap<int,QVector3D> coordinates;
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<ToolDefinition>
+        <Tool name="CalibrationNeedle">
+                <Marker x="1.0" y="2.0" z="3.0" dis="88 56 50" />             
+                <Marker x="3.0" y="2.0" z="2.0" dis="137 103 50"/>              
+                <Marker x="1.5" y="2.0" z="1.0" dis="61 103 56"/> 
+		<Marker x="1.5" y="2.0" z="1.0" dis="137 88 61"/>           
+        </Tool>
+        <Tool name="HoloLens">
+                <Marker x="1.0" y="2.0" z="3.0" dis="66 105 59" />             
+                <Marker x="3.0" y="2.0" z="2.0" dis="117 51 59"/>              
+                <Marker x="1.5" y="2.0" z="1.0" dis="117 66 150"/> 
+		<Marker x="1.5" y="2.0" z="1.0" dis="150 51 105"/>           
+        </Tool>
+        <Tool name="BoneDrill">
+                <Marker x="1.0" y="2.0" z="3.0" dis="60 88 50" />             
+                <Marker x="3.0" y="2.0" z="2.0" dis="73 54 50"/>              
+                <Marker x="1.5" y="2.0" z="1.0" dis="65 88 55"/> 
+		<Marker x="1.5" y="2.0" z="1.0" dis="60 73 65"/>           
+        </Tool>
+        <Tool name="Kinect">
+                <Marker x="1.0" y="2.0" z="3.0" dis="76 120" />             
+                <Marker x="3.0" y="2.0" z="2.0" dis="76 192"/>              
+                <Marker x="1.5" y="2.0" z="1.0" dis="120 192"/>           
+        </Tool>
+</ToolDefinition>

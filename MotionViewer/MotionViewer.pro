@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network serialport
+QT       += core gui network serialport xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -34,7 +34,8 @@ SOURCES += \
     holoviewer.cpp \
     nditool.cpp \
     transform.cpp \
-    regiviewer.cpp
+    regiviewer.cpp \
+    xmlparser.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
     holoviewer.h \
     nditool.h \
     transform.h \
-    regiviewer.h
+    regiviewer.h \
+    xmlparser.h
 
 FORMS += \
         mainwindow.ui \

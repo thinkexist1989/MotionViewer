@@ -12,6 +12,7 @@ NdiViewer::NdiViewer(QWidget *parent) :
 {
     ui->setupUi(this);
     init();
+
 //    QList<QVector3D> markers;
 //    markers.push_back(QVector3D(1.1,2.1,3.1));
 //    markers.push_back(QVector3D(2.2,4.4,5.9));
@@ -288,7 +289,8 @@ QList<NdiTool> NdiViewer::getToolDefination()
     QList<NdiTool> tools;
     tools << Tool1 << Tool2 << Tool3 << Tool4;
 
-    //加一个读取文本的东西
+    //read tool definition from xml file
+    //QList<NdiTool> tools = XmlParser::getToolsFromXml("../MotionViewer/tooldef.xml");
     return tools;
 }
 

@@ -8,6 +8,7 @@
 #include <nditool.h>
 #include <transform.h>
 #include <QPair>
+#include <xmlparser.h>
 
 namespace Ui {
 class NdiViewer;

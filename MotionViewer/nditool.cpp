@@ -31,6 +31,11 @@ void NdiTool::setMarkers(QList<QVector3D> markers)
     this->markers = markers;
 }
 
+void NdiTool::addMarker(QVector3D marker)
+{
+    this->markers.push_back(marker);
+}
+
 void NdiTool::insertIndexAndCoordinate(int index, QVector3D coordinate)
 {
     coordinates[index] = coordinate;
