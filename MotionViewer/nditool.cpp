@@ -21,6 +21,11 @@ void NdiTool::setMarkersDistances(QList<QList<float> > markerDistances)
     this->markerDistances = markerDistances;
 }
 
+void NdiTool::addMarkerDistance(QList<float> markerDistance)
+{
+    this->markerDistances.push_back(markerDistance);
+}
+
 QList<QList<float> > NdiTool::getMarkersDistances()
 {
     return this->markerDistances;

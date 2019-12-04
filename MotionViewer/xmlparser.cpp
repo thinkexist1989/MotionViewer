@@ -9,24 +9,25 @@ XmlParser::XmlParser(QObject *parent) : QObject(parent)
 
 QList<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
 {
+    int i = 0;
     QList<NdiTool> tools;
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
-        qDebug() << tr("Can not Open Xml File");
+        qDebug() << tr("XmlParser: Can not Open Xml File");
         return tools;
     }
 
     QDomDocument doc;
     if(!doc.setContent(&file)){
-        qDebug() << tr("Can not Read Xml File");
+        qDebug() << tr("XmlParser: Can not Read Xml File");
         file.close();
         return tools;
     }
     file.close();
 
     QDomElement root = doc.documentElement(); //return root node
-    if(!root.nodeName().toLower().contains("tooldefinition")){
-        qDebug() << tr("The xml must contain <ToolDefinition> as document root ");
+    if(root.nodeName().toLower() != ("tooldefinition")){
+        qDebug() << tr("XmlParser: The xml must contain <ToolDefinition> as document root ");
         return tools;
     }
     QDomNode toolNode = root.firstChild(); // get first tool
@@ -34,7 +35,7 @@ QList<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
         if(toolNode.isElement()){
             QDomElement e = toolNode.toElement();
             if(e.tagName().toLower() == "tool"){
-                qDebug() << tr("Find Tools:") << e.attribute("name");
+                qDebug() << tr("XmlParser: Tools ").toStdString().c_str() << ++i << tr("=>").toStdString().c_str() << e.attribute("name");
                 NdiTool tool(e.attribute("name"));
                 QDomNodeList markerNodes = e.childNodes();
                 for (int i = 0; i < markerNodes.count(); i++) {
@@ -54,30 +55,31 @@ QList<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
         }
         toolNode = toolNode.nextSibling();
     }
-
+    qDebug() << tr("Total find").toStdString().c_str() << tools.count() << tr("tools").toStdString().c_str();
     return tools;
 }
 
 QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
 {
+    int i = 0;
     QList<NdiTool> tools;
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
-        qDebug() << tr("Can not Open Xml File");
+        qDebug() << tr("XmlParser: Can not Open Xml File");
         return tools;
     }
 
     QDomDocument doc;
     if(!doc.setContent(&file)){
-        qDebug() << tr("Can not Read Xml File");
+        qDebug() << tr("XmlParser: Can not Read Xml File");
         file.close();
         return tools;
     }
     file.close();
 
     QDomElement root = doc.documentElement(); //return root node
-    if(!root.nodeName().toLower().contains("tooldefinition")){
-        qDebug() << tr("The xml must contain <ToolDefinition> as document root ");
+    if(root.nodeName().toLower() != ("tooldefinition")){
+        qDebug() << tr("XmlParser: The xml must contain <ToolDefinition> as document root ");
         return tools;
     }
     QDomNode toolNode = root.firstChild(); // get first tool
@@ -85,7 +87,7 @@ QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
         if(toolNode.isElement()){
             QDomElement e = toolNode.toElement();
             if(e.tagName().toLower() == "tool"){
-                qDebug() << tr("Find Tools:") << e.attribute("name");
+                qDebug() << tr("XmlParser: Tools ").toStdString().c_str() << ++i << tr("=>").toStdString().c_str() << e.attribute("name");
                 NdiTool tool(e.attribute("name"));
                 QDomNodeList markerNodes = e.childNodes();
                 for (int i = 0; i < markerNodes.count(); i++) {
@@ -93,10 +95,13 @@ QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
                     if(markerNode.isElement()){
                         QDomElement e = markerNode.toElement();
                         if(e.tagName().toLower() == "marker"){
-                            float x = e.attribute("x").toFloat();
-                            float y = e.attribute("y").toFloat();
-                            float z = e.attribute("z").toFloat();
-                            tool.addMarker(QVector3D(x,y,z));
+                            QString alldists = e.attribute("dis");
+                            QStringList strList = alldists.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
+                            QList<float> dists;
+                            foreach(QString dis, strList){
+                                dists.push_back(dis.toFloat());
+                            }
+                            tool.addMarkerDistance(dists);
                         }
                     }
                 }
@@ -105,7 +110,7 @@ QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
         }
         toolNode = toolNode.nextSibling();
     }
-
+    qDebug() << tr("Total find").toStdString().c_str() << tools.count() << tr("tools").toStdString().c_str();
     return tools;
 }
 

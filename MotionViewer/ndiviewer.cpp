@@ -250,47 +250,47 @@ QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
 
 QList<NdiTool> NdiViewer::getToolDefination()
 {
-    NdiTool Tool1("calibrationNeedle");
-    NdiTool Tool2("HoloLens");
-    NdiTool Tool3("BoneDrill");
-    NdiTool Tool4("Kinect");
+//    NdiTool Tool1("calibrationNeedle");
+//    NdiTool Tool2("HoloLens");
+//    NdiTool Tool3("BoneDrill");
+//    NdiTool Tool4("Kinect");
 
-    QList<QList<float>> Tool1markerDistances;
-    QList<float> Tool1p1; Tool1p1 << 88 << 56 << 50;
-    QList<float> Tool1p2; Tool1p2 << 137 << 103 << 50;
-    QList<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
-    QList<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
-    Tool1markerDistances << Tool1p1 << Tool1p2 << Tool1p3 << Tool1p4;
-    Tool1.setMarkersDistances(Tool1markerDistances);
+//    QList<QList<float>> Tool1markerDistances;
+//    QList<float> Tool1p1; Tool1p1 << 88 << 56 << 50;
+//    QList<float> Tool1p2; Tool1p2 << 137 << 103 << 50;
+//    QList<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
+//    QList<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
+//    Tool1markerDistances << Tool1p1 << Tool1p2 << Tool1p3 << Tool1p4;
+//    Tool1.setMarkersDistances(Tool1markerDistances);
 
-    QList<QList<float>> Tool2markerDistances;
-    QList<float> Tool2p1; Tool2p1 << 66 << 105 << 59;
-    QList<float> Tool2p2; Tool2p2 << 117 << 51 << 59;
-    QList<float> Tool2p3; Tool2p3 << 117 << 66 << 150;
-    QList<float> Tool2p4; Tool2p4 << 150 << 51 << 105;
-    Tool2markerDistances << Tool2p1 << Tool2p2 << Tool2p3 << Tool2p4;
-    Tool2.setMarkersDistances(Tool2markerDistances);
+//    QList<QList<float>> Tool2markerDistances;
+//    QList<float> Tool2p1; Tool2p1 << 66 << 105 << 59;
+//    QList<float> Tool2p2; Tool2p2 << 117 << 51 << 59;
+//    QList<float> Tool2p3; Tool2p3 << 117 << 66 << 150;
+//    QList<float> Tool2p4; Tool2p4 << 150 << 51 << 105;
+//    Tool2markerDistances << Tool2p1 << Tool2p2 << Tool2p3 << Tool2p4;
+//    Tool2.setMarkersDistances(Tool2markerDistances);
 
-    QList<QList<float>> Tool3markerDistances;
-    QList<float> Tool3p1; Tool3p1 << 60 << 88 << 50;
-    QList<float> Tool3p2; Tool3p2 << 73 << 54 << 50;
-    QList<float> Tool3p3; Tool3p3 << 65 << 88 << 55;
-    QList<float> Tool3p4; Tool3p4 << 60 << 73 << 65;
-    Tool3markerDistances << Tool3p1 << Tool3p2 << Tool3p3 << Tool3p4;
-    Tool3.setMarkersDistances(Tool3markerDistances);
+//    QList<QList<float>> Tool3markerDistances;
+//    QList<float> Tool3p1; Tool3p1 << 60 << 88 << 50;
+//    QList<float> Tool3p2; Tool3p2 << 73 << 54 << 50;
+//    QList<float> Tool3p3; Tool3p3 << 65 << 88 << 55;
+//    QList<float> Tool3p4; Tool3p4 << 60 << 73 << 65;
+//    Tool3markerDistances << Tool3p1 << Tool3p2 << Tool3p3 << Tool3p4;
+//    Tool3.setMarkersDistances(Tool3markerDistances);
 
-    QList<QList<float>> Tool4markerDistances;
-    QList<float> Tool4p1; Tool4p1 << 76 << 120 ;
-    QList<float> Tool4p2; Tool4p2 << 76 << 192 ;
-    QList<float> Tool4p3; Tool4p3 << 120 <<192 ;
-    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 ;
-    Tool4.setMarkersDistances(Tool4markerDistances);
+//    QList<QList<float>> Tool4markerDistances;
+//    QList<float> Tool4p1; Tool4p1 << 76 << 120 ;
+//    QList<float> Tool4p2; Tool4p2 << 76 << 192 ;
+//    QList<float> Tool4p3; Tool4p3 << 120 <<192 ;
+//    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 ;
+//    Tool4.setMarkersDistances(Tool4markerDistances);
 
-    QList<NdiTool> tools;
-    tools << Tool1 << Tool2 << Tool3 << Tool4;
+//    QList<NdiTool> tools;
+//    tools << Tool1 << Tool2 << Tool3 << Tool4;
 
     //read tool definition from xml file
-    //QList<NdiTool> tools = XmlParser::getToolsFromXml("../MotionViewer/tooldef.xml");
+    QList<NdiTool> tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/tooldef.xml");
     return tools;
 }
 
@@ -336,13 +336,13 @@ QMatrix4x4 NdiViewer::getVirtualTransformMatrix()
 
 QMatrix4x4 NdiViewer::getRealTransformMatrix()
 {
-    QMatrix4x4 mat(1.1,2.2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
     return mat;
 }
 
 QMatrix4x4 NdiViewer::getCalibrationMatrix()
 {
-    QMatrix4x4 mat(1.5,2.7,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
+    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
     return mat;
 }
 
