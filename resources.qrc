@@ -2,7 +2,6 @@
     <qresource prefix="/translations">
         <file>res/english.png</file>
         <file>res/chinese.png</file>
-        <file>translation_zh.qm</file>
     </qresource>
     <qresource prefix="/about">
         <file>res/zs.jpg</file>

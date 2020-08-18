@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<QList<NdiTool>>("QList<NdiTool>");
 
     chineseTranslator = new QTranslator(this);
-    chineseTranslator->load(":/translations/translation_zh.qm");
+    chineseTranslator->load("translation_zh.qm");
 
     ui->ndiCommDockWidget->setWidget(ndiComm);
     ui->ndiViewerDockWidget->setWidget(ndiViewer);
