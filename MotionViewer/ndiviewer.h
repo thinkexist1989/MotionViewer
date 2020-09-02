@@ -40,7 +40,8 @@ private:
 
     void init();
     bool isTool(QVector<float> dists, NdiTool toolx, int &index);
-    QList<NdiTool> getToolDefination();
+    //QList<NdiTool> getToolDefination();
+    void getToolDefination();
     QPair<QString, int> judgeTool(QVector<float> dists);
 
     QMatrix4x4 getVirtualTransformMatrix(); // Virtual tool pose
@@ -49,6 +50,7 @@ private:
 
     QList<NdiTool> getTools(QList<QVector3D> data);//tool name and pose
     QList<NdiTool> tools;
+    QList<NdiTool> existTools;
     void getRegiMat();
 
 signals:

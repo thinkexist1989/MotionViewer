@@ -36,6 +36,7 @@ void NdiViewer::init()
 {
     ui->tblMarkersView->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     ui->tblToolMarkers->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    getToolDefination();
     //ui->tblToolMarkers->verticalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     //set comboBox Functions
@@ -73,15 +74,14 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 }
 
-void NdiViewer::refreshToolView(QList<NdiTool> tools)
+void NdiViewer::refreshToolView(QList<NdiTool> existtools)
 {
-    if(tools.count() == 0)
+    if(existtools.count() == 0)
         return;
-
-    int count = tools.count();
+    int count = existtools.count();
     QStringList toolnames;
     for (int i = 0; i < count ; i++){
-        toolnames << tools[i].getName();
+        toolnames << existtools[i].getName();
     }
     ui->lstToolName->clear();
     ui->lstToolName->addItems(toolnames);
@@ -115,10 +115,14 @@ void NdiViewer::dataProc(QList<QVector3D> data)
 
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
-    tools=getTools(data);
-    refreshToolView(tools);
+    existTools=getTools(data);
+    if(existTools.count()>0)
+    qDebug() << existTools[0].getName()<<endl;
+    else
+    qDebug() <<"no tools is detected"<<endl;
+    refreshToolView(existTools);
 
-    emit toolsReady(tools);
+    emit toolsReady(existTools);
 
 //    if(!tools.isEmpty())
 //    {
@@ -145,16 +149,16 @@ void NdiViewer::on_btnExec_clicked()
     const int index = ui->cmbSteps->currentIndex();
     switch (index) {
     case 0://step 1:model
-        emit readyForTransform(HOLO_MODEL,tools);//emit signal to registrate
+        emit readyForTransform(HOLO_MODEL,existTools);//emit signal to registrate
         break;
     case 1://step 2:calibration needle
-        emit readyForTransform(HOLO_CALI_NEEDLE,tools);//emit signal to registrate
+        emit readyForTransform(HOLO_CALI_NEEDLE,existTools);//emit signal to registrate
         break;
     case 2://step 3:revise matrix
-        emit readyForTransform(HOLO_REVISE_MATRIX,tools);//emit signal to registrate
+        emit readyForTransform(HOLO_REVISE_MATRIX,existTools);//emit signal to registrate
         break;
     case 3: //step 4:bone drill
-        emit readyForTransform(HOLO_BONE_DRILL,tools);//emit signal to registrate
+        emit readyForTransform(HOLO_BONE_DRILL,existTools);//emit signal to registrate
         break;
     default:
         break;
@@ -225,12 +229,9 @@ void NdiViewer::getRegiMat()
 
 QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
 {
-    QList<NdiTool> tools;
     QPair<QString,int> toolNameIndex;
-
     //double *distance=dis;
     //加一个读取配置的函数，赋值toolNameSize
-    tools = getToolDefination();
     //返回值是QMap<QString,QList<float>>
     QList<NdiTool>::iterator i;
     for (i = tools.begin(); i != tools.end(); i++) {
@@ -248,7 +249,7 @@ QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
     return toolNameIndex;
 }
 
-QList<NdiTool> NdiViewer::getToolDefination()
+void NdiViewer::getToolDefination()
 {
 //    NdiTool Tool1("calibrationNeedle");
 //    NdiTool Tool2("HoloLens");
@@ -290,8 +291,10 @@ QList<NdiTool> NdiViewer::getToolDefination()
 //    tools << Tool1 << Tool2 << Tool3 << Tool4;
 
     //read tool definition from xml file
-    QList<NdiTool> tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/tooldef.xml");
-    return tools;
+    QString fileName = QCoreApplication::applicationDirPath();
+    qDebug()<<fileName<<endl;
+    tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/tooldef.xml");
+   // return tools;
 }
 
 bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
@@ -349,8 +352,8 @@ QMatrix4x4 NdiViewer::getCalibrationMatrix()
 void NdiViewer::on_lstToolName_currentTextChanged(const QString &currentText)
 {
     NdiTool temp(currentText);
-    if(tools.contains(temp)){
-        int index = tools.indexOf(temp);
-        refreshMarkersInTool(tools[index]);
+    if(existTools.contains(temp)){
+        int index = existTools.indexOf(temp);
+        refreshMarkersInTool(existTools[index]);
     }
 }
