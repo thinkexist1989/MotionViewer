@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>1090</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,20 +18,23 @@
     <normaloff>:/icon/res/viewer.ico</normaloff>:/icon/res/viewer.ico</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <property name="maximumSize">
-    <size>
-     <width>0</width>
-     <height>0</height>
-    </size>
-   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
-     <height>23</height>
+     <width>1090</width>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLanguage">
@@ -69,11 +72,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
    <property name="windowTitle">
     <string>NDI Comm</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>4</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="ndiDockWidgetContents"/>
   </widget>
@@ -84,44 +90,26 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
    <property name="windowTitle">
     <string>HoloLens Comm</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="holoDockWidgetContents"/>
   </widget>
-  <widget class="QDockWidget" name="ndiViewerDockWidget">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="windowTitle">
-    <string>NDI Viewer</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>4</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents"/>
-  </widget>
-  <widget class="QDockWidget" name="holoViewerDockWidget">
-   <property name="floating">
-    <bool>false</bool>
-   </property>
-   <property name="windowTitle">
-    <string>HoloLens Viewer</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_2"/>
-  </widget>
   <widget class="QDockWidget" name="regiDockWidget">
+   <property name="allowedAreas">
+    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
+   </property>
    <property name="windowTitle">
     <string>Registration</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>8</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3"/>
   </widget>

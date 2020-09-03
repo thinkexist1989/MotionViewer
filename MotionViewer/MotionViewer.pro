@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network serialport xml
+QT       += core gui network serialport xml opengl
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    glviewer.cpp \
         main.cpp \
         mainwindow.cpp \
     aboutdlg.cpp \
@@ -38,6 +39,7 @@ SOURCES += \
     xmlparser.cpp
 
 HEADERS += \
+    glviewer.h \
         mainwindow.h \
     aboutdlg.h \
     ndicomm.h \
@@ -50,6 +52,7 @@ HEADERS += \
     xmlparser.h
 
 FORMS += \
+    glviewer.ui \
         mainwindow.ui \
     aboutdlg.ui \
     ndiviewer.ui \

@@ -13,6 +13,8 @@
 #include "regiviewer.h"
 #include "transform.h"
 #include "nditool.h"
+#include "glviewer.h"
+
 
 #include <QMetaType> //register the signal type
 
@@ -49,6 +51,8 @@ private:
     HoloViewer *holoViewer;
 
     RegiViewer *regiViewer;
+
+    GLViewer *glViewer;
 
     Transform  *transform;
 

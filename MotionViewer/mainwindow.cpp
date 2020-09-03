@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
                                           holoComm(new HoloComm),
                                           holoViewer(new HoloViewer),
                                           regiViewer(new RegiViewer),
+                                          glViewer(new GLViewer),
                                           transform(new Transform),
                                           transformThread(new QThread)
 {
@@ -30,17 +31,23 @@ MainWindow::MainWindow(QWidget *parent) :
     chineseTranslator->load(":/translations/translation_zh.qm");
 
     ui->ndiCommDockWidget->setWidget(ndiComm);
-    ui->ndiViewerDockWidget->setWidget(ndiViewer);
+//    ui->ndiViewerDockWidget->setWidget(ndiViewer);
     ui->holoCommDockWidget->setWidget(holoComm);
-    ui->holoViewerDockWidget->setWidget(holoViewer);
+//    ui->holoViewerDockWidget->setWidget(holoViewer);
     ui->regiDockWidget->setWidget(regiViewer);
+//    ui->glViewerDockWidget->setWidget(glViewer);
 
-    this->tabifyDockWidget(ui->ndiCommDockWidget,ui->holoCommDockWidget);
-    this->tabifyDockWidget(ui->holoCommDockWidget,ui->regiDockWidget);
-    this->tabifyDockWidget(ui->ndiViewerDockWidget,ui->holoViewerDockWidget);
+//    this->tabifyDockWidget(ui->ndiCommDockWidget,ui->holoCommDockWidget);
+//    this->tabifyDockWidget(ui->holoCommDockWidget,ui->regiDockWidget);
+//    this->tabifyDockWidget(ui->ndiViewerDockWidget,ui->holoViewerDockWidget);
+//    this->tabifyDockWidget(ui->holoViewerDockWidget, ui->glViewerDockWidget);
 
-    ui->ndiCommDockWidget->raise();
-    ui->ndiViewerDockWidget->raise();
+//    ui->ndiCommDockWidget->raise();
+//    ui->ndiViewerDockWidget->raise();
+
+    ui->tabWidget->addTab(ndiViewer,"NDI Viewer");
+    ui->tabWidget->addTab(holoViewer, "Holo Viewer");
+    ui->tabWidget->addTab(glViewer, "GL Viewer");
 
     //connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
     //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
@@ -153,11 +160,11 @@ void MainWindow::on_actionNdiViewer_toggled(bool arg1)
 {
     if(!arg1) {
         ui->ndiCommDockWidget->close();
-        ui->ndiViewerDockWidget->close();
+//        ui->ndiViewerDockWidget->close();
     }
     else {
         ui->ndiCommDockWidget->show();
-        ui->ndiViewerDockWidget->show();
+//        ui->ndiViewerDockWidget->show();
     }
 }
 
@@ -165,11 +172,11 @@ void MainWindow::on_actionHoloViewer_toggled(bool arg1)
 {
     if(!arg1) {
         ui->holoCommDockWidget->close();
-        ui->holoViewerDockWidget->close();
+//        ui->holoViewerDockWidget->close();
     }
     else {
         ui->holoCommDockWidget->show();
-        ui->holoViewerDockWidget->show();
+//        ui->holoViewerDockWidget->show();
     }
 }
 
