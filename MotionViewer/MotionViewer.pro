@@ -77,6 +77,9 @@ include(opencv.pri)
 # Add Eigen config
 include(eigen.pri)
 
+# Add freeglut config
+include(freeglut.pri)
+
 
 # Add translations
 TRANSLATIONS += translation_zh.ts

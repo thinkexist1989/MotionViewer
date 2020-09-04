@@ -11,7 +11,7 @@ namespace Ui {
 class GLViewer;
 }
 
-class GLViewer : public QOpenGLWidget
+class GLViewer : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
 
@@ -21,7 +21,7 @@ public:
 
 private:
     Ui::GLViewer *ui;
-    QOpenGLFunctions *f;
+//    QOpenGLFunctions *f;
     std::shared_ptr<QElapsedTimer> etimer;
 
 protected:

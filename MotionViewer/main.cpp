@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include <GL/freeglut.h>
 
 int main(int argc, char *argv[])
 {
-    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    glutInit(&argc, argv);
+
+//    QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
