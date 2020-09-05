@@ -3,9 +3,9 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
-#include <QElapsedTimer>
+//#include <QElapsedTimer> //计算时间流逝
 #include <memory>
-
+#include "backdrop.h"
 
 namespace Ui {
 class GLViewer;
@@ -21,8 +21,7 @@ public:
 
 private:
     Ui::GLViewer *ui;
-//    QOpenGLFunctions *f;
-    std::shared_ptr<QElapsedTimer> etimer;
+    Backdrop *backdrop; //draw background
 
 protected:
     void initializeGL() override;

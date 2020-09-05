@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    backdrop.cpp \
     glviewer.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -39,6 +40,7 @@ SOURCES += \
     xmlparser.cpp
 
 HEADERS += \
+    backdrop.h \
     glviewer.h \
         mainwindow.h \
     aboutdlg.h \
@@ -67,6 +69,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
+    gl/gl.qrc \
     resources.qrc
 
 RC_ICONS = viewer.ico
@@ -78,7 +81,7 @@ include(opencv.pri)
 include(eigen.pri)
 
 # Add freeglut config
-include(freeglut.pri)
+#include(freeglut.pri)
 
 
 # Add translations
