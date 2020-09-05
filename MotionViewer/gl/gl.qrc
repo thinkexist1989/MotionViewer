@@ -1,10 +1,14 @@
 <RCC>
-    <qresource prefix="gl/">
+    <qresource prefix="/gl">
         <file>mesh.frag</file>
         <file>mesh.vert</file>
         <file>mesh_wireframe.frag</file>
         <file>quad.frag</file>
         <file>quad.vert</file>
         <file>sphere.stl</file>
+        <file>model_loading.frag</file>
+        <file>model_loading.vert</file>
+        <file>coor.frag</file>
+        <file>coor.vert</file>
     </qresource>
 </RCC>

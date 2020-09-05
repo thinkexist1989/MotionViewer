@@ -26,29 +26,37 @@ CONFIG += c++11
 
 SOURCES += \
     backdrop.cpp \
+    coordinate.cpp \
     glviewer.cpp \
         main.cpp \
         mainwindow.cpp \
     aboutdlg.cpp \
+    mesh.cpp \
+    model.cpp \
     ndicomm.cpp \
     ndiviewer.cpp \
     holocomm.cpp \
     holoviewer.cpp \
     nditool.cpp \
+    stb_image.cpp \
     transform.cpp \
     regiviewer.cpp \
     xmlparser.cpp
 
 HEADERS += \
     backdrop.h \
+    coordinate.h \
     glviewer.h \
         mainwindow.h \
     aboutdlg.h \
+    mesh.h \
+    model.h \
     ndicomm.h \
     ndiviewer.h \
     holocomm.h \
     holoviewer.h \
     nditool.h \
+    stb_image.h \
     transform.h \
     regiviewer.h \
     xmlparser.h
@@ -80,9 +88,41 @@ include(opencv.pri)
 # Add Eigen config
 include(eigen.pri)
 
+# Add Assimp config
+include(assimp.pri)
+
 # Add freeglut config
 #include(freeglut.pri)
+
+win32:LIBS += -lOpenGL32
+win32:LIBS += -lGlu32
 
 
 # Add translations
 TRANSLATIONS += translation_zh.ts
+
+message($${PWD})
+
+
+linux-g++{
+    #...
+    EXTRA_BINFILES += \
+        $${THIRDPARTY_PATH}/gstreamer-0.10/linux/plugins/libgstrtp.so \
+        $${THIRDPARTY_PATH}/gstreamer-0.10/linux/plugins/libgstvideo4linux2.so
+    for(FILE,EXTRA_BINFILES){
+        QMAKE_POST_LINK += $$quote(cp $${FILE} $${DESTDIR}$$escape_expand(\n\t))
+    }
+}
+
+win32 {
+    #...
+    EXTRA_BINFILES += \
+        $$PWD/gl/sphere.obj
+    EXTRA_BINFILES_WIN = $${EXTRA_BINFILES}
+    EXTRA_BINFILES_WIN ~= s,/,\\,g
+        DESTDIR_WIN = $${OUT_PWD}
+    DESTDIR_WIN ~= s,/,\\,g
+    for(FILE,EXTRA_BINFILES_WIN){
+                QMAKE_POST_LINK +=$$quote(cmd /c copy /y $${FILE} $${DESTDIR_WIN}$$escape_expand(\n\t))
+    }
+}

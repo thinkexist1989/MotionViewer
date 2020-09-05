@@ -6,6 +6,8 @@
     </qresource>
     <qresource prefix="/about">
         <file>res/zs.jpg</file>
+        <file>res/motion.jpeg</file>
+        <file>res/g1006.png</file>
     </qresource>
     <qresource prefix="/icon">
         <file>res/about.ico</file>

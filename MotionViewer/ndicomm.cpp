@@ -186,7 +186,7 @@ void NdiComm::on_openCloseButton_clicked()
 
             if(!openSuccess){ // serial close success
                 isPortOpened = false;
-                ui->openCloseButton->setText(tr("Close"));
+                ui->openCloseButton->setText(tr("Open"));
                 ui->openCloseButton->setIcon(QIcon(":/icon/res/start.ico"));
                 qDebug() << "Close serial port success!";
             }
@@ -246,7 +246,7 @@ void NdiComm::changeEvent(QEvent *event)
 
 NdiCommProc::NdiCommProc(QObject *parent) :
     QObject (parent),
-    isRunning(true)
+    isRunning(false)
 {
     ndiThread = new QThread();
 
