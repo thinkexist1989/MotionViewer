@@ -12,14 +12,20 @@
 GLViewer::GLViewer(QWidget *parent) :
     QOpenGLWidget(parent),
     ui(new Ui::GLViewer),
-    yaw(-90), //当yaw= 0时，在xz平面的分量指向x轴，而初始值应该指向-z，所以旋转-90度
-    pitch(0),
+    yaw(-135), //当yaw= 0时，在xz平面的分量指向x轴，而初始值应该指向-z，所以旋转-90度(这个yaw的定义确定的，因为front和+x轴的夹角)
+    pitch(-45),
     fov(45.0),
     cameraPos(1.0, 1.0, 1.0),
-    cameraFront(-0.2, -0.2, -0.2),
-    cameraUp(0.0, 1.0, 0.0)
+    cameraUp(0.0f, 1.0f, 0.0f)
 {
     ui->setupUi(this);
+
+    QVector3D front(cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)),
+                    sin(qDegreesToRadians(pitch)),
+                    cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians((yaw))));
+    cameraFront = front.normalized();
+    qDebug() << cameraFront;
+
 }
 
 GLViewer::~GLViewer()
@@ -82,6 +88,18 @@ void GLViewer::drawAxis()
     glEnd();
 }
 
+void GLViewer::drawNodes()
+{
+    initializeOpenGLFunctions();
+
+    for(auto& node : nodes)
+    {
+        QMatrix4x4 trans;
+        trans.translate(node);
+        nodeModel->draw(view, projection, trans);
+    }
+}
+
 void GLViewer::initializeGL()
 {
     initializeOpenGLFunctions();
@@ -94,7 +112,7 @@ void GLViewer::initializeGL()
 
 //    model1 = new Model("C:\\Users\\think\\Desktop\\universal_robot-melodic-devel\\ur_e_description\\meshes\\ur5e\\visual\\base.dae");
 
-    model1 = new Model(QFileInfo("./sphere.obj").absoluteFilePath().toStdString());
+    nodeModel = new Model(QFileInfo("./sphere.dae").absoluteFilePath().toStdString());
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=]{update();});
@@ -117,13 +135,15 @@ void GLViewer::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glEnable(GL_DEPTH_TEST); //enable depth test
+    glDisable(GL_CULL_FACE);
+    glEnable(GL_BLEND);
 
 
     /*** view and projection matrix ***/
-    QMatrix4x4 view;
+    view.setToIdentity(); //due to the view used every time, so first set to identity.
     view.lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
 
-    QMatrix4x4 projection;
+    projection.setToIdentity(); // same as view
     projection.perspective(fov, (float)width()/height(), 0.1, 100);
 
     /*** background ***/
@@ -134,17 +154,11 @@ void GLViewer::paintGL()
     QMatrix4x4 model;
     coordinate->draw(view, projection, model);
 
-    /*** model ***/
-    QMatrix4x4 trans;
-    //    model.rotate(20.0f, rotAxis[i]);
-    trans.scale(0.001f, 0.001f, 0.001f);
-    trans.translate(0.0f, 0.0f, 0.0f);
-    model1->draw(view, projection, trans);
 
-    QMatrix4x4 trans2;
-    trans2.scale(0.001f, 0.001f, 0.001f);
-    trans2.translate(5.0f, 5.0f, 5.0f);
-    model1->draw(view, projection, trans2);
+    /*** nodes ***/
+    nodes.clear();
+    nodes << QVector3D(0,0,0) << QVector3D(-0.3,-0.3,-0.3) << QVector3D(0.3,-0.3,-0.3) << QVector3D(-0.3,0.3,-0.3) << QVector3D(-0.3,-0.3,0.3);
+    drawNodes();
 
 
     /*** status ***/
@@ -193,9 +207,16 @@ void GLViewer::mouseMoveEvent(QMouseEvent *event)
 
     if(event->buttons() & Qt::LeftButton) //left button -> rotation
     {
-        yaw = fmod(yaw + d.x()*0.1, 360); //fmod is like % operator for float
-        tilt = fmod(tilt - d.y()*0.1, 360);
-        pitch = fmod(pitch - d.y()*0.1, 360);
+//        yaw = fmod(yaw + d.x()*fov*0.001, 360); //fmod is like % operator for float
+//        tilt = fmod(tilt - d.y()*fov*0.001, 360);
+//        pitch = fmod(pitch - d.y()*fov*0.001, 360);
+
+        yaw += d.x()*fov*0.001;
+        pitch -= d.y()*fov*0.001;
+        if(pitch > 89.5)
+            pitch = 89.5;
+        else if(pitch < -89.5)
+            pitch = -89.5;
 
         QVector3D front(cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)),
                         sin(qDegreesToRadians(pitch)),
@@ -207,8 +228,8 @@ void GLViewer::mouseMoveEvent(QMouseEvent *event)
     }
     else if(event->buttons() & Qt::RightButton) //right button -> translation
     {
-        cameraPos += d.x()/500.0*QVector3D::crossProduct(cameraFront, cameraUp).normalized();
-        cameraPos -= d.y()/500.0*cameraUp;
+        cameraPos -= d.x()*fov*0.0001*QVector3D::crossProduct(cameraFront, cameraUp).normalized();
+        cameraPos += d.y()*fov*0.0001*cameraUp;
     }
 
     _mouse_pos = p;
@@ -223,13 +244,15 @@ void GLViewer::wheelEvent(QWheelEvent *event)
     {
         zoom *= 1.13;
         fov *= 1.13;
-        fov = fov < 0.05? 0.05: fov;
+        fov = fov > 120? 120 : fov;
+
     }
     else if(event->delta() > 0)
     {
         zoom /= 1.13;
         fov /= 1.13;
-        fov = fov > 70? 70 : fov;
+        fov = fov < 0.1? 0.1: fov;
+
     }
 
     update();

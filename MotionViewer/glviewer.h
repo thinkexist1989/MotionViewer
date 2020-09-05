@@ -24,11 +24,15 @@ public:
     void drawShaded();
     void drawWireframe();
 
-    Model* model1;
+    Model* nodeModel;
+
+    QVector<QVector3D> nodes; //ndi detected nodes
 
 private:
     void setDrawMode(int mode);
     void drawAxis();
+
+    void drawNodes(); //draw NDI node
 
 private:
     Ui::GLViewer *ui;
@@ -61,6 +65,9 @@ private:
 
     QStringList status; //print status on GL viewport
 
+    QMatrix4x4 view; //view matrix
+    QMatrix4x4 projection; //projection matrix
+
 protected:
     void initializeGL() override; //intialize OpenGL
     void paintGL() override; //draw OpenGL
@@ -76,6 +83,7 @@ public slots:
     void addStatus(QString& s);
     void clearStatus();
     void drawStatus();
+
 };
 
 #endif // GLVIEWER_H
