@@ -49,44 +49,44 @@ void GLViewer::setDrawMode(int mode)
     update(); //refresh display
 }
 
-void GLViewer::drawAxis()
-{
-    initializeOpenGLFunctions();
+//void GLViewer::drawAxis()
+//{
+//    initializeOpenGLFunctions();
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+//    glMatrixMode(GL_PROJECTION);
+//    glLoadIdentity();
 
-    int h = height();
-    int w = width();
+//    int h = height();
+//    int w = width();
 
-    if (w > h)
-        glOrtho(-w / h, w / h, -1.0f, 1.0f, -1.0f, 1.0f);
-    else
-        glOrtho(-1.0f, 1.0f, -h / w, h / w, -1.0f, 1.0f);
+//    if (w > h)
+//        glOrtho(-w / h, w / h, -1.0f, 1.0f, -1.0f, 1.0f);
+//    else
+//        glOrtho(-1.0f, 1.0f, -h / w, h / w, -1.0f, 1.0f);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+//    glMatrixMode(GL_MODELVIEW);
+//    glLoadIdentity();
 
-//    glRotatef(x_angle, 1.0f, 0.0f, 0.0f);
-//    glRotatef(y_angle, 0.0f, 1.0f, 0.0f);
+////    glRotatef(x_angle, 1.0f, 0.0f, 0.0f);
+////    glRotatef(y_angle, 0.0f, 1.0f, 0.0f);
 
-    glLineWidth(3.0f);
-    glColor3f(1.0f, 0.0f, 0.0f); //画红色的x轴
-    glBegin(GL_LINES);
-    glVertex3f(-1.0f, 0.0f, 0.0f);
-    glVertex3f(1.0f, 0.0f, 0.0f);
-    glEnd();
-    glColor3f(0.0, 1.0, 0.0); //画绿色的y轴
-    glBegin(GL_LINES);
-    glVertex3f(0.0f, -1.0f, 0.0f);
-    glVertex3f(0.0f, 1.0f, 0.0f);
-    glEnd();
-    glColor3f(0.0, 0.0, 1.0); //画蓝色的z轴
-    glBegin(GL_LINES);
-    glVertex3f(0.0f, 0.0f, -1.0f);
-    glVertex3f(0.0f, 0.0f, 1.0f);
-    glEnd();
-}
+//    glLineWidth(3.0f);
+//    glColor3f(1.0f, 0.0f, 0.0f); //画红色的x轴
+//    glBegin(GL_LINES);
+//    glVertex3f(-1.0f, 0.0f, 0.0f);
+//    glVertex3f(1.0f, 0.0f, 0.0f);
+//    glEnd();
+//    glColor3f(0.0, 1.0, 0.0); //画绿色的y轴
+//    glBegin(GL_LINES);
+//    glVertex3f(0.0f, -1.0f, 0.0f);
+//    glVertex3f(0.0f, 1.0f, 0.0f);
+//    glEnd();
+//    glColor3f(0.0, 0.0, 1.0); //画蓝色的z轴
+//    glBegin(GL_LINES);
+//    glVertex3f(0.0f, 0.0f, -1.0f);
+//    glVertex3f(0.0f, 0.0f, 1.0f);
+//    glEnd();
+//}
 
 void GLViewer::drawNodes()
 {
@@ -118,6 +118,17 @@ void GLViewer::initializeGL()
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=]{update();});
     timer->start(10);
+
+    /*** test nodes ***/
+    QTimer *genNodesTimer = new QTimer(this);
+    connect(genNodesTimer, &QTimer::timeout, this, [=]{
+        nodes.clear();
+        int sum = rand()%20;
+        for(int i = 0; i < sum; i++)
+            nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
+    });
+    genNodesTimer->start(2000);
+
 }
 
 void GLViewer::paintGL()
@@ -157,13 +168,14 @@ void GLViewer::paintGL()
 
 
     /*** nodes ***/
-    nodes.clear();
-    nodes << QVector3D(0,0,0) << QVector3D(-0.3,-0.3,-0.3) << QVector3D(0.3,-0.3,-0.3) << QVector3D(-0.3,0.3,-0.3) << QVector3D(-0.3,-0.3,0.3);
+//    nodes.clear();
+//    nodes << QVector3D(0,0,0)<< QVector3D(-0.3,-0.3,-0.3) << QVector3D(0.3,-0.3,-0.3) << QVector3D(-0.3,0.3,-0.3) << QVector3D(-0.3,-0.3,0.3);
+//    nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
     drawNodes();
 
 
     /*** status ***/
-    QString s1 = QString("Status: Dectected %1 nodes.").arg(rand()%100);
+    QString s1 = QString("Status: Dectected %1 nodes.").arg(nodes.size());
     QString s2 = QString("        Phased %1 tools.").arg(rand()%10);
     QStringList ss; ss << s1 << s2;
 

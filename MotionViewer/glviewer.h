@@ -30,7 +30,7 @@ public:
 
 private:
     void setDrawMode(int mode);
-    void drawAxis();
+//    void drawAxis();
 
     void drawNodes(); //draw NDI node
 
