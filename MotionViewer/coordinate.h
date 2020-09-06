@@ -18,7 +18,7 @@ public:
     void initGrid();
     void drawGrid();
 
-    void initVertexArray(float* vertices, unsigned long long len, QOpenGLVertexArrayObject* vao, QOpenGLBuffer* vbo);
+    void initVertexArray(float* gridVertices, unsigned long long len, QOpenGLVertexArrayObject* vao, QOpenGLBuffer* vbo);
 private:
     QOpenGLShaderProgram sp; //coor.vert coor.frag
     QOpenGLVertexArrayObject* vaoX;
@@ -31,6 +31,15 @@ private:
     QOpenGLBuffer* vboZ;
 
     //for grid
+    void genGridXYVertices(float width, float height, int stepWidth, int stepHeight, QVector4D color);
+
+    QVector<float> gridVertices; // vertex buffer
+    QVector<unsigned int> gridIndices; // Index buffer
+
+    QOpenGLVertexArrayObject* vaoGrid;
+    QOpenGLBuffer* vboGrid;
+    QOpenGLBuffer* veoGrid;
+
     QOpenGLVertexArrayObject* vaoXZ;
     QOpenGLBuffer* vboXZ;
 

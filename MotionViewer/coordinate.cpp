@@ -25,7 +25,15 @@ void Coordinate::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
 
     drawAxis();
 
-//    drawGrid();
+//    drawGrid(); //xy
+
+    model.rotate(90, QVector3D(0.0f, 1.0f, 0.0f));
+    sp.setUniformValue("model", model);
+//    drawGrid(); //yz
+
+    model.rotate(90, QVector3D(1.0f, 0.0f, 0.0f));
+    sp.setUniformValue("model", model);
+    drawGrid(); //xz
 
     sp.release();
 }
@@ -125,42 +133,20 @@ void Coordinate::drawAxis()
 
 void Coordinate::initGrid()
 {
-    float verticesXZ[] = {-5.0f, 0.0f, -5.0f, 1.0f, 0.0f, 1.0f, 0.1f,
-                          -5.0f, 0.0f,  5.0f, 1.0f, 0.0f, 1.0f, 0.1f,
-                           5.0f, 0.0f,  5.0f, 1.0f, 0.0f, 1.0f, 0.1f,
-                           5.0f, 0.0f, -5.0f, 1.0f, 0.0f, 1.0f, 0.1f};
+    genGridXYVertices(2.0f, 2.0f, 20, 20, QVector4D(0.3f, 0.3f, 0.3f, 0.5f));
 
-    vaoXZ = new QOpenGLVertexArrayObject();
-    if(vaoXZ->create())
-        vaoXZ->bind();
-    vboXZ = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    vboXZ->create();
-    vboXZ->bind();
-    vboXZ->allocate(verticesXZ, sizeof (verticesXZ));
-//    vboX->setUsagePattern(QOpenGLBuffer::StaticDraw);
+    vaoGrid = new QOpenGLVertexArrayObject();
+    if(vaoGrid->create())
+        vaoGrid->bind();
+    vboGrid = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
+    vboGrid->create();
+    vboGrid->bind();
+    vboGrid->allocate(gridVertices.data(), sizeof(float)*gridVertices.size());
 
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(0));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(3* sizeof(float)));
-
-    vboXZ->release();
-    vaoXZ->release();
-
-    float verticesYZ[] = { 0.0f, -5.0f, -5.0f, 0.0f, 1.0f, 1.0f, 0.1f,
-                           0.0f, -5.0f,  5.0f, 0.0f, 1.0f, 1.0f, 0.1f,
-                           0.0f,  5.0f,  5.0f, 0.0f, 1.0f, 1.0f, 0.1f,
-                           0.0f,  5.0f, -5.0f, 0.0f, 1.0f, 1.0f, 0.1f};
-
-    vaoYZ = new QOpenGLVertexArrayObject();
-    if(vaoYZ->create())
-        vaoYZ->bind();
-    vboYZ = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    vboYZ->create();
-    vboYZ->bind();
-    vboYZ->allocate(verticesYZ, sizeof (verticesYZ));
-//    vboX->setUsagePattern(QOpenGLBuffer::StaticDraw);
+    veoGrid = new QOpenGLBuffer(QOpenGLBuffer::IndexBuffer);
+    veoGrid->create();
+    veoGrid->bind();
+    veoGrid->allocate(gridIndices.data(), sizeof(unsigned int)*gridIndices.size());
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(0));
@@ -168,51 +154,21 @@ void Coordinate::initGrid()
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(3* sizeof(float)));
 
-    vboYZ->release();
-    vaoYZ->release();
+//    veoGrid->release();
+    vboGrid->release();
+    vaoGrid->release();
 
-    float verticesXY[] = {-5.0f, -5.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.1f,
-                          -5.0f, 5.0f,  0.0f, 1.0f, 1.0f, 0.0f, 0.1f,
-                           5.0f, 5.0f,  0.0f, 1.0f, 1.0f, 0.0f, 0.1f,
-                           5.0f, -5.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.1f};
-
-    vaoXY = new QOpenGLVertexArrayObject();
-    if(vaoXY->create())
-        vaoXY->bind();
-    vboXY = new QOpenGLBuffer(QOpenGLBuffer::VertexBuffer);
-    vboXY->create();
-    vboXY->bind();
-    vboXY->allocate(verticesXY, sizeof (verticesXY));
-//    vboX->setUsagePattern(QOpenGLBuffer::StaticDraw);
-
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(0));
-
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 7*sizeof(float), reinterpret_cast<void*>(3* sizeof(float)));
-
-    vboXY->release();
-    vaoXY->release();
 }
 
 
 
 void Coordinate::drawGrid()
 {
-    vaoXZ->bind();
-//    glLineWidth(1.5f);
-    glDrawArrays(GL_QUADS, 0, 4);
-    vaoXZ->release();
-
-    vaoXY->bind();
-//    glLineWidth(1.5f);
-    glDrawArrays(GL_QUADS, 0, 4);
-    vaoXY->release();
-
-    vaoYZ->bind();
-//    glLineWidth(1.5f);
-    glDrawArrays(GL_QUADS, 0, 4);
-    vaoYZ->release();
+    vaoGrid->bind();
+    glLineWidth(1.5f);
+//    glDrawArrays(GL_QUADS, 0, 4);
+    glDrawElements(GL_LINES, veoGrid->size(), GL_UNSIGNED_INT, reinterpret_cast<void*>(0));
+    vaoGrid->release();
 }
 
 
@@ -236,4 +192,45 @@ void Coordinate::initVertexArray(float *vertices, unsigned long long len, QOpenG
 
     vbo->release();
     vao->release();
+}
+
+void Coordinate::genGridXYVertices(float width, float height, int stepWidth, int stepHeight, QVector4D color)
+{
+    float stripWidth = width / stepWidth; //width 步进距离
+    float stripHeight = height / stepHeight; // height 步进距离
+
+    gridVertices.clear();
+    gridVertices << -width/2 << -height/2 << 0.0f << color.x() << color.y() << color.z() << color.w()
+             <<  width/2 << -height/2 << 0.0f << color.x() << color.y() << color.z() << color.w()
+             <<  width/2 <<  height/2 << 0.0f << color.x() << color.y() << color.z() << color.w()
+             << -width/2 <<  height/2 << 0.0f << color.x() << color.y() << color.z() << color.w();
+
+    gridIndices.clear();
+    gridIndices << 0 << 1
+                << 1 << 2
+                << 2 << 3
+                << 3 << 0;
+
+    int st = gridVertices.size()/7;
+    qDebug() << st;
+
+    for(int i = 1; i < stepWidth; i++)
+    {
+        gridVertices << -width/2 + stripWidth*i << -height/2 << 0.0f << color.x() << color.y() << color.z() << color.w()
+                    << -width/2 + stripWidth*i << height/2 << 0.0f << color.x() << color.y() << color.z() << color.w();
+
+        gridIndices << st + 2*(i-1) << st + 1 + 2*(i-1);
+    }
+
+    st = gridVertices.size()/7;
+
+    for(int j = 1; j < stepHeight; j++)
+    {
+        gridVertices << -width/2 << -height/2 + stripHeight*j << 0.0f << color.x() << color.y() << color.z() << color.w()
+                     <<  width/2 << -height/2 + stripHeight*j << 0.0f << color.x() << color.y() << color.z() << color.w();
+
+        gridIndices << st + 2*(j-1) << st +1 + 2*(j-1);
+    }
+
+//    qDebug() << gridVertices;
 }

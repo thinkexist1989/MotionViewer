@@ -104,7 +104,8 @@ void GLViewer::initializeGL()
 {
     initializeOpenGLFunctions();
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //default background
+//    glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //default background
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //default background
 
     backdrop = new Backdrop();
 
@@ -130,7 +131,7 @@ void GLViewer::paintGL()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
-    glClearColor(0.2f, 0.3f, 0.3f, 0.0f); //default background
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //default background
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
