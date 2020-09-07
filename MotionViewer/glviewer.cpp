@@ -156,6 +156,7 @@ void GLViewer::paintGL()
     view.lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
 
     projection.setToIdentity(); // same as view
+//    projection.ortho(0.0f, (float)width()/height()*fov, 0.0f, (float)fov, 0.1, 100); //正交投影
     projection.perspective(fov, (float)width()/height(), 0.1, 100);
 
     /*** background ***/
