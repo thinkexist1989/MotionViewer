@@ -38,7 +38,7 @@ private:
     QMatrix4x4 KinectMarkerToKinectMatrix;
     QMatrix4x4 modelResultLastTimeMat;
     QMatrix4x4 calibritionNeedleResultLastTimeMat;
-    QList<NdiTool> tools;
+    QList<NdiTool> existTools;
     QList<QMatrix4x4> matrixList;
     void modelCalc();
     void LoadCalibrationMatrix();

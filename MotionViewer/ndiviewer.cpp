@@ -45,17 +45,17 @@ void NdiViewer::init()
     //    ui->cmbSteps->addItems(functionLists);
 }
 
-void NdiViewer::refreshMarkersView(QList<QVector3D> data)
+void NdiViewer::refreshMarkersView(QList<QVector3D> markersData)
 {
 
     //    ui->tblMarkersView->horizontalHeader()->setStretchLastSection(true);
 
-    int count = data.count();
+    int count = markersData.count();
 
     ui->tblMarkersView->setRowCount(count);
 
     for(int i = 0; i< count; i++){
-        QVector3D marker = data.at(i);
+        QVector3D marker = markersData.at(i);
         ui->tblMarkersView->setItem(i,0,new QTableWidgetItem(QString::number(static_cast<double>(marker.x()))));
         ui->tblMarkersView->setItem(i,1,new QTableWidgetItem(QString::number(static_cast<double>(marker.y()))));
         ui->tblMarkersView->setItem(i,2,new QTableWidgetItem(QString::number(static_cast<double>(marker.z()))));
@@ -76,8 +76,10 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 void NdiViewer::refreshToolView(QList<NdiTool> existtools)
 {
-    if(existtools.count() == 0)
-        return;
+    if(existtools.count() == 0){
+        //return;
+        ui->lstToolName->clear();
+        ui->tblToolMarkers->clear();}
     int count = existtools.count();
     QStringList toolnames;
     for (int i = 0; i < count ; i++){
@@ -107,21 +109,25 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
             ui->tblToolMarkers->setItem(i,1, new QTableWidgetItem(QString::number(static_cast<double>(coordinate.y()))));
             ui->tblToolMarkers->setItem(i,2, new QTableWidgetItem(QString::number(static_cast<double>(coordinate.z()))));
         }
+
     }
 }
 
 void NdiViewer::dataProc(QList<QVector3D> data)
 {
-
+    //qDebug() << data.size()<< endl;
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
     existTools=getTools(data);
-    if(existTools.count()>0)
-    qDebug() << existTools[0].getName()<<endl;
+    /*
+    if(existTools.count()>0){
+        for(int i=0;i<existTools.count();i++)
+        qDebug() << existTools[i].getName()<<endl;//显示检测出什么工具
+    }
     else
-    qDebug() <<"no tools is detected"<<endl;
+    //qDebug() <<"no tools is detected"<<endl; //显示什么也没检测出来
+    */
     refreshToolView(existTools);
-
     emit toolsReady(existTools);
 
 //    if(!tools.isEmpty())

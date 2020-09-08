@@ -300,7 +300,7 @@ void NdiCommProc::openSerial(bool open)
 void NdiCommProc::ndiCommStart()
 {
     if(!initsensor()){ //init Ndi
-        qDebug() << tr("Init NDI failed!");
+
         return;
     }
     while (isRunning) {
@@ -483,10 +483,10 @@ void NdiCommProc::get_data()
 
         markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
     }
-
     emit dataReady(markers);
-
-    qDebug() << "Communication time consuming:" << timer.elapsed() << "ms";
+    //QThread::msleep(10);这个地方我怀疑是发的快了 所以出问题了
+   // qDebug() << "Communication time consuming:" << (double)timer.nsecsElapsed()/(double)1000000 <<endl;
+   // qDebug() << "Communication time consuming:" << timer.elapsed() << "ms";  //显示处理速度
 }
 
 template<typename T> T NdiCommProc::getNum(const char *p)
