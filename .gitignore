@@ -408,41 +408,7 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 *.ini
-<<<<<<< Updated upstream
-=======
 
 # .idea
 .idea/
-build/ALL_BUILD.vcxproj
-build/ALL_BUILD.vcxproj.filters
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/CMakeFiles/3.18.2/CMakeCCompiler.cmake
-build/CMakeFiles/3.18.2/CMakeCXXCompiler.cmake
-build/CMakeFiles/3.18.2/CMakeDetermineCompilerABI_C.bin
-build/CMakeFiles/3.18.2/CMakeDetermineCompilerABI_CXX.bin
-build/CMakeFiles/3.18.2/CMakeRCCompiler.cmake
-build/CMakeFiles/3.18.2/CMakeSystem.cmake
-build/CMakeFiles/3.18.2/CompilerIdC/CMakeCCompilerId.c
-build/CMakeFiles/3.18.2/CompilerIdC/CompilerIdC.exe
-build/CMakeFiles/3.18.2/CompilerIdC/CompilerIdC.vcxproj
-build/CMakeFiles/3.18.2/CompilerIdCXX/CMakeCXXCompilerId.cpp
-build/CMakeFiles/3.18.2/CompilerIdCXX/CompilerIdCXX.exe
-build/CMakeFiles/3.18.2/CompilerIdCXX/CompilerIdCXX.vcxproj
-build/CMakeFiles/3.18.2/VCTargetsPath.txt
-build/CMakeFiles/3.18.2/VCTargetsPath.vcxproj
-build/CMakeFiles/a4bed1bda990443c7074bc5506739346/qrc_resources.cpp.rule
-build/CMakeFiles/a50b2a5f8f1f112cc4ae4c359b433891/generate.stamp.rule
-build/CMakeFiles/cmake.check_cache
-build/CMakeFiles/generate.stamp
-build/CMakeFiles/generate.stamp.depend
-build/CMakeFiles/generate.stamp.list
-build/CMakeFiles/MotionViewer_autogen.dir/AutogenInfo.json
-build/CMakeFiles/MotionViewer_autogen.dir/AutoRcc_resources_EWIEGA46WW_Info.json
-build/CMakeFiles/TargetDirectories.txt
-build/MotionViewer.sln
-build/MotionViewer.vcxproj
-build/MotionViewer.vcxproj.filters
-build/ZERO_CHECK.vcxproj
-build/ZERO_CHECK.vcxproj.filters
->>>>>>> Stashed changes
+
