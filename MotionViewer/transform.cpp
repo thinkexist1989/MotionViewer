@@ -303,8 +303,8 @@ void Transform::calibrationNeedleCalc()
 
      //get the markers' location of Needle
     QMap<int,QVector3D> calibrationNeedleMarkers;
-    if(tools.contains(NdiTool("calibrationNeedle"))){
-        int index = tools.indexOf(NdiTool("calibrationNeedle"));
+    if(tools.contains(NdiTool("CalibrationNeedle"))){
+        int index = tools.indexOf(NdiTool("CalibrationNeedle"));
        calibrationNeedleMarkers=tools[index].getIndexAndCoordinate();
        calibrationNeedleToNDI=SetCoordination2(calibrationNeedleMarkers);
     }
