@@ -9,8 +9,9 @@
 **MotionViewer是一个针对NDI Spectra双目定位系统、Kinect深度相机及HoloLens混合现实眼镜的数据可视化程序，用于基于混合现实的医疗手术辅助系统。**
 
 <div align="center">
-<img src="./res/ndi-spectra.jpg" style="zoom:30%;" /><img src="./res/kinect.jpg" style="zoom:30%;" /><img src="./res/HoloLens1.jpg" style="zoom:30%;" />
+<img src="./res/ndi-spectra.jpg" style="zoom:20%;" /><img src="./res/kinect.jpg" style="zoom:20%;" /><img src="./res/HoloLens1.jpg" style="zoom:20%;" />
 </div>
+
 #### 依赖库
 
 1. [Qt]( https://www.qt.io/cn) 用于GUI设计
@@ -34,8 +35,6 @@
 
 ### 具体设计
 
-
-
 #### 功能1：采集NDI的Marker点数据并做相应处理
 
 功能需求：
@@ -49,12 +48,12 @@
 设计思路：
 
 1. 自定义**NdiComm**类，负责实现NDI的通信功能，隐藏通信实现细节
-	1. 利用QTcpSocket与QTcpServer类实现TCP通信
-	2. 利用QSerialPort类实现串口通信
+   1. 利用QTcpSocket与QTcpServer类实现TCP通信
+   2. 利用QSerialPort类实现串口通信
 2. 自定义**NdiViewer**类，用来存储NDI数据并进行相应处理
-	1. 利用**QVector3D**类存储每个Marker点坐标
-	2. 利用**QList<QVector3D>**管理所有Marker点坐标
-	3. 定义*获取当前标定件位置*，*获取投影后位置*，*更新矫正矩阵*三个函数
+   1. 利用**QVector3D**类存储每个Marker点坐标
+   2. 利用**QList\<QVector3D\>**管理所有Marker点坐标
+   3. 定义*获取当前标定件位置*，*获取投影后位置*，*更新矫正矩阵*三个函数
 
 
 #### 功能2：将坐标数据发送给HoloLens
@@ -67,12 +66,11 @@
 4. 对于客户端，可以设置目标IP，目标端口号等相关信息；
 5. 可以发送追踪机械的位姿信息；
 
-
 设计思路：
-1. 自定义**HoloComm**类，负责实现NDI的通信功能，隐藏通信实现细节
-	1. 利用QTcpSocket与QTcpServer类实现TCP通信
-	2. 利用QUdpSocket类实现UDP通信
 
+1. 自定义**HoloComm**类，负责实现NDI的通信功能，隐藏通信实现细节
+   1. 利用QTcpSocket与QTcpServer类实现TCP通信
+   2. 利用QUdpSocket类实现UDP通信
 
 #### 功能3：可视化HoloLens视频流与扫描设备（Kinect）视频流
 
@@ -81,10 +79,24 @@
 1. 可视化HoloLens视频流
 2. 可视化扫描设备（Kinect）视频流
 
-
 #### 功能4：配准设置与结果可视化
 
 功能需求：
 
 1. 显示术前模型与术中采集模型
 2. 显示术前模型与术中采集模型的配准结果，并显示获得的旋转矩阵
+
+### 文件结构
+
+- **MainWindow类** （mainwindow.h, mainwindow.cpp, mainwindow.ui）主界面框架
+- **NdiComm类**
+- **NdiViewer类**
+- **HoloComm类**
+- **HoloViewer类**
+- **RegiViewer类**
+- **GLViewer类**
+- **AboutDlg类**（aboutdlg.h, aboutdlg.cpp, aboutdlg.ui）About对话框显示
+- **Backdrop类**
+- **NdiTool类**
+- **Model类**
+- **Mesh类**
