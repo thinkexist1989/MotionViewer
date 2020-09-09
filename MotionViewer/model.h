@@ -26,6 +26,9 @@ public:
     void Draw(QOpenGLShaderProgram* psp = nullptr);
     void draw(QMatrix4x4 view, QMatrix4x4 projection,QMatrix4x4 model);
 
+    void setShader(const QString& vertex, const QString& fragment);
+    void setColor(const QVector4D color);
+
     unsigned int TextureFromFile(const char *path, const std::string &directory, bool gamma = false);
 
 private:
@@ -37,6 +40,7 @@ private:
 
     QOpenGLShaderProgram sp;
     QMatrix4x4 model; // position and orietation of model
+    QVector4D color = QVector4D(1.0f, 0.75f, 0.0f, 1.0f);
 
 };
 

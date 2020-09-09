@@ -115,6 +115,9 @@ void GLViewer::initializeGL()
 
     nodeModel = new Model(QFileInfo("./sphere.dae").absoluteFilePath().toStdString());
 
+    ndiModel = new Model(QFileInfo("./ndi.stl").absoluteFilePath().toStdString());
+    ndiModel->setColor(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
+
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=]{update();});
     timer->start(10);
@@ -174,6 +177,10 @@ void GLViewer::paintGL()
 //    nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
     drawNodes();
 
+
+    /*** ndi ***/
+    model.scale(0.001);
+    ndiModel->draw(view, projection, model);
 
     /*** status ***/
     QString s1 = QString("Status: Dectected %1 nodes.").arg(nodes.size());

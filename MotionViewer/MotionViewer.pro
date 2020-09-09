@@ -117,7 +117,9 @@ linux-g++{
 win32 {
     #...
     EXTRA_BINFILES += \
-        $$PWD/gl/sphere.dae
+        $$PWD/gl/sphere.dae \
+        $$PWD/gl/ndi.dae \
+        $$PWD/gl/hololens.3ds
     EXTRA_BINFILES_WIN = $${EXTRA_BINFILES}
     EXTRA_BINFILES_WIN ~= s,/,\\,g
         DESTDIR_WIN = $${OUT_PWD}

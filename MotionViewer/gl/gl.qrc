@@ -10,5 +10,7 @@
         <file>model_loading.vert</file>
         <file>coor.frag</file>
         <file>coor.vert</file>
+        <file>model.frag</file>
+        <file>model.vert</file>
     </qresource>
 </RCC>

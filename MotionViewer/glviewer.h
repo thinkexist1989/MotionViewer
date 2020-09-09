@@ -26,6 +26,7 @@ public:
     void drawWireframe();
 
     Model* nodeModel;
+    Model* ndiModel;
 
     QVector<QVector3D> nodes; //ndi detected nodes
     QVector<NdiTool> tools;

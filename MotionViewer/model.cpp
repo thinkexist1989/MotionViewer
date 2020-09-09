@@ -36,12 +36,26 @@ void Model::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
     sp.setUniformValue("view", view);
     sp.setUniformValue("projection", projection);
     sp.setUniformValue("model", model);
+    sp.setUniformValue("color", color);
 
     for(unsigned int i = 0; i < meshes.size(); i++)
     {
         meshes[i].Draw(&sp);
     }
     sp.release();
+}
+
+void Model::setShader(const QString &vertex, const QString &fragment)
+{
+    sp.removeAllShaders();
+    sp.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex);
+    sp.addShaderFromSourceFile(QOpenGLShader::Fragment, fragment);
+    sp.link();
+}
+
+void Model::setColor(const QVector4D color)
+{
+    this->color = color;
 }
 
 void Model::loadModel(const std::string &path)
