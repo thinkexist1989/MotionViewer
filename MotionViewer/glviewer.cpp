@@ -298,3 +298,8 @@ void GLViewer::drawStatus()
         painter.drawText(5, 15+20*i, status[i]);
     }
 }
+
+void GLViewer::dataProc(QVector<QVector3D> &data)
+{
+    nodes = data;
+}

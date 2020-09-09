@@ -8,14 +8,7 @@
 #include <QThread>
 #include <QVector3D>
 #include <QList>
-
-extern QString                  serialName;
-extern int                      baudRate;
-extern QSerialPort::Parity      parity;
-extern QSerialPort::StopBits    stopBits;
-extern QSerialPort::DataBits    dataBits;
-extern QSerialPort::FlowControl flowControl;
-extern bool                     openSuccess;
+#include "ndicommthread.h" //处理NDI串口通信的线程
 
 namespace Ui {
     class NdiComm;
@@ -30,18 +23,26 @@ public:
     explicit NdiComm(QWidget *parent = nullptr);
     ~NdiComm();
 
-    friend class NdiCommProc; //Declare friend class NdiCommProc
+    friend class NdiCommThread; //Declare friend class NdiCommThread
 
     void initPort(); //refresh serial ports
 
-    QList<QVector3D> markers; //storage for coordinates of markers
+    QVector<QVector3D> markers; //storage for coordinates of markers
 
 private:
     Ui::NdiComm *ui;
     NdiCommProc *ndiCommProc;
 	NdiComm *ndiComm;
-//    QThread *ndiThread;
-//    QSerialPort serialPort; //Serial port
+
+    QSharedPointer<NdiCommThread> ndiThread;
+
+    QString                  serialName;
+    int                      baudRate;
+    QSerialPort::Parity      parity;
+    QSerialPort::StopBits    stopBits;
+    QSerialPort::DataBits    dataBits;
+    QSerialPort::FlowControl flowControl;
+    bool                     openSuccess;
     
     bool isPortOpened;
     bool isStarted;
@@ -51,7 +52,7 @@ private:
     QSerialPort::StopBits getStopBits(QString text);
     QSerialPort::FlowControl getFlowCtrl(QString text);
 
-    void printThread(QString front); //Test for thread
+//    void printThread(QString front); //Test for thread
 
 public:
     //Use to read and write on serialPort.
@@ -61,11 +62,11 @@ public:
 //    inline void clear() { serialPort.clear(); }
 
 signals:
-    void serialOpened(bool); //serial port open or close signal
+//    void serialOpened(bool); //serial port open or close signal
     void commStarted(); //start with ndi signal
 
-    void initFinished(QString);
-    void dataReady(QList<QVector3D>);
+//    void initFinished(QString);
+    void dataReady(QVector<QVector3D>&);
 
 public slots:
     void recvProc();
@@ -73,7 +74,10 @@ public slots:
 private slots:
     void on_refreshButton_clicked();
     void on_openCloseButton_clicked();
-    void on_startButton_clicked();
+//    void on_startButton_clicked();
+
+    void processError(const QString &s);
+    void processTimout(const QString &s);
 
 protected:
     void changeEvent(QEvent *event);
@@ -86,52 +90,52 @@ protected:
  *
  * ********************************/
 
-class NdiCommProc : public QObject
-{
-    Q_OBJECT
-public:
-    explicit NdiCommProc(QObject *parent = nullptr);
-    ~NdiCommProc();
-    float q;
-    //const char *msg;
+//class NdiCommProc : public QObject
+//{
+//    Q_OBJECT
+//public:
+//    explicit NdiCommProc(QObject *parent = nullptr);
+//    ~NdiCommProc();
+//    float q;
+//    //const char *msg;
 
-    QByteArray requestData;
-    QString strDisplay;
+//    QByteArray requestData;
+//    QString strDisplay;
 
-    QByteArray requestData1;
+//    QByteArray requestData1;
 
-    QByteArray recvbuf;
+//    QByteArray recvbuf;
 
-    bool isRunning;
+//    bool isRunning;
 
-    QSerialPort* serialPort;
-    QThread *ndiThread;
+//    QSerialPort* serialPort;
+//    QThread *ndiThread;
 
-signals:
-    void initFinished(QString);
-    void dataReady(QList<QVector3D>);
+//signals:
+//    void initFinished(QString);
+//    void dataReady(QList<QVector3D>);
 
-public slots:
-    void openSerial(bool open);
+//public slots:
+//    void openSerial(bool open);
 
-    void ndiCommStart(); //start to communicate with Ndi
+//    void ndiCommStart(); //start to communicate with Ndi
 
-    void printThread(QString front);
+//    void printThread(QString front);
 
-    void get_data(); // Get data from NDI BY Yang Luo
+//    void get_data(); // Get data from NDI BY Yang Luo
 
-//    void data_read(); //FOR SU SHUN
+////    void data_read(); //FOR SU SHUN
 
-private:
-    bool writeReadMsg(QByteArray sendmsg, QByteArray recvmsg = "", int delay_ms = 0, int read_ms = 10);
-    bool initsensor();
-    template<typename T> T getNum(const char* p);
+//private:
+//    bool writeReadMsg(QByteArray sendmsg, QByteArray recvmsg = "", int delay_ms = 0, int read_ms = 10);
+//    bool initsensor();
+//    template<typename T> T getNum(const char* p);
 
-//    bool writeReadMsg(QByteArray msg);
-//    bool datawrong=false;
-//    int ConvertHexQString(QString ch, int i, int j);
-//    float Hex_To_Decimal(unsigned char * Byte);
+////    bool writeReadMsg(QByteArray msg);
+////    bool datawrong=false;
+////    int ConvertHexQString(QString ch, int i, int j);
+////    float Hex_To_Decimal(unsigned char * Byte);
 
-};
+//};
 
 #endif // NDICOMM_H

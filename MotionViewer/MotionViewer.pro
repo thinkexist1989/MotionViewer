@@ -34,6 +34,7 @@ SOURCES += \
     mesh.cpp \
     model.cpp \
     ndicomm.cpp \
+    ndicommthread.cpp \
     ndiviewer.cpp \
     holocomm.cpp \
     holoviewer.cpp \
@@ -52,6 +53,7 @@ HEADERS += \
     mesh.h \
     model.h \
     ndicomm.h \
+    ndicommthread.h \
     ndiviewer.h \
     holocomm.h \
     holoviewer.h \
@@ -90,6 +92,9 @@ include(eigen.pri)
 
 # Add Assimp config
 include(assimp.pri)
+
+# Add Boost config
+#include(boost.pri)
 
 # Add freeglut config
 #include(freeglut.pri)

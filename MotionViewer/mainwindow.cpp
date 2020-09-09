@@ -27,6 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<NdiTool>("NdiTool");
     qRegisterMetaType<QList<NdiTool>>("QList<NdiTool>");
 
+    qRegisterMetaType<QVector<QVector3D>>("QVector<QVector3D>&");
+
     chineseTranslator = new QTranslator(this);
     chineseTranslator->load(":/translations/translation_zh.qm");
 

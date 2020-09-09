@@ -45,7 +45,7 @@ void NdiViewer::init()
     //    ui->cmbSteps->addItems(functionLists);
 }
 
-void NdiViewer::refreshMarkersView(QList<QVector3D> markersData)
+void NdiViewer::refreshMarkersView(QVector<QVector3D>& markersData)
 {
 
     //    ui->tblMarkersView->horizontalHeader()->setStretchLastSection(true);
@@ -113,7 +113,7 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
     }
 }
 
-void NdiViewer::dataProc(QList<QVector3D> data)
+void NdiViewer::dataProc(QVector<QVector3D> &data)
 {
     //qDebug() << data.size()<< endl;
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
@@ -186,7 +186,7 @@ void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
     }
 }
 
-QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
+QList<NdiTool> NdiViewer::getTools(QVector<QVector3D> &data)
 {
     QList<NdiTool> detectedTools;
     QList<QVector3D> markers;

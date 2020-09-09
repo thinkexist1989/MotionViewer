@@ -84,6 +84,8 @@ public slots:
     void clearStatus();
     void drawStatus();
 
+    void dataProc(QVector<QVector3D>& data); //Process markers' coordinates
+
 };
 
 #endif // GLVIEWER_H
