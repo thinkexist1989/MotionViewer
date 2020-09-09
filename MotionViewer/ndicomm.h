@@ -7,7 +7,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QVector3D>
-#include <QList>
+#include <QVector>
 
 extern QString                  serialName;
 extern int                      baudRate;
@@ -34,7 +34,7 @@ public:
 
     void initPort(); //refresh serial ports
 
-    QList<QVector3D> markers; //storage for coordinates of markers
+    QVector<QVector3D> markers; //storage for coordinates of markers
 
 private:
     Ui::NdiComm *ui;
@@ -65,7 +65,7 @@ signals:
     void commStarted(); //start with ndi signal
 
     void initFinished(QString);
-    void dataReady(QList<QVector3D>);
+    void dataReady(const QVector<QVector3D>& ); //发送检测到的markers
 
 public slots:
     void recvProc();
@@ -109,7 +109,7 @@ public:
 
 signals:
     void initFinished(QString);
-    void dataReady(QList<QVector3D>);
+    void dataReady(const QVector<QVector3D>& );
 
 public slots:
     void openSerial(bool open);
@@ -126,6 +126,14 @@ private:
     bool writeReadMsg(QByteArray sendmsg, QByteArray recvmsg = "", int delay_ms = 0, int read_ms = 10);
     bool initsensor();
     template<typename T> T getNum(const char* p);
+
+    quint16 calculate_crc16(quint16 wCRCin,
+                                           quint16 wCPoly,
+                                           quint16 wResultXOR,
+                                           bool input_invert,
+                                           bool ouput_invert,
+                                           const char *puchMsg,
+                                           int usDataLen);
 
 //    bool writeReadMsg(QByteArray msg);
 //    bool datawrong=false;

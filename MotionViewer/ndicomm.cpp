@@ -19,13 +19,16 @@ NdiComm::NdiComm(QWidget *parent) :
     isPortOpened(false),
     isStarted(false)
 {
+    qRegisterMetaType<QVector<QVector3D>>("Coordinates");
+    qRegisterMetaType<QVector<QVector3D>>("QVector<QVector3D>&");
+
     ui->setupUi(this);
     initPort();
 
     ndiCommProc = new NdiCommProc();
-    qRegisterMetaType<QList<QVector3D>>("Coordinates");
+
     connect(ndiCommProc, &NdiCommProc::initFinished, this, [=](QString msg){emit this->initFinished(msg);});
-    connect(ndiCommProc, &NdiCommProc::dataReady, this, [=](QList<QVector3D> data){
+    connect(ndiCommProc, &NdiCommProc::dataReady, this, [=](const QVector<QVector3D>& data){
 	this->markers = data;
         emit this->dataReady(markers);});
 
@@ -306,13 +309,14 @@ void NdiCommProc::ndiCommStart()
     while (isRunning) {
 //        data_read();
         get_data();
+        QThread::msleep(10);
     }
 }
 
 void NdiCommProc::printThread(QString front)
 {
     qDebug()<< front << tr(" Thread is: ") << QThread::currentThreadId();
-    QList<QVector3D> markers;
+    QVector<QVector3D> markers;
     markers.push_back(QVector3D(1,2,3));
     markers.push_back(QVector3D(2,4,5));
     emit dataReady(markers);
@@ -360,7 +364,7 @@ bool NdiCommProc::initsensor()
 {
     //FOR SU SHUN
     qDebug() << "Initializing~~";
-    QList<QByteArray> msgList;
+    QVector<QByteArray> msgList;
 
     if(!writeReadMsg("VER 4\r", "Northern Digital Inc.",0,50)){
         qDebug() << "Waiting for reset...";
@@ -434,8 +438,8 @@ bool NdiCommProc::initsensor()
 
 void NdiCommProc::get_data()
 {
-    QElapsedTimer timer;
-    timer.start();
+//    QElapsedTimer timer;
+//    timer.start();
 
     this->serialPort->clear();
     QByteArray msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
@@ -470,7 +474,7 @@ void NdiCommProc::get_data()
         }
     }
 
-    QList<QVector3D> markers;
+    QVector<QVector3D> markers;
 
     for (int i = 0; i < numofpoints; i++)
     {
@@ -484,7 +488,8 @@ void NdiCommProc::get_data()
         markers.push_back(QVector3D(coordinate[0], coordinate[1], coordinate[2]));
     }
     emit dataReady(markers);
-    //QThread::msleep(10);这个地方我怀疑是发的快了 所以出问题了
+
+//    QThread::msleep(10); //这个地方我怀疑是发的快了 所以出问题了
    // qDebug() << "Communication time consuming:" << (double)timer.nsecsElapsed()/(double)1000000 <<endl;
    // qDebug() << "Communication time consuming:" << timer.elapsed() << "ms";  //显示处理速度
 }
@@ -496,143 +501,66 @@ template<typename T> T NdiCommProc::getNum(const char *p)
     return temp;
 }
 
-//void NdiCommProc::data_read()
-//{
-//    //FOR SU SHUN
-//    this->serialPort->clear();
-//    QByteArray msg = "BX:18033D6C\r";
-//    //msg = "BX:1000FEAD\r";
-//    //
-//    serialPort->write(msg);
-//    int nSpot = 0;
-//    //	int numofpoints = 0;
-//    int p1 = 0;
-//    int p2 = 0;
-//    int p3 = 0;
-//    int p4 = 0;
-//    unsigned    char hexbyte[4];
-//    requestData1.clear();
-//    strDisplay.clear();
-//    while (this->serialPort->waitForReadyRead(100))
-//    {
-//        requestData = this->serialPort->readAll();
-//        requestData1 = requestData1 + requestData;
-//    }
-//    strDisplay = requestData1.toHex();
-//    nSpot += 60;
-//    int numofpoints = ConvertHexQString(strDisplay, 2, nSpot);
-//    if (numofpoints > 8)
-//        nSpot += 2;
-//    nSpot += 4;
-//    if(requestData1.length() != nSpot + numofpoints*12)
-//    {
-//        qDebug()<<"data length wrong,continue get data!";
-//        requestData = this->serialPort->readAll();
-//        requestData1 = requestData1 + requestData;
-//        strDisplay = requestData1.toHex();
-//    }
-//    if(requestData1.length() == nSpot + numofpoints*12)
-//    {
-
-//        qDebug()<<"data length right!";
-//    }
-//    float data[1][3];
-//    QList<QVector3D> markers;
-//    for (int i = 0; i < numofpoints; i++)
-//    {
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][0] = q;
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][1] = q;
-//        p1 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p2 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p3 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        p4 = ConvertHexQString(strDisplay, 2, nSpot);
-//        nSpot += 2;
-//        hexbyte[0] = p1;
-//        hexbyte[1] = p2;
-//        hexbyte[2] = p3;
-//        hexbyte[3] = p4;
-//        q = Hex_To_Decimal(hexbyte);
-//        data[0][2] = q;
-
-//markers.push_back(QVector3D(data[0][0], data[0][1], data[0][2]));
-
-//    }
-
-//    emit dataReady(markers);
-//    requestData.clear();
-//}
-
-//int NdiCommProc::ConvertHexQString(QString ch, int i, int j)
-//{
-//    int u = 0;
-//    for (int n = 0; n < i; n++)
-//    {
-//        if (ch[j + n] == '0')
-//            u = u + (0 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '1')
-//            u = u + (1 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '2')
-//            u = u + (2 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '3')
-//            u = u + (3 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '4')
-//            u = u + (4 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '5')
-//            u = u + (5 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '6')
-//            u = u + (6 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '7')
-//            u = u + (7 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '8')
-//            u = u + (8 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == '9')
-//            u = u + (9 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'a' || ch[j] == 'A')
-//            u = u + (10 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'b' || ch[j] == 'B')
-//            u = u + (11 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'c' || ch[j] == 'C')
-//            u = u + (12 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'd' || ch[j] == 'D')
-//            u = u + (13 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'e' || ch[j] == 'E')
-//            u = u + (14 * (int)pow(16, i - n - 1));
-//        if (ch[j + n] == 'f' || ch[j] == 'F')
-//            u = u + (15 * (int)pow(16, i - n - 1));
-//    }
-//    return u;
-//}
-//float NdiCommProc::Hex_To_Decimal(unsigned char *Byte)//
-//{
-
-//    return *((float*)Byte);//
-//}
+/*************************************************
+Function:       calculate_crc16
+Description:    通用的16位CRC校验算法
+Input:          wCRCin：CRC16算法的初始值
+                wCPoly：特征多项式
+                wResultXOR：结果异或值
+                input_invert：输入值是否反转
+                ouput_invert：输出值是否反转
+                puchMsg：开始校验的数据的起始地址
+                usDataLen：校验的数据长度
+Output:         无输出
+Return:         16位CRC校验结果
+Others:         example：CRC-16/CCITT由本函数实现则填充参数如下：
+                calculate_crc(0,0x1021,0,true,true,puchMsg,usDataLen)
+                NDI校验
+                char* msg = "GET:Device.*";
+                quint16 x = calculate_crc16(0,0x8005,0, true, true, msg,12);
+*************************************************/
+quint16 NdiCommProc::calculate_crc16(quint16 wCRCin,
+                                       quint16 wCPoly,
+                                       quint16 wResultXOR,
+                                       bool input_invert,
+                                       bool ouput_invert,
+                                       const char *puchMsg,
+                                       int usDataLen)
+{
+    quint8 wChar = 0;
+    while (usDataLen--)
+    {
+        wChar = *(puchMsg++);
+        if(input_invert)//输入值反转
+        {
+            quint8 temp_char = wChar;
+            wChar=0;
+            for(int i=0;i<8;++i)
+            {
+                if(temp_char&0x01)
+                    wChar|=0x01<<(7-i);
+                temp_char>>=1;
+            }
+        }
+        wCRCin ^= (wChar << 8);
+        for (int i = 0; i < 8; i++)
+        {
+            if (wCRCin & 0x8000)
+                wCRCin = (wCRCin << 1) ^ wCPoly;
+            else
+                wCRCin = wCRCin << 1;
+        }
+    }
+    if(ouput_invert)
+    {
+        quint16 temp_short = wCRCin;
+        wCRCin=0;
+        for(int i=0;i<16;++i)
+        {
+            if(temp_short&0x01)
+                wCRCin|=0x01<<(15-i);
+            temp_short>>=1;
+        }
+    }
+    return (wCRCin^wResultXOR);
+}

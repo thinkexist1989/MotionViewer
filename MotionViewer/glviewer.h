@@ -84,6 +84,8 @@ public slots:
     void clearStatus();
     void drawStatus();
 
+    void dataProc(const QVector<QVector3D>& data);
+
 };
 
 #endif // GLVIEWER_H

@@ -55,7 +55,7 @@ bool HoloComm::write(QByteArray ba)
     }
 }
 
-bool HoloComm::writeMatrix(int command, QList<QMatrix4x4> matrixList)
+bool HoloComm::writeMatrix(int command, QVector<QMatrix4x4> matrixList)
 {
     QByteArray ba;
     int dataLen = matrixList.count()*16*4; //Every Matrix is 4x4
@@ -231,7 +231,7 @@ void HoloComm::on_disconnectButton_clicked()
     ui->connectButton->setEnabled(true);
 }
 
-void HoloComm::commandProc(int command, QList<QMatrix4x4> matrixList)
+void HoloComm::commandProc(int command, QVector<QMatrix4x4> matrixList)
 {
     writeMatrix(command, matrixList);
 }

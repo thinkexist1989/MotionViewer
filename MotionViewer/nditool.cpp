@@ -9,29 +9,29 @@ NdiTool::NdiTool(QString name) : name(name)
 {
 }
 
-bool NdiTool::operator==(const NdiTool &t)
+bool NdiTool::operator==(const NdiTool &t) const
 {
     if(this->name == t.name)
         return true;
     return false;
 }
 
-void NdiTool::setMarkersDistances(QList<QList<float> > markerDistances)
+void NdiTool::setMarkersDistances(QVector<QVector<float> > markerDistances)
 {
     this->markerDistances = markerDistances;
 }
 
-void NdiTool::addMarkerDistance(QList<float> markerDistance)
+void NdiTool::addMarkerDistance(QVector<float> markerDistance)
 {
     this->markerDistances.push_back(markerDistance);
 }
 
-QList<QList<float> > NdiTool::getMarkersDistances()
+QVector<QVector<float> > NdiTool::getMarkersDistances()
 {
     return this->markerDistances;
 }
 
-void NdiTool::setMarkers(QList<QVector3D> markers)
+void NdiTool::setMarkers(QVector<QVector3D>& markers)
 {
     this->markers = markers;
 }

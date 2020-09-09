@@ -7,6 +7,7 @@
 #include <QMatrix4x4>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QCloseEvent>
 
 MainWindow::MainWindow(QWidget *parent) :
                                           QMainWindow(parent),
@@ -22,10 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    qRegisterMetaType<QMap<QString,QList<QVector3D>>>("QMap<QString,QList<QVector3D>>"); //register signal type
-    qRegisterMetaType<QList<QMatrix4x4>>("QList<QMatrix4x4>");
+    qRegisterMetaType<QMap<QString,QVector<QVector3D>>>("QMap<QString,QVector<QVector3D>>"); //register signal type
+    qRegisterMetaType<QVector<QMatrix4x4>>("QVector<QMatrix4x4>");
     qRegisterMetaType<NdiTool>("NdiTool");
-    qRegisterMetaType<QList<NdiTool>>("QList<NdiTool>");
+    qRegisterMetaType<QVector<NdiTool>>("QVector<NdiTool>");
 
     chineseTranslator = new QTranslator(this);
     chineseTranslator->load(":/translations/translation_zh.qm");
@@ -50,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tabWidget->addTab(glViewer, "GL Viewer");
 
     //connect(ndiComm, &NdiComm::initFinished, this, [=](QString msg){qDebug() << msg;});
-    //connect(ndiComm, &NdiComm::dataReady, this, [=](QList<QVector3D> markers){ qDebug() << markers; });
+    //connect(ndiComm, &NdiComm::dataReady, this, [=](QVector<QVector3D> markers){ qDebug() << markers; });
     //connect(holoComm, &HoloComm::dataReady, this, [=](QString data){qDebug() << "Received data is: " << data;});
 
     transform->moveToThread(transformThread);
@@ -67,6 +68,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(regiViewer, &RegiViewer::poindCloudRegiMatReady, transform, &Transform::poindCloudRegiMatProc);
 
     connect(transform, &Transform::needRegiMat, regiViewer, &RegiViewer::needRegiMatProc);
+
+    connect(ndiComm, &NdiComm::dataReady, glViewer, &GLViewer::dataProc);
     //just for test
     //    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
     //    qDebug() << "QMatrix is:" <<mat;

@@ -2,7 +2,7 @@
 #define TRANSFORM_H
 
 #include <QObject>
-#include <QList>
+#include <QVector>
 #include <QMap>
 #include <QMatrix4x4>
 #include "nditool.h"
@@ -22,11 +22,11 @@ public:
     int currentCommand;
 
 signals:
-    void readyForHololens(int, QList<QMatrix4x4>);
+    void readyForHololens(int, QVector<QMatrix4x4>);
     void needRegiMat();
 public slots:
-    void transformProc(int, QList<NdiTool>);
-    void toolsProc(QList<NdiTool>);
+    void transformProc(int, QVector<NdiTool>);
+    void toolsProc(QVector<NdiTool>);
     void holoMatrixProc(QMatrix4x4);
     void poindCloudRegiMatProc(QMatrix4x4);
 
@@ -38,8 +38,8 @@ private:
     QMatrix4x4 KinectMarkerToKinectMatrix;
     QMatrix4x4 modelResultLastTimeMat;
     QMatrix4x4 calibritionNeedleResultLastTimeMat;
-    QList<NdiTool> existTools;
-    QList<QMatrix4x4> matrixList;
+    QVector<NdiTool> existTools;
+    QVector<QMatrix4x4> matrixList;
     void modelCalc();
     void LoadCalibrationMatrix();
     void calibrationNeedleCalc();

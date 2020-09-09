@@ -2,7 +2,7 @@
 #define NDIVIEWER_H
 
 #include <QWidget>
-#include <QList>
+#include <QVector>
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <nditool.h>
@@ -25,22 +25,22 @@ public:
     QMatrix4x4 virtualTransformMatrix;
     QMatrix4x4 realTransformMatrix;
     QMatrix4x4 calibrationMatrix;
-    QMap<QString,QList<QVector3D>> ToolsNumAndPose;
-    QList<NdiTool> ToolStates;
-    QList<NdiTool> toolInfos;
+    QMap<QString,QVector<QVector3D>> ToolsNumAndPose;
+    QVector<NdiTool> ToolStates;
+    QVector<NdiTool> toolInfos;
 private:
     Ui::NdiViewer *ui;
 
-    void refreshMarkersView(QList<QVector3D> data); //show marker detected by NDI
+    void refreshMarkersView(const QVector<QVector3D>& data); //show marker detected by NDI
     void refreshMatrixView(QMatrix4x4 mat);
 
-    void refreshToolView(QList<NdiTool> tools);// show detected tools
+    void refreshToolView(QVector<NdiTool> tools);// show detected tools
     void refreshMarkersInTool(NdiTool tool);
 
 
     void init();
     bool isTool(QVector<float> dists, NdiTool toolx, int &index);
-    //QList<NdiTool> getToolDefination();
+    //QVector<NdiTool> getToolDefination();
     void getToolDefination();
     QPair<QString, int> judgeTool(QVector<float> dists);
 
@@ -48,18 +48,18 @@ private:
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
     QMatrix4x4 getCalibrationMatrix(); //Calibration Matrix
 
-    QList<NdiTool> getTools(QList<QVector3D> data);//tool name and pose
-    QList<NdiTool> tools;
-    QList<NdiTool> existTools;
+    QVector<NdiTool> getTools(const QVector<QVector3D>& data);//tool name and pose
+    QVector<NdiTool> tools;
+    QVector<NdiTool> existTools;
     void getRegiMat();
 
 signals:
-    void readyForTransform(int,QList<NdiTool>); //signal for transform
+    void readyForTransform(int,QVector<NdiTool>); //signal for transform
     void needRegiMat(QString fileName);
-    void toolsReady(QList<NdiTool>);
+    void toolsReady(QVector<NdiTool>);
 
 public slots:
-    void dataProc(QList<QVector3D> data); //Process markers' coordinates
+    void dataProc(const QVector<QVector3D>& data); //Process markers' coordinates
 
 protected:
     void changeEvent(QEvent *event);

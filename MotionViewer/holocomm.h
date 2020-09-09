@@ -7,7 +7,7 @@
 #include <QUdpSocket>
 #include <QByteArray>
 #include <QMatrix4x4>
-#include <QList>
+#include <QVector>
 #include <transform.h>
 
 #define TCP_SERVER 0
@@ -30,7 +30,7 @@ public:
     void init();
     bool write(QByteArray ba);
 
-    bool writeMatrix(int command, QList<QMatrix4x4> matrixList);
+    bool writeMatrix(int command, QVector<QMatrix4x4> matrixList);
 
 
 private slots:
@@ -66,7 +66,7 @@ private slots:
     void on_disconnectButton_clicked();
 
 public slots:
-    void commandProc(int,QList<QMatrix4x4>);
+    void commandProc(int,QVector<QMatrix4x4>);
 
 protected:
     void changeEvent(QEvent *event);

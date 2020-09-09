@@ -11,8 +11,8 @@ class XmlParser : public QObject
 public:
     explicit XmlParser(QObject *parent = nullptr);
 
-    static QList<NdiTool> getToolsByCoordinatesFromXml(QString fileName);
-    static QList<NdiTool> getToolsByDistancesFromXml(QString fileName);
+    static QVector<NdiTool> getToolsByCoordinatesFromXml(QString fileName);
+    static QVector<NdiTool> getToolsByDistancesFromXml(QString fileName);
 
 signals:
 

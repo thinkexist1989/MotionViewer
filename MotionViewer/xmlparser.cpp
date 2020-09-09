@@ -7,10 +7,10 @@ XmlParser::XmlParser(QObject *parent) : QObject(parent)
 
 }
 
-QList<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
+QVector<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
 {
     int i = 0;
-    QList<NdiTool> tools;
+    QVector<NdiTool> tools;
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
         qDebug() << tr("XmlParser: Can not Open Xml File");
@@ -59,10 +59,10 @@ QList<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
     return tools;
 }
 
-QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
+QVector<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
 {
     int i = 0;
-    QList<NdiTool> tools;
+    QVector<NdiTool> tools;
     QFile file(fileName);
     if(!file.open(QFile::ReadOnly)){
         qDebug() << tr("XmlParser: Can not Open Xml File");
@@ -97,7 +97,7 @@ QList<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
                         if(e.tagName().toLower() == "marker"){
                             QString alldists = e.attribute("dis");
                             QStringList strList = alldists.split(QRegExp("[\r\n\t ]+"), QString::SkipEmptyParts);
-                            QList<float> dists;
+                            QVector<float> dists;
                             foreach(QString dis, strList){
                                 dists.push_back(dis.toFloat());
                             }

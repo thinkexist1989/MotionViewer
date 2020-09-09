@@ -8,14 +8,14 @@ Transform::Transform(QObject *parent) :
 {
 }
 
-void Transform::transformProc(int command, QList<NdiTool> existTools)//这个existTools有啥用？
+void Transform::transformProc(int command, QVector<NdiTool> existTools)//这个existTools有啥用？
 {
     //TODO: add transform code
     //this->tools = tools;
     if(!pCRead)
         getRegiMat();
 
-    QList<QMatrix4x4> matrixList;
+    QVector<QMatrix4x4> matrixList;
     switch(command) {
     case HOLO_MODEL:
         currentCommand = HOLO_MODEL;
@@ -38,7 +38,7 @@ void Transform::transformProc(int command, QList<NdiTool> existTools)//这个exi
     }
 }
 
-void Transform::toolsProc(QList<NdiTool> Tools)
+void Transform::toolsProc(QVector<NdiTool> Tools)
 {
     this->existTools = Tools;
 }

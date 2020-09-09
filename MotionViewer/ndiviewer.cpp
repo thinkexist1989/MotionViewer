@@ -1,7 +1,7 @@
 #include "ndiviewer.h"
 #include "ui_ndiviewer.h"
 #include <QDebug>
-#include <QListIterator>
+#include <QVectorIterator>
 #include <QVectorIterator>
 #include <iterator>
 #include <QFileDialog>
@@ -13,7 +13,7 @@ NdiViewer::NdiViewer(QWidget *parent) :
     ui->setupUi(this);
     init();
 
-//    QList<QVector3D> markers;
+//    QVector<QVector3D> markers;
 //    markers.push_back(QVector3D(1.1,2.1,3.1));
 //    markers.push_back(QVector3D(2.2,4.4,5.9));
 //    markers.push_back(QVector3D(5.6,7.8,5.4));
@@ -22,7 +22,7 @@ NdiViewer::NdiViewer(QWidget *parent) :
 
     //refreshMatrixView(virtualTransformMatrix);
 
-//    QList<QVector3D> list1;
+//    QVector<QVector3D> list1;
 //    list1 << QVector3D(1.1,2.1,3.1) << QVector3D(1.1,2.1,3.1);
 
 }
@@ -45,7 +45,7 @@ void NdiViewer::init()
     //    ui->cmbSteps->addItems(functionLists);
 }
 
-void NdiViewer::refreshMarkersView(QList<QVector3D> markersData)
+void NdiViewer::refreshMarkersView(const QVector<QVector3D>& markersData)
 {
 
     //    ui->tblMarkersView->horizontalHeader()->setStretchLastSection(true);
@@ -74,7 +74,7 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 }
 
-void NdiViewer::refreshToolView(QList<NdiTool> existtools)
+void NdiViewer::refreshToolView(QVector<NdiTool> existtools)
 {
     if(existtools.count() == 0){
         //return;
@@ -113,7 +113,7 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
     }
 }
 
-void NdiViewer::dataProc(QList<QVector3D> data)
+void NdiViewer::dataProc(const QVector<QVector3D>& data)
 {
     //qDebug() << data.size()<< endl;
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
@@ -186,40 +186,41 @@ void NdiViewer::on_cmbSteps_currentIndexChanged(int index)
     }
 }
 
-QList<NdiTool> NdiViewer::getTools(QList<QVector3D> data)
+QVector<NdiTool> NdiViewer::getTools(const QVector<QVector3D>& data)
 {
-    QList<NdiTool> detectedTools;
-    QList<QVector3D> markers;
+    QVector<NdiTool> detectedTools;
+    QVector<QVector3D> markers;
     QPair<QString,int> toolNameIndex;
     QVector<float> dists;
     int datacount = data.count();
-    if ((datacount>2)&&(datacount<50))
-    {
-        for (int  i= 0; i< datacount; i++)
-        {
-            dists.clear();
-            for(int j = 0; j< datacount; j++)
-            {    
-                float dis = sqrt(pow((data[i].x() - data[j].x()), 2)
-                                 + pow((data[i].y() - data[j].y()), 2)
-                                 + pow((data[i].z() - data[j].z()), 2));
-                dists.push_back(dis);
-            }
-            toolNameIndex=judgeTool(dists);
-            if (toolNameIndex.first != "")
-            {
 
-                NdiTool tool(toolNameIndex.first);
-                if(detectedTools.contains(tool)){
-                    int index = detectedTools.indexOf(tool);
-                    detectedTools[index].insertIndexAndCoordinate(toolNameIndex.second, data[i]);
-                }
-                else {
-                    tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
-                    detectedTools.push_back(tool);
-                }
-                //qDebug() << tr("Find tools: ") << tool.getName();
+    if ((datacount<2)||(datacount>50))
+        return detectedTools;
+
+    for (int  i= 0; i< datacount; i++)
+    {
+        dists.clear();
+        for(int j = 0; j< datacount; j++)
+        {
+            float dis = sqrt(pow((data[i].x() - data[j].x()), 2)
+                             + pow((data[i].y() - data[j].y()), 2)
+                             + pow((data[i].z() - data[j].z()), 2));
+            dists.push_back(dis);
+        }
+        toolNameIndex=judgeTool(dists);
+        if (toolNameIndex.first != "")
+        {
+
+            NdiTool tool(toolNameIndex.first);
+            if(detectedTools.contains(tool)){
+                int index = detectedTools.indexOf(tool);
+                detectedTools[index].insertIndexAndCoordinate(toolNameIndex.second, data[i]);
             }
+            else {
+                tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
+                detectedTools.push_back(tool);
+            }
+            //qDebug() << tr("Find tools: ") << tool.getName();
         }
     }
     return detectedTools;
@@ -238,8 +239,8 @@ QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
     QPair<QString,int> toolNameIndex;
     //double *distance=dis;
     //加一个读取配置的函数，赋值toolNameSize
-    //返回值是QMap<QString,QList<float>>
-    QList<NdiTool>::iterator i;
+    //返回值是QMap<QString,QVector<float>>
+    QVector<NdiTool>::iterator i;
     for (i = tools.begin(); i != tools.end(); i++) {
         NdiTool tool = *i;
         int index = -1;
@@ -262,38 +263,38 @@ void NdiViewer::getToolDefination()
 //    NdiTool Tool3("BoneDrill");
 //    NdiTool Tool4("Kinect");
 
-//    QList<QList<float>> Tool1markerDistances;
-//    QList<float> Tool1p1; Tool1p1 << 88 << 56 << 50;
-//    QList<float> Tool1p2; Tool1p2 << 137 << 103 << 50;
-//    QList<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
-//    QList<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
+//    QVector<QVector<float>> Tool1markerDistances;
+//    QVector<float> Tool1p1; Tool1p1 << 88 << 56 << 50;
+//    QVector<float> Tool1p2; Tool1p2 << 137 << 103 << 50;
+//    QVector<float> Tool1p3; Tool1p3 << 61 << 103 << 56;
+//    QVector<float> Tool1p4; Tool1p4 << 137 << 88 << 61;
 //    Tool1markerDistances << Tool1p1 << Tool1p2 << Tool1p3 << Tool1p4;
 //    Tool1.setMarkersDistances(Tool1markerDistances);
 
-//    QList<QList<float>> Tool2markerDistances;
-//    QList<float> Tool2p1; Tool2p1 << 66 << 105 << 59;
-//    QList<float> Tool2p2; Tool2p2 << 117 << 51 << 59;
-//    QList<float> Tool2p3; Tool2p3 << 117 << 66 << 150;
-//    QList<float> Tool2p4; Tool2p4 << 150 << 51 << 105;
+//    QVector<QVector<float>> Tool2markerDistances;
+//    QVector<float> Tool2p1; Tool2p1 << 66 << 105 << 59;
+//    QVector<float> Tool2p2; Tool2p2 << 117 << 51 << 59;
+//    QVector<float> Tool2p3; Tool2p3 << 117 << 66 << 150;
+//    QVector<float> Tool2p4; Tool2p4 << 150 << 51 << 105;
 //    Tool2markerDistances << Tool2p1 << Tool2p2 << Tool2p3 << Tool2p4;
 //    Tool2.setMarkersDistances(Tool2markerDistances);
 
-//    QList<QList<float>> Tool3markerDistances;
-//    QList<float> Tool3p1; Tool3p1 << 60 << 88 << 50;
-//    QList<float> Tool3p2; Tool3p2 << 73 << 54 << 50;
-//    QList<float> Tool3p3; Tool3p3 << 65 << 88 << 55;
-//    QList<float> Tool3p4; Tool3p4 << 60 << 73 << 65;
+//    QVector<QVector<float>> Tool3markerDistances;
+//    QVector<float> Tool3p1; Tool3p1 << 60 << 88 << 50;
+//    QVector<float> Tool3p2; Tool3p2 << 73 << 54 << 50;
+//    QVector<float> Tool3p3; Tool3p3 << 65 << 88 << 55;
+//    QVector<float> Tool3p4; Tool3p4 << 60 << 73 << 65;
 //    Tool3markerDistances << Tool3p1 << Tool3p2 << Tool3p3 << Tool3p4;
 //    Tool3.setMarkersDistances(Tool3markerDistances);
 
-//    QList<QList<float>> Tool4markerDistances;
-//    QList<float> Tool4p1; Tool4p1 << 76 << 120 ;
-//    QList<float> Tool4p2; Tool4p2 << 76 << 192 ;
-//    QList<float> Tool4p3; Tool4p3 << 120 <<192 ;
+//    QVector<QVector<float>> Tool4markerDistances;
+//    QVector<float> Tool4p1; Tool4p1 << 76 << 120 ;
+//    QVector<float> Tool4p2; Tool4p2 << 76 << 192 ;
+//    QVector<float> Tool4p3; Tool4p3 << 120 <<192 ;
 //    Tool4markerDistances << Tool4p1 << Tool4p2 << Tool4p3 ;
 //    Tool4.setMarkersDistances(Tool4markerDistances);
 
-//    QList<NdiTool> tools;
+//    QVector<NdiTool> tools;
 //    tools << Tool1 << Tool2 << Tool3 << Tool4;
 
     //read tool definition from xml file
@@ -305,16 +306,16 @@ void NdiViewer::getToolDefination()
 
 bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
 {
-    QList<QList<float>> tool = toolx.getMarkersDistances();
+    QVector<QVector<float>> tool = toolx.getMarkersDistances();
     float err=2;
 
     bool istool=false;
     int numberOfMarkers = tool.count();
-    QList<QList<float>>::iterator i;
+    QVector<QVector<float>>::iterator i;
     for (i = tool.begin(); i != tool.end(); i++) {
         int q= 0;
-        QList<float> markerDists = *i;
-        QList<float>::iterator j;
+        QVector<float> markerDists = *i;
+        QVector<float>::iterator j;
         for (j = markerDists.begin(); j != markerDists.end(); j++) {
             float markerDis = *j;
             QVector<float>::iterator k;

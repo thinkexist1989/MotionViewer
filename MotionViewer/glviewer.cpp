@@ -120,14 +120,14 @@ void GLViewer::initializeGL()
     timer->start(10);
 
     /*** test nodes ***/
-    QTimer *genNodesTimer = new QTimer(this);
-    connect(genNodesTimer, &QTimer::timeout, this, [=]{
-        nodes.clear();
-        int sum = rand()%20;
-        for(int i = 0; i < sum; i++)
-            nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
-    });
-    genNodesTimer->start(2000);
+//    QTimer *genNodesTimer = new QTimer(this);
+//    connect(genNodesTimer, &QTimer::timeout, this, [=]{
+//        nodes.clear();
+//        int sum = rand()%20;
+//        for(int i = 0; i < sum; i++)
+//            nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
+//    });
+//    genNodesTimer->start(2000);
 
 }
 
@@ -296,5 +296,14 @@ void GLViewer::drawStatus()
     for(int i = 0; i < status.size(); i++)
     {
         painter.drawText(5, 15+20*i, status[i]);
+    }
+}
+
+void GLViewer::dataProc(const QVector<QVector3D> &data)
+{
+    nodes = data;
+    for(auto& node : nodes)
+    {
+        node *= 0.001;
     }
 }
