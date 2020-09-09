@@ -16,12 +16,12 @@ bool NdiTool::operator==(const NdiTool &t) const
     return false;
 }
 
-void NdiTool::setMarkersDistances(QVector<QVector<float> > markerDistances)
+void NdiTool::setMarkersDistances(const QVector<QVector<float> > &markerDistances)
 {
     this->markerDistances = markerDistances;
 }
 
-void NdiTool::addMarkerDistance(QVector<float> markerDistance)
+void NdiTool::addMarkerDistance(const QVector<float> &markerDistance)
 {
     this->markerDistances.push_back(markerDistance);
 }

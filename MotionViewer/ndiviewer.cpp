@@ -74,7 +74,7 @@ void NdiViewer::refreshMatrixView(QMatrix4x4 mat)
 
 }
 
-void NdiViewer::refreshToolView(QVector<NdiTool> existtools)
+void NdiViewer::refreshToolView(QVector<NdiTool> &existtools)
 {
     if(existtools.count() == 0){
         //return;
@@ -234,7 +234,7 @@ void NdiViewer::getRegiMat()
     }
 }
 
-QPair<QString, int> NdiViewer::judgeTool(QVector<float> dists)
+QPair<QString, int> NdiViewer::judgeTool(QVector<float> &dists)
 {
     QPair<QString,int> toolNameIndex;
     //double *distance=dis;
@@ -304,7 +304,7 @@ void NdiViewer::getToolDefination()
    // return tools;
 }
 
-bool NdiViewer::isTool(QVector<float> dists, NdiTool toolx, int &index)
+bool NdiViewer::isTool(QVector<float> &dists, NdiTool toolx, int &index)
 {
     QVector<QVector<float>> tool = toolx.getMarkersDistances();
     float err=2;

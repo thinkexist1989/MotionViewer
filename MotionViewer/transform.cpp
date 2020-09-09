@@ -8,7 +8,7 @@ Transform::Transform(QObject *parent) :
 {
 }
 
-void Transform::transformProc(int command, QVector<NdiTool> existTools)//这个existTools有啥用？
+void Transform::transformProc(int command, const QVector<NdiTool>& existTools)//这个existTools有啥用？
 {
     //TODO: add transform code
     //this->tools = tools;
@@ -38,13 +38,13 @@ void Transform::transformProc(int command, QVector<NdiTool> existTools)//这个e
     }
 }
 
-void Transform::toolsProc(QVector<NdiTool> Tools)
+void Transform::toolsProc(const QVector<NdiTool>& Tools)
 {
     this->existTools = Tools;
 }
 
 
-QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers)
+QMatrix4x4 Transform::SetCoordination(QMap<int, QVector3D> &markers)
 {
 
     float m11=markers[1].x()-markers[0].x();
@@ -86,7 +86,7 @@ QMatrix4x4 Transform::SetCoordination(QMap<int,QVector3D> markers)
      //qDebug()<<"ToolcoordinationMatrix"<<mat;
      return mat;
  }
-QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
+QMatrix4x4 Transform::SetCoordination1(QMap<int, QVector3D> &markers)
 {
      QMatrix4x4 mat;
      QVector3D A=markers[0];
@@ -116,7 +116,7 @@ QMatrix4x4 Transform::SetCoordination1(QMap<int,QVector3D> markers)
     return mat;
 
 }
-QMatrix4x4 Transform::SetCoordination2(QMap<int,QVector3D> markers)
+QMatrix4x4 Transform::SetCoordination2(QMap<int, QVector3D> &markers)
 {
      QMatrix4x4 mat;
      QVector3D A=markers[0];
@@ -185,7 +185,7 @@ void Transform::LoadCalibrationMatrix()
  this->HoloLensToHoloLensMarkerMatrix=HoloLensToHoloLensMarker;
   this->KinectMarkerToKinectMatrix=KinectMarkerToKinect;
 }
-void Transform::poindCloudRegiMatProc(QMatrix4x4 mat)
+void Transform::poindCloudRegiMatProc(const QMatrix4x4& mat)
 {
     qDebug() << "Transform received RegiMat:" << mat;
     pCRead=true;
@@ -414,7 +414,7 @@ void Transform::boneDrillCalc()
      this->matrixList.clear();
      this->matrixList.push_back(result);
 }
-void Transform::holoMatrixProc(QMatrix4x4 holoMat)
+void Transform::holoMatrixProc(const QMatrix4x4& holoMat)
 {
     this->holoMat=holoMat;
     //qDebug() << "HoloLens send:" << holoMat;

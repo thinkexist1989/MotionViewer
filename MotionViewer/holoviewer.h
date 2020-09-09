@@ -19,7 +19,7 @@ private:
     Ui::HoloViewer *ui;
 
 public slots:
-    void dataProc(QString);
+    void dataProc(const QString &);
 
 protected:
     void changeEvent(QEvent *event);

@@ -34,15 +34,15 @@ private:
     void refreshMarkersView(const QVector<QVector3D>& data); //show marker detected by NDI
     void refreshMatrixView(QMatrix4x4 mat);
 
-    void refreshToolView(QVector<NdiTool> tools);// show detected tools
+    void refreshToolView(QVector<NdiTool> &tools);// show detected tools
     void refreshMarkersInTool(NdiTool tool);
 
 
     void init();
-    bool isTool(QVector<float> dists, NdiTool toolx, int &index);
+    bool isTool(QVector<float> &dists, NdiTool toolx, int &index);
     //QVector<NdiTool> getToolDefination();
     void getToolDefination();
-    QPair<QString, int> judgeTool(QVector<float> dists);
+    QPair<QString, int> judgeTool(QVector<float>& dists);
 
     QMatrix4x4 getVirtualTransformMatrix(); // Virtual tool pose
     QMatrix4x4 getRealTransformMatrix(); // Real tool pose
@@ -54,9 +54,9 @@ private:
     void getRegiMat();
 
 signals:
-    void readyForTransform(int,QVector<NdiTool>); //signal for transform
+    void readyForTransform(int,const QVector<NdiTool>&); //signal for transform
     void needRegiMat(QString fileName);
-    void toolsReady(QVector<NdiTool>);
+    void toolsReady(const QVector<NdiTool>&);
 
 public slots:
     void dataProc(const QVector<QVector3D>& data); //Process markers' coordinates

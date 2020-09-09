@@ -14,7 +14,7 @@ HoloViewer::~HoloViewer()
     delete ui;
 }
 
-void HoloViewer::dataProc(QString data)
+void HoloViewer::dataProc(const QString& data)
 {
     //qDebug() << "Received data is: " << data;
 }

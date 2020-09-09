@@ -20,7 +20,7 @@ RegiViewer::~RegiViewer()
     delete ui;
 }
 
-void RegiViewer::showMatrix(QMatrix4x4 mat)
+void RegiViewer::showMatrix(const QMatrix4x4 &mat)
 {
     ui->tblRegiMat->setRowCount(4);
     for(int i = 0; i < 4; i++){

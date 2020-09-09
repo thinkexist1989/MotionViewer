@@ -15,8 +15,8 @@ public:
     bool operator==(const NdiTool &t) const; //overload operator== to judge if tool is equal
 
     QString getName() {return this->name;}
-    void setMarkersDistances(QVector<QVector<float>> markerDistances); //set all markers' distances
-    void addMarkerDistance(QVector<float> markerDistance); // add distance of one marker
+    void setMarkersDistances(const QVector<QVector<float>>& markerDistances); //set all markers' distances
+    void addMarkerDistance(const QVector<float>& markerDistance); // add distance of one marker
     QVector<QVector<float>> getMarkersDistances();
 
     void setMarkers(QVector<QVector3D>&);

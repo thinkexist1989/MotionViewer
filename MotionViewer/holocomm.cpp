@@ -231,7 +231,7 @@ void HoloComm::on_disconnectButton_clicked()
     ui->connectButton->setEnabled(true);
 }
 
-void HoloComm::commandProc(int command, QVector<QMatrix4x4> matrixList)
+void HoloComm::commandProc(int command, const QVector<QMatrix4x4>& matrixList)
 {
     writeMatrix(command, matrixList);
 }

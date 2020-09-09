@@ -70,6 +70,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(transform, &Transform::needRegiMat, regiViewer, &RegiViewer::needRegiMatProc);
 
     connect(ndiComm, &NdiComm::dataReady, glViewer, &GLViewer::dataProc);
+    connect(ndiViewer, &NdiViewer::toolsReady, glViewer, &GLViewer::toolProc);
     //just for test
     //    QMatrix4x4 mat(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16);
     //    qDebug() << "QMatrix is:" <<mat;

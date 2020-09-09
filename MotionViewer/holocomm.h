@@ -53,8 +53,8 @@ private:
     void dataProc(QByteArray ba); // process the data from HoloLens
 
 signals:
-    void dataReady(QString);
-    void holoMatrixReady(QMatrix4x4);
+    void dataReady(const QString&);
+    void holoMatrixReady(const QMatrix4x4 &);
 
 private slots:
     void tcpNewConnectionProc();
@@ -66,7 +66,7 @@ private slots:
     void on_disconnectButton_clicked();
 
 public slots:
-    void commandProc(int,QVector<QMatrix4x4>);
+    void commandProc(int, const QVector<QMatrix4x4> &);
 
 protected:
     void changeEvent(QEvent *event);

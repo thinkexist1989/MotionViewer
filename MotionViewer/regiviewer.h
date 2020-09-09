@@ -16,7 +16,7 @@ public:
     explicit RegiViewer(QWidget *parent = nullptr);
     ~RegiViewer();
 
-    void showMatrix(QMatrix4x4 mat);
+    void showMatrix(const QMatrix4x4& mat);
 
     QMatrix4x4 pointCloudRegiMat;
 
@@ -32,7 +32,7 @@ private:
     Ui::RegiViewer *ui;
 
 signals:
-    void poindCloudRegiMatReady(QMatrix4x4);
+    void poindCloudRegiMatReady(const QMatrix4x4&);
 };
 
 #endif // REGIVIEWER_H

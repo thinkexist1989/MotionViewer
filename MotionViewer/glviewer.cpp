@@ -177,7 +177,7 @@ void GLViewer::paintGL()
 
     /*** status ***/
     QString s1 = QString("Status: Dectected %1 nodes.").arg(nodes.size());
-    QString s2 = QString("        Phased %1 tools.").arg(rand()%10);
+    QString s2 = QString("        Phased %1 tools.").arg(tools.size());
     QStringList ss; ss << s1 << s2;
 
     setStatus(ss);
@@ -306,4 +306,9 @@ void GLViewer::dataProc(const QVector<QVector3D> &data)
     {
         node *= 0.001;
     }
+}
+
+void GLViewer::toolProc(const QVector<NdiTool> &data)
+{
+    tools = data;
 }

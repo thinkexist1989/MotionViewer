@@ -22,13 +22,13 @@ public:
     int currentCommand;
 
 signals:
-    void readyForHololens(int, QVector<QMatrix4x4>);
+    void readyForHololens(int, const QVector<QMatrix4x4>&);
     void needRegiMat();
 public slots:
-    void transformProc(int, QVector<NdiTool>);
-    void toolsProc(QVector<NdiTool>);
-    void holoMatrixProc(QMatrix4x4);
-    void poindCloudRegiMatProc(QMatrix4x4);
+    void transformProc(int, const QVector<NdiTool> &);
+    void toolsProc(const QVector<NdiTool> &);
+    void holoMatrixProc(const QMatrix4x4 &);
+    void poindCloudRegiMatProc(const QMatrix4x4 &);
 
 private:
     QMatrix4x4 poindCloudRegiMat;
@@ -46,9 +46,9 @@ private:
     void reviseMatrixCalc();
     void boneDrillCalc();
     bool pCRead;
-    QMatrix4x4 SetCoordination(QMap<int,QVector3D> markers);
-    QMatrix4x4 SetCoordination1(QMap<int,QVector3D> markers);
-    QMatrix4x4 SetCoordination2(QMap<int,QVector3D> markers);
+    QMatrix4x4 SetCoordination(QMap<int,QVector3D>& markers);
+    QMatrix4x4 SetCoordination1(QMap<int,QVector3D>& markers);
+    QMatrix4x4 SetCoordination2(QMap<int,QVector3D>& markers);
     void getRegiMat();
 };
 

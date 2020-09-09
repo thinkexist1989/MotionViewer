@@ -8,6 +8,7 @@
 #include "backdrop.h"
 #include "model.h"
 #include "coordinate.h"
+#include "nditool.h"
 
 namespace Ui {
 class GLViewer;
@@ -27,6 +28,7 @@ public:
     Model* nodeModel;
 
     QVector<QVector3D> nodes; //ndi detected nodes
+    QVector<NdiTool> tools;
 
 private:
     void setDrawMode(int mode);
@@ -85,6 +87,7 @@ public slots:
     void drawStatus();
 
     void dataProc(const QVector<QVector3D>& data);
+    void toolProc(const QVector<NdiTool>& data);
 
 };
 
