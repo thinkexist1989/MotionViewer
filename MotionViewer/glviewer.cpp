@@ -7,6 +7,7 @@
 #include <QWheelEvent> //process wheel event
 #include <QFileInfo>
 #include <QtMath>
+#include <xmlparser.h>
 
 
 GLViewer::GLViewer(QWidget *parent) :
@@ -16,7 +17,7 @@ GLViewer::GLViewer(QWidget *parent) :
     pitch(-45),
     fov(45.0),
     cameraPos(1.0, 1.0, 1.0),
-    cameraUp(0.0f, 1.0f, 0.0f)
+    cameraUp(-1.0f, 0.0f, 0.0f)
 {
     ui->setupUi(this);
 
@@ -118,6 +119,8 @@ void GLViewer::initializeGL()
     ndiModel = new Model(QFileInfo("./ndi.stl").absoluteFilePath().toStdString());
     ndiModel->setColor(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
+    loadTools();
+
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, [=]{update();});
     timer->start(10);
@@ -182,9 +185,24 @@ void GLViewer::paintGL()
     model.scale(0.001);
     ndiModel->draw(view, projection, model);
 
+    /*** tools ***/
+    for(auto& tool : existTools)
+    {
+        QMatrix4x4 model;
+//        model.scale(tools[tools.indexOf(NdiTool(tool.name))].scale);
+        model.scale(tool.scale);
+        qDebug() << tool.scale;
+        model = tool.SetCoordination2(tool.getIndexAndCoordinate()) * model;
+        toolModels[tool.name]->draw(view, projection, model);
+    }
+//    QMatrix4x4 m;
+//    m.scale(0.001);
+////        model = tool.SetCoordination2(tool.getIndexAndCoordinate()) * model;
+//    toolModels["CalibrationNeedle"]->draw(view, projection, m);
+
     /*** status ***/
     QString s1 = QString("Status: Dectected %1 nodes.").arg(nodes.size());
-    QString s2 = QString("        Phased %1 tools.").arg(tools.size());
+    QString s2 = QString("        Phased %1 tools.").arg(existTools.size());
     QStringList ss; ss << s1 << s2;
 
     setStatus(ss);
@@ -317,5 +335,20 @@ void GLViewer::dataProc(const QVector<QVector3D> &data)
 
 void GLViewer::toolProc(const QVector<NdiTool> &data)
 {
-    tools = data;
+    existTools = data;
+}
+
+void GLViewer::toolsLoaded(const QVector<NdiTool> &tools)
+{
+    for(auto& tool : tools)
+    {
+        toolModels[tool.name] = new Model(QFileInfo(tool.modelPath).absoluteFilePath().toStdString());
+        toolModels[tool.name]->setColor(QVector4D(131.0f/255.0,111.0f/255.0, 255.0f/255.0, 1.0f));
+    }
+}
+
+void GLViewer::loadTools()
+{
+    tools = XmlParser::getToolsByDistancesFromXml("./tooldef.xml");
+    toolsLoaded(tools);
 }

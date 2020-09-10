@@ -57,6 +57,7 @@ signals:
     void readyForTransform(int,const QVector<NdiTool>&); //signal for transform
     void needRegiMat(QString fileName);
     void toolsReady(const QVector<NdiTool>&);
+    void toolsLoaded(const QVector<NdiTool>&); // 从xml文件加载的tools，方便GLViewer预加载工件3d model
 
 public slots:
     void dataProc(const QVector<QVector3D>& data); //Process markers' coordinates

@@ -5,12 +5,18 @@
 #include <QVector3D>
 #include <QString>
 #include <QMap>
+#include <QMatrix4x4>
 
 class NdiTool
 {
 public:
     explicit NdiTool();
-    NdiTool(QString name);
+    NdiTool(const QString& name);
+
+    QString name;
+    QString modelPath = "";
+    float scale = 1.0f;
+    int coordinateMethod = 2;
 
     bool operator==(const NdiTool &t) const; //overload operator== to judge if tool is equal
 
@@ -26,12 +32,18 @@ public:
 
     void insertIndexAndCoordinate(int index, QVector3D coordinate);
     QMap<int,QVector3D> getIndexAndCoordinate();
+
+    void setModelPath(const QString &path);
+    void setModelScale(float s);
+    void setCoordinateMethod(int method);
+
+    QMatrix4x4 SetCoordination(const QMap<int,QVector3D>& markers, int method);
+    QMatrix4x4 SetCoordination1(const QMap<int,QVector3D>& markers);
+    QMatrix4x4 SetCoordination2(const QMap<int,QVector3D>& markers);
 private:
-    QString name;
     QVector<QVector3D> markers;
     QVector<QVector<float>> markerDistances;
     int count;
-
 };
 
 #endif // NDITOOL_H

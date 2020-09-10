@@ -29,11 +29,11 @@ void Coordinate::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
 
     model.rotate(90, QVector3D(0.0f, 1.0f, 0.0f));
     sp.setUniformValue("model", model);
-//    drawGrid(); //yz
+    drawGrid(); //yz
 
-    model.rotate(90, QVector3D(1.0f, 0.0f, 0.0f));
-    sp.setUniformValue("model", model);
-    drawGrid(); //xz
+//    model.rotate(90, QVector3D(1.0f, 0.0f, 0.0f));
+//    sp.setUniformValue("model", model);
+//    drawGrid(); //xz
 
     sp.release();
 }

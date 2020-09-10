@@ -211,7 +211,7 @@ QVector<NdiTool> NdiViewer::getTools(const QVector<QVector3D>& data)
         if (toolNameIndex.first != "")
         {
 
-            NdiTool tool(toolNameIndex.first);
+            NdiTool tool = tools[tools.indexOf(toolNameIndex.first)];
             if(detectedTools.contains(tool)){
                 int index = detectedTools.indexOf(tool);
                 detectedTools[index].insertIndexAndCoordinate(toolNameIndex.second, data[i]);
@@ -298,9 +298,10 @@ void NdiViewer::getToolDefination()
 //    tools << Tool1 << Tool2 << Tool3 << Tool4;
 
     //read tool definition from xml file
-    QString fileName = QCoreApplication::applicationDirPath();
-    qDebug()<<fileName<<endl;
-    tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/tooldef.xml");
+//    QString fileName = QCoreApplication::applicationDirPath();
+//    qDebug()<<fileName<<endl;
+    tools = XmlParser::getToolsByDistancesFromXml("./tooldef.xml");
+//    emit toolsLoaded(tools);
    // return tools;
 }
 

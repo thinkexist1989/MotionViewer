@@ -37,6 +37,7 @@ QVector<NdiTool> XmlParser::getToolsByCoordinatesFromXml(QString fileName)
             if(e.tagName().toLower() == "tool"){
                 qDebug() << tr("XmlParser: Tools ").toStdString().c_str() << ++i << tr("=>").toStdString().c_str() << e.attribute("name");
                 NdiTool tool(e.attribute("name"));
+                tool.setModelPath(e.attribute("model")); //保存模型文件的名称
                 QDomNodeList markerNodes = e.childNodes();
                 for (int i = 0; i < markerNodes.count(); i++) {
                     QDomNode markerNode = markerNodes.at(i);
@@ -89,6 +90,9 @@ QVector<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
             if(e.tagName().toLower() == "tool"){
                 qDebug() << tr("XmlParser: Tools ").toStdString().c_str() << ++i << tr("=>").toStdString().c_str() << e.attribute("name");
                 NdiTool tool(e.attribute("name"));
+                tool.setModelPath(e.attribute("model")); //保存模型文件的名称
+                tool.setModelScale(e.attribute("scale").toFloat()); //保存模型缩放比例
+                tool.setCoordinateMethod(e.attribute("coordination").toInt()); //保存设置坐标系方法
                 QDomNodeList markerNodes = e.childNodes();
                 for (int i = 0; i < markerNodes.count(); i++) {
                     QDomNode markerNode = markerNodes.at(i);

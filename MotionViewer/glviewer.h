@@ -28,8 +28,11 @@ public:
     Model* nodeModel;
     Model* ndiModel;
 
+    QVector<NdiTool> tools; //预加载的工具
+    QMap<QString, Model*> toolModels; //预加载的所有工具3D model，用名称对应
+
     QVector<QVector3D> nodes; //ndi detected nodes
-    QVector<NdiTool> tools;
+    QVector<NdiTool> existTools; //检测到的工具
 
 private:
     void setDrawMode(int mode);
@@ -89,6 +92,10 @@ public slots:
 
     void dataProc(const QVector<QVector3D>& data);
     void toolProc(const QVector<NdiTool>& data);
+    void toolsLoaded(const QVector<NdiTool>& existTools);
+
+public:
+    void loadTools();
 
 };
 
