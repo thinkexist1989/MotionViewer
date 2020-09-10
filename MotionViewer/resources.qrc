@@ -32,5 +32,9 @@
         <file>res/kinect.ico</file>
         <file>res/run.ico</file>
         <file>res/coordinates.ico</file>
+        <file>res/regi.svg</file>
+        <file>res/cube_solid.svg</file>
+        <file>res/cube_wire.svg</file>
+        <file>res/grid.svg</file>
     </qresource>
 </RCC>

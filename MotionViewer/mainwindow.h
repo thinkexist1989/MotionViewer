@@ -41,6 +41,18 @@ private slots:
 
     void on_actionEnglish_triggered();
 
+    void on_ndiCommDockWidget_visibilityChanged(bool visible);
+
+    void on_holoCommDockWidget_visibilityChanged(bool visible);
+
+    void on_actionRegi_toggled(bool arg1);
+
+    void on_regiDockWidget_visibilityChanged(bool visible);
+
+    void on_actionDisplayMode_triggered();
+
+    void on_actionNdi_triggered();
+
 private:
     Ui::MainWindow *ui;
 

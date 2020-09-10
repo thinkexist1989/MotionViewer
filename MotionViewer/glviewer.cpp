@@ -241,6 +241,7 @@ void GLViewer::clearStatus()
 
 void GLViewer::drawStatus()
 {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); //需要恢复成GL_FILL模式，否则显示的文字看不清
     QPainter painter(this);
     painter.setPen(Qt::white);
     painter.setRenderHint(QPainter::Antialiasing);

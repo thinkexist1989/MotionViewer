@@ -197,3 +197,52 @@ void MainWindow::on_actionEnglish_triggered()
     setStatusMsg(tr("GUI Language Changed"));
     qApp->removeTranslator(chineseTranslator);
 }
+
+void MainWindow::on_ndiCommDockWidget_visibilityChanged(bool visible)
+{
+//    if(!visible && ui->actionNdiViewer->isChecked())
+        ui->actionNdiViewer->setChecked(visible);
+}
+
+void MainWindow::on_holoCommDockWidget_visibilityChanged(bool visible)
+{
+    ui->actionHoloViewer->setChecked(visible);
+}
+
+void MainWindow::on_actionRegi_toggled(bool arg1)
+{
+    if(!arg1) {
+        ui->regiDockWidget->close();
+    }
+    else {
+        ui->regiDockWidget->show();
+    }
+}
+
+void MainWindow::on_regiDockWidget_visibilityChanged(bool visible)
+{
+    ui->actionRegi->setChecked(visible);
+}
+
+void MainWindow::on_actionDisplayMode_triggered()
+{
+    static int mode = 0;
+
+    if(mode)
+    {
+        mode = 0;
+        glViewer->setDrawMode(mode);
+        ui->actionDisplayMode->setIcon(QIcon(":icon/res/cube_solid.svg"));
+    }
+    else
+    {
+        mode = 1;
+        glViewer->setDrawMode(mode);
+        ui->actionDisplayMode->setIcon(QIcon(":icon/res/cube_wire.svg"));
+    }
+}
+
+void MainWindow::on_actionNdi_triggered()
+{
+    ui->tabWidget->addTab(ndiViewer,"NDI Viewer");
+}

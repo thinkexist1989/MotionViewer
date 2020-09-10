@@ -37,8 +37,11 @@ public:
 
     GLCamera* camera; //GLCamera类，负责观察矩阵计算
 
-private:
+
     void setDrawMode(int mode);
+
+private:
+
 //    void drawAxis();
 
     void drawNodes(); //draw NDI node

@@ -25,7 +25,7 @@
        <number>-1</number>
       </property>
       <property name="tabsClosable">
-       <bool>false</bool>
+       <bool>true</bool>
       </property>
       <property name="movable">
        <bool>true</bool>
@@ -56,8 +56,17 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionNdi"/>
+    <addaction name="actionHolo"/>
+    <addaction name="action3d"/>
+   </widget>
    <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -69,6 +78,7 @@
    <addaction name="actionNdiViewer"/>
    <addaction name="actionHoloViewer"/>
    <addaction name="actionKinectViewer"/>
+   <addaction name="actionRegi"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="ndiCommDockWidget">
@@ -119,6 +129,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3"/>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionDisplayMode"/>
+  </widget>
   <action name="actionChinese">
    <property name="icon">
     <iconset resource="resources.qrc">
@@ -138,6 +160,10 @@
    </property>
   </action>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/about.ico</normaloff>:/icon/res/about.ico</iconset>
+   </property>
    <property name="text">
     <string>About</string>
    </property>
@@ -191,6 +217,49 @@
    </property>
    <property name="toolTip">
     <string>Kinect Viewer</string>
+   </property>
+  </action>
+  <action name="actionRegi">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/regi.svg</normaloff>:/icon/res/regi.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Registration</string>
+   </property>
+  </action>
+  <action name="actionDisplayMode">
+   <property name="checkable">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/cube_solid.svg</normaloff>
+     <normalon>:/icon/res/cube_wire.svg</normalon>:/icon/res/cube_solid.svg</iconset>
+   </property>
+   <property name="text">
+    <string>DisplayMode</string>
+   </property>
+  </action>
+  <action name="actionNdi">
+   <property name="text">
+    <string>NDI Spectra</string>
+   </property>
+  </action>
+  <action name="actionHolo">
+   <property name="text">
+    <string>HoloLens</string>
+   </property>
+  </action>
+  <action name="action3d">
+   <property name="text">
+    <string>3D Presentation</string>
    </property>
   </action>
  </widget>
