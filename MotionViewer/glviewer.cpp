@@ -13,17 +13,18 @@
 GLViewer::GLViewer(QWidget *parent) :
     QOpenGLWidget(parent),
     ui(new Ui::GLViewer),
-    yaw(-135), //当yaw= 0时，在xz平面的分量指向x轴，而初始值应该指向-z，所以旋转-90度(这个yaw的定义确定的，因为front和+x轴的夹角)
+    yaw(-45), //当yaw= 0时，在xz平面的分量指向x轴，而初始值应该指向-z，所以旋转-90度(这个yaw的定义确定的，为front和+x轴的夹角)
     pitch(-45),
     fov(45.0),
-    cameraPos(1.0, 1.0, 1.0),
+    cameraPos(-1.0f, 1.0f, -1.0f),
     cameraUp(-1.0f, 0.0f, 0.0f)
 {
     ui->setupUi(this);
 
-    QVector3D front(cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)),
-                    sin(qDegreesToRadians(pitch)),
-                    cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians((yaw))));
+    QVector3D front(-sin(qDegreesToRadians(pitch)),
+                    cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians(yaw)),
+                    cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)));
+
     cameraFront = front.normalized();
     qDebug() << cameraFront;
 
@@ -192,7 +193,7 @@ void GLViewer::paintGL()
 //        model.scale(tools[tools.indexOf(NdiTool(tool.name))].scale);
         model.scale(tool.scale);
         qDebug() << tool.scale;
-        model = tool.SetCoordination2(tool.getIndexAndCoordinate()) * model;
+        model = tool.SetCoordination(tool.getIndexAndCoordinate()) * model;
         toolModels[tool.name]->draw(view, projection, model);
     }
 //    QMatrix4x4 m;
@@ -257,9 +258,9 @@ void GLViewer::mouseMoveEvent(QMouseEvent *event)
         else if(pitch < -89.5)
             pitch = -89.5;
 
-        QVector3D front(cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)),
-                        sin(qDegreesToRadians(pitch)),
-                        cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians((yaw))));
+        QVector3D front(-sin(qDegreesToRadians(pitch)),
+                        cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians(yaw)),
+                        cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)));
         cameraFront = front.normalized();
 
 //        qDebug() << QString("yaw: %1, tilt: %2").arg(yaw).arg(tilt).toStdString().c_str();

@@ -37,7 +37,7 @@ public:
     void setModelScale(float s);
     void setCoordinateMethod(int method);
 
-    QMatrix4x4 SetCoordination(const QMap<int,QVector3D>& markers, int method);
+    QMatrix4x4 SetCoordination(const QMap<int,QVector3D>& markers);
     QMatrix4x4 SetCoordination1(const QMap<int,QVector3D>& markers);
     QMatrix4x4 SetCoordination2(const QMap<int,QVector3D>& markers);
 private:

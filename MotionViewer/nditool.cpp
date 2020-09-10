@@ -65,10 +65,17 @@ void NdiTool::setCoordinateMethod(int method)
     coordinateMethod = method;
 }
 
-QMatrix4x4 NdiTool::SetCoordination(const QMap<int, QVector3D> &markers, int method)
+QMatrix4x4 NdiTool::SetCoordination(const QMap<int, QVector3D> &markers)
 {
     //FOR SU SHUN
-    return QMatrix4x4();
+    switch (coordinateMethod) {
+    case 1:
+        return SetCoordination1(markers);
+    case 2:
+        return SetCoordination2(markers);
+    default:
+        break;
+    }
 
 }
 

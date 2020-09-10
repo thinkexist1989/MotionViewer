@@ -65,8 +65,8 @@ void Coordinate::initAxis()
     vaoX->release();
 
 
-    float verticesY[] = {0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-                         0.0f, 0.1f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
+    float verticesY[] = {0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+                         0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
 //    initVertexArray(verticesY, sizeof (verticesY), vaoY, vboY);
 
@@ -89,8 +89,8 @@ void Coordinate::initAxis()
     vaoY->release();
 
 
-    float verticesZ[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                         0.0f, 0.0f, 0.1f, 0.0f, 0.0f, 1.0f, 1.0f};
+    float verticesZ[] = {0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+                         0.0f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 1.0f};
 
 //    initVertexArray(verticesZ,sizeof (verticesZ), vaoZ, vboZ);
 
