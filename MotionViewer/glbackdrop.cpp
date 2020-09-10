@@ -1,6 +1,6 @@
-#include "backdrop.h"
+#include "glbackdrop.h"
 
-Backdrop::Backdrop()
+GLBackdrop::GLBackdrop()
 {
     initializeOpenGLFunctions();
 
@@ -20,7 +20,7 @@ Backdrop::Backdrop()
     vertices.release();
 }
 
-void Backdrop::draw()
+void GLBackdrop::draw()
 {
     shader.bind();
     vertices.bind();

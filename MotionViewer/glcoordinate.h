@@ -6,10 +6,10 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 
-class Coordinate : protected QOpenGLFunctions
+class GLCoordinate : protected QOpenGLFunctions
 {
 public:
-    Coordinate();
+    GLCoordinate();
     void init();
     void draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model);
 

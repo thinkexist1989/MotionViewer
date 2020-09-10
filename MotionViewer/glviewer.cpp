@@ -12,21 +12,11 @@
 
 GLViewer::GLViewer(QWidget *parent) :
     QOpenGLWidget(parent),
-    ui(new Ui::GLViewer),
-    yaw(-45), //当yaw= 0时，在xz平面的分量指向x轴，而初始值应该指向-z，所以旋转-90度(这个yaw的定义确定的，为front和+x轴的夹角)
-    pitch(-45),
-    fov(45.0),
-    cameraPos(-1.0f, 1.0f, -1.0f),
-    cameraUp(-1.0f, 0.0f, 0.0f)
+    ui(new Ui::GLViewer)
 {
     ui->setupUi(this);
 
-    QVector3D front(-sin(qDegreesToRadians(pitch)),
-                    cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians(yaw)),
-                    cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)));
-
-    cameraFront = front.normalized();
-    qDebug() << cameraFront;
+    camera = new GLCamera();
 
 }
 
@@ -51,45 +41,6 @@ void GLViewer::setDrawMode(int mode)
     update(); //refresh display
 }
 
-//void GLViewer::drawAxis()
-//{
-//    initializeOpenGLFunctions();
-
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-
-//    int h = height();
-//    int w = width();
-
-//    if (w > h)
-//        glOrtho(-w / h, w / h, -1.0f, 1.0f, -1.0f, 1.0f);
-//    else
-//        glOrtho(-1.0f, 1.0f, -h / w, h / w, -1.0f, 1.0f);
-
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
-
-////    glRotatef(x_angle, 1.0f, 0.0f, 0.0f);
-////    glRotatef(y_angle, 0.0f, 1.0f, 0.0f);
-
-//    glLineWidth(3.0f);
-//    glColor3f(1.0f, 0.0f, 0.0f); //画红色的x轴
-//    glBegin(GL_LINES);
-//    glVertex3f(-1.0f, 0.0f, 0.0f);
-//    glVertex3f(1.0f, 0.0f, 0.0f);
-//    glEnd();
-//    glColor3f(0.0, 1.0, 0.0); //画绿色的y轴
-//    glBegin(GL_LINES);
-//    glVertex3f(0.0f, -1.0f, 0.0f);
-//    glVertex3f(0.0f, 1.0f, 0.0f);
-//    glEnd();
-//    glColor3f(0.0, 0.0, 1.0); //画蓝色的z轴
-//    glBegin(GL_LINES);
-//    glVertex3f(0.0f, 0.0f, -1.0f);
-//    glVertex3f(0.0f, 0.0f, 1.0f);
-//    glEnd();
-//}
-
 void GLViewer::drawNodes()
 {
     initializeOpenGLFunctions();
@@ -109,15 +60,13 @@ void GLViewer::initializeGL()
 //    glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //default background
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //default background
 
-    backdrop = new Backdrop();
+//    backdrop = new Backdrop();
 
-    coordinate = new Coordinate();
+    coordinate = new GLCoordinate();
 
-//    model1 = new Model("C:\\Users\\think\\Desktop\\universal_robot-melodic-devel\\ur_e_description\\meshes\\ur5e\\visual\\base.dae");
+    nodeModel = new GLModel(QFileInfo("./sphere.dae").absoluteFilePath().toStdString());
 
-    nodeModel = new Model(QFileInfo("./sphere.dae").absoluteFilePath().toStdString());
-
-    ndiModel = new Model(QFileInfo("./ndi.stl").absoluteFilePath().toStdString());
+    ndiModel = new GLModel(QFileInfo("./ndi.stl").absoluteFilePath().toStdString());
     ndiModel->setColor(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
 
     loadTools();
@@ -159,18 +108,16 @@ void GLViewer::paintGL()
 
 
     /*** view and projection matrix ***/
-    view.setToIdentity(); //due to the view used every time, so first set to identity.
-    view.lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
+    view = camera->getViewMatrix();
 
     projection.setToIdentity(); // same as view
 //    projection.ortho(0.0f, (float)width()/height()*fov, 0.0f, (float)fov, 0.1, 100); //正交投影
-    projection.perspective(fov, (float)width()/height(), 0.1, 100);
+    projection.perspective(camera->zoom, (float)width()/height(), 0.1, 100);
 
     /*** background ***/
 //    backdrop->draw();
 
     /*** axis ***/
-//    drawAxis();
     QMatrix4x4 model;
     coordinate->draw(view, projection, model);
 
@@ -190,7 +137,6 @@ void GLViewer::paintGL()
     for(auto& tool : existTools)
     {
         QMatrix4x4 model;
-//        model.scale(tools[tools.indexOf(NdiTool(tool.name))].scale);
         model.scale(tool.scale);
         qDebug() << tool.scale;
         model = tool.SetCoordination(tool.getIndexAndCoordinate()) * model;
@@ -247,29 +193,15 @@ void GLViewer::mouseMoveEvent(QMouseEvent *event)
 
     if(event->buttons() & Qt::LeftButton) //left button -> rotation
     {
-//        yaw = fmod(yaw + d.x()*fov*0.001, 360); //fmod is like % operator for float
-//        tilt = fmod(tilt - d.y()*fov*0.001, 360);
-//        pitch = fmod(pitch - d.y()*fov*0.001, 360);
 
-        yaw += d.x()*fov*0.001;
-        pitch -= d.y()*fov*0.001;
-        if(pitch > 89.5)
-            pitch = 89.5;
-        else if(pitch < -89.5)
-            pitch = -89.5;
-
-        QVector3D front(-sin(qDegreesToRadians(pitch)),
-                        cos(qDegreesToRadians(pitch))*sin(qDegreesToRadians(yaw)),
-                        cos(qDegreesToRadians(pitch))*cos(qDegreesToRadians(yaw)));
-        cameraFront = front.normalized();
+        camera->cameraRotate(d);
 
 //        qDebug() << QString("yaw: %1, tilt: %2").arg(yaw).arg(tilt).toStdString().c_str();
         update();
     }
     else if(event->buttons() & Qt::RightButton) //right button -> translation
     {
-        cameraPos -= d.x()*fov*0.0001*QVector3D::crossProduct(cameraFront, cameraUp).normalized();
-        cameraPos += d.y()*fov*0.0001*cameraUp;
+        camera->cameraTranslate(d);
     }
 
     _mouse_pos = p;
@@ -282,17 +214,11 @@ void GLViewer::wheelEvent(QWheelEvent *event)
 //    qDebug() << event->delta(); //每次delta都是+/- 120，每滚动一格都会进入，+1即可
     if(event->delta() < 0)
     {
-        zoom *= 1.13;
-        fov *= 1.13;
-        fov = fov > 120? 120 : fov;
-
+        camera->zoom = camera->zoom * 1.13 > 200 ? 200 : camera->zoom * 1.13;
     }
     else if(event->delta() > 0)
     {
-        zoom /= 1.13;
-        fov /= 1.13;
-        fov = fov < 0.1? 0.1: fov;
-
+        camera->zoom = camera->zoom * 0.885 < 0.1 ? 0.1 : camera->zoom * 0.885;
     }
 
     update();
@@ -343,7 +269,7 @@ void GLViewer::toolsLoaded(const QVector<NdiTool> &tools)
 {
     for(auto& tool : tools)
     {
-        toolModels[tool.name] = new Model(QFileInfo(tool.modelPath).absoluteFilePath().toStdString());
+        toolModels[tool.name] = new GLModel(QFileInfo(tool.modelPath).absoluteFilePath().toStdString());
         toolModels[tool.name]->setColor(QVector4D(131.0f/255.0,111.0f/255.0, 255.0f/255.0, 1.0f));
     }
 }

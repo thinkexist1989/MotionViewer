@@ -31,14 +31,14 @@ struct Texture {
 };
 
 
-class Mesh: protected QOpenGLFunctions
+class GLMesh: protected QOpenGLFunctions
 {
 public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
     std::vector<Texture> textures;
 
-    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
+    GLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
 
     void Draw(QOpenGLShaderProgram* psp);
 

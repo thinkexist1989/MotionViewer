@@ -1,21 +1,21 @@
-#include "coordinate.h"
+#include "glcoordinate.h"
 
-Coordinate::Coordinate()
+GLCoordinate::GLCoordinate()
 {
-    initializeOpenGLFunctions();
+    initializeOpenGLFunctions(); //必须先调用次函数获取OpenGL上下文
     sp.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/gl/coor.vert");
     sp.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/gl/coor.frag");
     sp.link();
     init();
 }
 
-void Coordinate::init()
+void GLCoordinate::init()
 {
     initAxis();
     initGrid();
 }
 
-void Coordinate::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
+void GLCoordinate::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
 {
     sp.bind();
 
@@ -38,7 +38,7 @@ void Coordinate::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
     sp.release();
 }
 
-void Coordinate::initAxis()
+void GLCoordinate::initAxis()
 {
 
     float verticesX[] = {0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
@@ -113,7 +113,7 @@ void Coordinate::initAxis()
     vaoZ->release();
 }
 
-void Coordinate::drawAxis()
+void GLCoordinate::drawAxis()
 {
     vaoX->bind();
     glLineWidth(1.5f);
@@ -131,7 +131,7 @@ void Coordinate::drawAxis()
     vaoZ->release();
 }
 
-void Coordinate::initGrid()
+void GLCoordinate::initGrid()
 {
     genGridXYVertices(2.0f, 2.0f, 20, 20, QVector4D(0.3f, 0.3f, 0.3f, 0.5f));
 
@@ -162,7 +162,7 @@ void Coordinate::initGrid()
 
 
 
-void Coordinate::drawGrid()
+void GLCoordinate::drawGrid()
 {
     vaoGrid->bind();
     glLineWidth(1.5f);
@@ -173,7 +173,7 @@ void Coordinate::drawGrid()
 
 
 //目前这个函数有点问题 sizeof(vertices)结果不对
-void Coordinate::initVertexArray(float *vertices, unsigned long long len, QOpenGLVertexArrayObject *vao, QOpenGLBuffer *vbo)
+void GLCoordinate::initVertexArray(float *vertices, unsigned long long len, QOpenGLVertexArrayObject *vao, QOpenGLBuffer *vbo)
 {
     vao = new QOpenGLVertexArrayObject();
     if(vao->create())
@@ -194,7 +194,7 @@ void Coordinate::initVertexArray(float *vertices, unsigned long long len, QOpenG
     vao->release();
 }
 
-void Coordinate::genGridXYVertices(float width, float height, int stepWidth, int stepHeight, QVector4D color)
+void GLCoordinate::genGridXYVertices(float width, float height, int stepWidth, int stepHeight, QVector4D color)
 {
     float stripWidth = width / stepWidth; //width 步进距离
     float stripHeight = height / stepHeight; // height 步进距离

@@ -1,7 +1,7 @@
-#include "mesh.h"
+#include "glmesh.h"
 #include <iostream>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+GLMesh::GLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;
     this->indices = indices;
@@ -11,7 +11,7 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
     std::cout << "Setup Mesh OK!" << std::endl;
 }
 
-void Mesh::setupMesh()
+void GLMesh::setupMesh()
 {
     initializeOpenGLFunctions();
 
@@ -52,7 +52,7 @@ void Mesh::setupMesh()
 
 }
 
-void Mesh::Draw(QOpenGLShaderProgram *psp)
+void GLMesh::Draw(QOpenGLShaderProgram *psp)
 {
     // bind appropriate textures
     unsigned int diffuseNr  = 1;

@@ -5,10 +5,10 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLFunctions>
 
-class Backdrop : protected QOpenGLFunctions
+class GLBackdrop : protected QOpenGLFunctions
 {
 public:
-    Backdrop();
+    GLBackdrop();
     void draw();
 private:
     QOpenGLShaderProgram shader;

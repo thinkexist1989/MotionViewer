@@ -25,14 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
-    backdrop.cpp \
-    coordinate.cpp \
+    glbackdrop.cpp \
+    glcoordinate.cpp \
+    glmesh.cpp \
+    glmodel.cpp \
     glviewer.cpp \
         main.cpp \
         mainwindow.cpp \
     aboutdlg.cpp \
-    mesh.cpp \
-    model.cpp \
     ndicomm.cpp \
     ndiviewer.cpp \
     holocomm.cpp \
@@ -44,13 +44,14 @@ SOURCES += \
     xmlparser.cpp
 
 HEADERS += \
-    backdrop.h \
-    coordinate.h \
+    glbackdrop.h \
+    glcamera.hpp \
+    glcoordinate.h \
+    glmesh.h \
+    glmodel.h \
     glviewer.h \
         mainwindow.h \
     aboutdlg.h \
-    mesh.h \
-    model.h \
     ndicomm.h \
     ndiviewer.h \
     holocomm.h \

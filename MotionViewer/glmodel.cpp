@@ -1,11 +1,11 @@
-#include "model.h"
+#include "glmodel.h"
 
 #include <iostream>
 #include <stb_image.h>
 #include <QResource>
 #include <QString>
 
-Model::Model(const std::string &path, bool gamma) : gammaCorrection(gamma)
+GLModel::GLModel(const std::string &path, bool gamma) : gammaCorrection(gamma)
 {
     initializeOpenGLFunctions();
     loadModel(path); // load model file
@@ -16,7 +16,7 @@ Model::Model(const std::string &path, bool gamma) : gammaCorrection(gamma)
     sp.link();
 }
 
-void Model::Draw(QOpenGLShaderProgram *psp)
+void GLModel::Draw(QOpenGLShaderProgram *psp)
 {
     sp.bind();
 //    std::cout <<"meshes size is: " <<meshes.size() << std::endl;
@@ -30,7 +30,7 @@ void Model::Draw(QOpenGLShaderProgram *psp)
     sp.release();
 }
 
-void Model::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
+void GLModel::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
 {
     sp.bind();
     sp.setUniformValue("view", view);
@@ -45,7 +45,7 @@ void Model::draw(QMatrix4x4 view, QMatrix4x4 projection, QMatrix4x4 model)
     sp.release();
 }
 
-void Model::setShader(const QString &vertex, const QString &fragment)
+void GLModel::setShader(const QString &vertex, const QString &fragment)
 {
     sp.removeAllShaders();
     sp.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex);
@@ -53,12 +53,12 @@ void Model::setShader(const QString &vertex, const QString &fragment)
     sp.link();
 }
 
-void Model::setColor(const QVector4D color)
+void GLModel::setColor(const QVector4D color)
 {
     this->color = color;
 }
 
-void Model::loadModel(const std::string &path)
+void GLModel::loadModel(const std::string &path)
 {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals);
@@ -76,7 +76,7 @@ void Model::loadModel(const std::string &path)
 //    std::cout << "load model OK!" << std::endl;
 }
 
-void Model::processNode(aiNode *node, const aiScene *scene)
+void GLModel::processNode(aiNode *node, const aiScene *scene)
 {
     for(unsigned int i = 0; i < node->mNumMeshes; i++)
     {
@@ -92,7 +92,7 @@ void Model::processNode(aiNode *node, const aiScene *scene)
     }
 }
 
-Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
+GLMesh GLModel::processMesh(aiMesh *mesh, const aiScene *scene)
 {
     std::cout << "Processing Meshes!" << std::endl;
     // data to fill
@@ -177,10 +177,10 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene)
     // return a mesh object created from the extracted mesh data
     //            return Mesh(vertices, indices, textures);
     std::cout << "Process Meshes OK!" << std::endl;
-    return Mesh(vertices, indices, textures);
+    return GLMesh(vertices, indices, textures);
 }
 
-std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
+std::vector<Texture> GLModel::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName)
 {
     std::vector<Texture> textures;
     for(unsigned int i = 0; i < mat->GetTextureCount(type); i++)
@@ -213,7 +213,7 @@ std::vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType 
 }
 
 
-unsigned int Model::TextureFromFile(const char *path, const std::string &directory, bool gamma)
+unsigned int GLModel::TextureFromFile(const char *path, const std::string &directory, bool gamma)
 {
     std::string filename = std::string(path);
     filename = directory + '/' + filename;

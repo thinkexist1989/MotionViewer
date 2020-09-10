@@ -5,10 +5,11 @@
 #include <QOpenGLFunctions>
 //#include <QElapsedTimer> //计算时间流逝
 #include <memory>
-#include "backdrop.h"
-#include "model.h"
-#include "coordinate.h"
-#include "nditool.h"
+#include "glbackdrop.h"
+#include "glmodel.h"
+#include "glcoordinate.h" //GLCo
+#include "nditool.h" //NdiTool类
+#include "glcamera.hpp" //GLCamera类
 
 namespace Ui {
 class GLViewer;
@@ -25,14 +26,16 @@ public:
     void drawShaded();
     void drawWireframe();
 
-    Model* nodeModel;
-    Model* ndiModel;
+    GLModel* nodeModel;
+    GLModel* ndiModel;
 
     QVector<NdiTool> tools; //预加载的工具
-    QMap<QString, Model*> toolModels; //预加载的所有工具3D model，用名称对应
+    QMap<QString, GLModel*> toolModels; //预加载的所有工具3D model，用名称对应
 
     QVector<QVector3D> nodes; //ndi detected nodes
     QVector<NdiTool> existTools; //检测到的工具
+
+    GLCamera* camera; //GLCamera类，负责观察矩阵计算
 
 private:
     void setDrawMode(int mode);
@@ -43,18 +46,12 @@ private:
 private:
     Ui::GLViewer *ui;
 
-    Backdrop *backdrop; //draw background
+    GLBackdrop *backdrop; //draw background
 
-    Coordinate* coordinate;
+    GLCoordinate* coordinate;
 
     QVector3D center;
     float scale;
-    float zoom;
-    float tilt;  // up down
-    float yaw;  //left right
-    float pitch;
-
-    float fov; //field of view
 
     float perspective;
     int drawMode; // 0 is shaded, 1 is wireframe
