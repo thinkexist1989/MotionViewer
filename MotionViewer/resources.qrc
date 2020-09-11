@@ -41,5 +41,7 @@
         <file>res/tview.png</file>
         <file>res/fill.png</file>
         <file>res/line.png</file>
+        <file>res/ortho.png</file>
+        <file>res/persp.png</file>
     </qresource>
 </RCC>

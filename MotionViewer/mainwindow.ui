@@ -140,6 +140,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDisplayMode"/>
+   <addaction name="actionProjection"/>
    <addaction name="separator"/>
    <addaction name="actionAxo"/>
    <addaction name="actionFrontView"/>
@@ -312,6 +313,18 @@
    </property>
    <property name="toolTip">
     <string>Axonometric View</string>
+   </property>
+  </action>
+  <action name="actionProjection">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/persp.png</normaloff>:/icon/res/persp.png</iconset>
+   </property>
+   <property name="text">
+    <string>Projection</string>
+   </property>
+   <property name="toolTip">
+    <string>Perspective or Orthogonal</string>
    </property>
   </action>
  </widget>

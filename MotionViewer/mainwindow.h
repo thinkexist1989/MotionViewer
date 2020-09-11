@@ -61,6 +61,8 @@ private slots:
 
     void on_actionAxo_triggered();
 
+    void on_actionProjection_triggered();
+
 private:
     Ui::MainWindow *ui;
 

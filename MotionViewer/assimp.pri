@@ -1,5 +1,5 @@
 win32:{
-!build_pass:message(Assimp Directory is $$(ASSIMP))
+#!build_pass:message(Assimp Directory is $$(ASSIMP))
 INCLUDEPATH += $$(ASSIMP)/include
     Debug:{
 #        LIBS += $$(ASSIMP)/lib/assimp-vc142-mt.lib

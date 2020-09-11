@@ -9,9 +9,10 @@
 
 const float YAW         = -45.0f;
 const float PITCH       = -45.0f;
-const float ZOOM        = 45.0f;
+const float ZOOM        = 1.0f;
+const float FOV         = 45.0f;
 const float SENSITIVITY = 0.002f;
-const float SPEED       = 0.0001f;
+const float SPEED       = 0.01f;
 
 
 class GLCamera : protected QOpenGLFunctions
@@ -28,6 +29,7 @@ public:
     float pitch;
     //相机选项
     float zoom; //缩放
+    float fov; //field of view
     float mouseSensitivity; //鼠标灵敏度
     float moveSpeed; //移动速度
 
@@ -38,6 +40,7 @@ public:
              float _yaw = YAW,
              float _pitch = PITCH ) :
         zoom(ZOOM),
+        fov(FOV),
         mouseSensitivity(SENSITIVITY),
         moveSpeed(SPEED)
     {
@@ -99,6 +102,20 @@ public:
     {
         pos -= d.x() * zoom * moveSpeed * right;
         pos += d.y() * zoom * moveSpeed * QVector3D::crossProduct(worldUp, right).normalized();
+
+        updateCameraVector();
+    }
+
+    void cameraZoom(float step)
+    {
+        pos -= step*front;
+
+        if(step > 0)
+            zoom *= 0.9; // 缩小
+        else
+            zoom *= 1.4; // 放大
+
+        zoom = zoom > 6 ? 6 : zoom;
 
         updateCameraVector();
     }

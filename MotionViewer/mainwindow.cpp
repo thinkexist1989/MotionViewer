@@ -266,3 +266,21 @@ void MainWindow::on_actionAxo_triggered()
 {
     glViewer->camera->AxoView();
 }
+
+void MainWindow::on_actionProjection_triggered()
+{
+    static int projMode = 0;
+
+    if(projMode)
+    {
+        projMode = 0;
+        glViewer->setProjectionMode(projMode);
+        ui->actionProjection->setIcon(QIcon(":icon/res/persp.png"));
+    }
+    else
+    {
+        projMode = 1;
+        glViewer->setProjectionMode(projMode);
+        ui->actionProjection->setIcon(QIcon(":/icon/res/ortho.png"));
+    }
+}

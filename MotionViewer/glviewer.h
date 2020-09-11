@@ -39,6 +39,7 @@ public:
 
 
     void setDrawMode(int mode);
+    void setProjectionMode(int mode);
 
 private:
 
@@ -57,7 +58,8 @@ private:
     float scale;
 
     float perspective;
-    int drawMode; // 0 is shaded, 1 is wireframe
+    int drawMode = 0; // 0 is shaded, 1 is wireframe
+    int projMode = 0; //projection.  0 is perspective , 1 is orthogonal
 
 //    Q_PROPERTY(float perspective MEMBER perspective WRITE set_perspective);
 //    QPropertyAnimation anim;

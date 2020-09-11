@@ -41,6 +41,12 @@ void GLViewer::setDrawMode(int mode)
     update(); //refresh display
 }
 
+void GLViewer::setProjectionMode(int mode)
+{
+    projMode = mode;
+    update();
+}
+
 void GLViewer::drawNodes()
 {
     initializeOpenGLFunctions();
@@ -98,6 +104,19 @@ void GLViewer::paintGL()
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 
+    if(projMode == 1)
+    {
+        projection.setToIdentity(); // same as view
+        projection.ortho(-1.0f*camera->zoom, 1.0f*camera->zoom, -1.0f*height()/(float)width()*camera->zoom, 1.0f*height()/(float)width()*camera->zoom, 0.1, 100);
+//        projection.perspective(camera->zoom, (float)width()/height(), 0.1, 100);
+    }
+    else
+    {
+        projection.setToIdentity(); // same as view
+        projection.perspective(camera->fov, (float)width()/height(), 0.1, 100);
+    }
+
+//    glClearColor(0.2f, 0.3f, 0.3f, 1.0f); //default background
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //default background
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -110,9 +129,11 @@ void GLViewer::paintGL()
     /*** view and projection matrix ***/
     view = camera->getViewMatrix();
 
-    projection.setToIdentity(); // same as view
+//    projection.setToIdentity(); // same as view
 //    projection.ortho(0.0f, (float)width()/height()*fov, 0.0f, (float)fov, 0.1, 100); //正交投影
-    projection.perspective(camera->zoom, (float)width()/height(), 0.1, 100);
+
+
+//    projection.perspective(camera->zoom, (float)width()/height(), 0.1, 100);
 
     /*** background ***/
 //    backdrop->draw();
@@ -214,11 +235,13 @@ void GLViewer::wheelEvent(QWheelEvent *event)
 //    qDebug() << event->delta(); //每次delta都是+/- 120，每滚动一格都会进入，+1即可
     if(event->delta() < 0)
     {
-        camera->zoom = camera->zoom * 1.13 > 150 ? 150 : camera->zoom * 1.13;
+//        camera->zoom = camera->zoom * 1.13 > 150 ? 150 : camera->zoom * 1.13;
+        camera->cameraZoom(0.2f);
     }
     else if(event->delta() > 0)
     {
-        camera->zoom = camera->zoom * 0.885 < 0.1 ? 0.1 : camera->zoom * 0.885;
+//        camera->zoom = camera->zoom * 0.885 < 0.1 ? 0.1 : camera->zoom * 0.885;
+        camera->cameraZoom(-0.2f);
     }
 
     update();
