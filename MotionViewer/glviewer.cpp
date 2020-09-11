@@ -214,7 +214,7 @@ void GLViewer::wheelEvent(QWheelEvent *event)
 //    qDebug() << event->delta(); //每次delta都是+/- 120，每滚动一格都会进入，+1即可
     if(event->delta() < 0)
     {
-        camera->zoom = camera->zoom * 1.13 > 200 ? 200 : camera->zoom * 1.13;
+        camera->zoom = camera->zoom * 1.13 > 150 ? 150 : camera->zoom * 1.13;
     }
     else if(event->delta() > 0)
     {

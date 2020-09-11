@@ -84,10 +84,10 @@ RESOURCES += \
 RC_ICONS = viewer.ico
 
 # Add OpenCV config
-include(opencv.pri)
+#include(opencv.pri)
 
 # Add Eigen config
-include(eigen.pri)
+#include(eigen.pri)
 
 # Add Assimp config
 include(assimp.pri)
@@ -102,7 +102,7 @@ win32:LIBS += -lGlu32
 # Add translations
 TRANSLATIONS += translation_zh.ts
 
-message($${PWD})
+#message($${PWD})
 
 
 linux-g++{

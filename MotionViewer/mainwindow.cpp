@@ -232,17 +232,37 @@ void MainWindow::on_actionDisplayMode_triggered()
     {
         mode = 0;
         glViewer->setDrawMode(mode);
-        ui->actionDisplayMode->setIcon(QIcon(":icon/res/cube_solid.svg"));
+        ui->actionDisplayMode->setIcon(QIcon(":icon/res/fill.png"));
     }
     else
     {
         mode = 1;
         glViewer->setDrawMode(mode);
-        ui->actionDisplayMode->setIcon(QIcon(":icon/res/cube_wire.svg"));
+        ui->actionDisplayMode->setIcon(QIcon(":icon/res/line.png"));
     }
 }
 
 void MainWindow::on_actionNdi_triggered()
 {
     ui->tabWidget->addTab(ndiViewer,"NDI Viewer");
+}
+
+void MainWindow::on_actionFrontView_triggered()
+{
+    glViewer->camera->frontView();
+}
+
+void MainWindow::on_actionRightView_triggered()
+{
+    glViewer->camera->rightView();
+}
+
+void MainWindow::on_actionTopView_triggered()
+{
+    glViewer->camera->topView();
+}
+
+void MainWindow::on_actionAxo_triggered()
+{
+    glViewer->camera->AxoView();
 }

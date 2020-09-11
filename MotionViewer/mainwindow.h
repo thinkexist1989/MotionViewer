@@ -53,6 +53,14 @@ private slots:
 
     void on_actionNdi_triggered();
 
+    void on_actionFrontView_triggered();
+
+    void on_actionRightView_triggered();
+
+    void on_actionTopView_triggered();
+
+    void on_actionAxo_triggered();
+
 private:
     Ui::MainWindow *ui;
 

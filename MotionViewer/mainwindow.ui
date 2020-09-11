@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>1090</width>
-     <height>22</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuLanguage">
@@ -129,7 +129,7 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3"/>
   </widget>
-  <widget class="QToolBar" name="toolBar">
+  <widget class="QToolBar" name="glToolBar">
    <property name="windowTitle">
     <string>toolBar</string>
    </property>
@@ -140,6 +140,11 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionDisplayMode"/>
+   <addaction name="separator"/>
+   <addaction name="actionAxo"/>
+   <addaction name="actionFrontView"/>
+   <addaction name="actionRightView"/>
+   <addaction name="actionTopView"/>
   </widget>
   <action name="actionChinese">
    <property name="icon">
@@ -180,10 +185,10 @@
      <normaloff>:/icon/res/ndi.png</normaloff>:/icon/res/ndi.png</iconset>
    </property>
    <property name="text">
-    <string>NdiViewer</string>
+    <string>NDI Communication</string>
    </property>
    <property name="toolTip">
-    <string>NDI Viewer</string>
+    <string>NDI Communication</string>
    </property>
   </action>
   <action name="actionHoloViewer">
@@ -198,10 +203,10 @@
      <normaloff>:/icon/res/vr.ico</normaloff>:/icon/res/vr.ico</iconset>
    </property>
    <property name="text">
-    <string>HoloViewer</string>
+    <string>HoloLens Communication</string>
    </property>
    <property name="toolTip">
-    <string>HoloLens Viewer</string>
+    <string>HoloLens Communication</string>
    </property>
   </action>
   <action name="actionKinectViewer">
@@ -240,8 +245,7 @@
    </property>
    <property name="icon">
     <iconset resource="resources.qrc">
-     <normaloff>:/icon/res/cube_solid.svg</normaloff>
-     <normalon>:/icon/res/cube_wire.svg</normalon>:/icon/res/cube_solid.svg</iconset>
+     <normaloff>:/icon/res/fill.png</normaloff>:/icon/res/fill.png</iconset>
    </property>
    <property name="text">
     <string>DisplayMode</string>
@@ -260,6 +264,54 @@
   <action name="action3d">
    <property name="text">
     <string>3D Presentation</string>
+   </property>
+  </action>
+  <action name="actionFrontView">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/fview.png</normaloff>:/icon/res/fview.png</iconset>
+   </property>
+   <property name="text">
+    <string>FrontView</string>
+   </property>
+   <property name="toolTip">
+    <string>Front View</string>
+   </property>
+  </action>
+  <action name="actionRightView">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/rview.png</normaloff>:/icon/res/rview.png</iconset>
+   </property>
+   <property name="text">
+    <string>RightView</string>
+   </property>
+   <property name="toolTip">
+    <string>Right View</string>
+   </property>
+  </action>
+  <action name="actionTopView">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/tview.png</normaloff>:/icon/res/tview.png</iconset>
+   </property>
+   <property name="text">
+    <string>TopView</string>
+   </property>
+   <property name="toolTip">
+    <string>Top View</string>
+   </property>
+  </action>
+  <action name="actionAxo">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/icon/res/cube_wire.svg</normaloff>:/icon/res/cube_wire.svg</iconset>
+   </property>
+   <property name="text">
+    <string>AxonometricView</string>
+   </property>
+   <property name="toolTip">
+    <string>Axonometric View</string>
    </property>
   </action>
  </widget>

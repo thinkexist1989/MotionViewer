@@ -103,6 +103,45 @@ public:
         updateCameraVector();
     }
 
+    void frontView()
+    {
+        this->yaw = 0;
+        this->pitch = 0;
+        this->pos = QVector3D(0.0f, 0.0f, -2.0f);
+        this->up =  QVector3D(-1.0f, 0.0f, 0.0f);
+
+        updateCameraVector();
+    }
+
+    void rightView()
+    {
+        this->yaw = 90.0f;
+        this->pitch = 0;
+        this->pos = QVector3D(0.0f, -1.0f, 0.0f);
+        this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+
+        updateCameraVector();
+    }
+
+    void topView()
+    {
+        this->yaw = 0;
+        this->pitch = -89.9f;
+        this->pos = QVector3D(-2.0f, 0.0f, 0.0f);
+        this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+
+        updateCameraVector();
+    }
+
+    void AxoView()
+    {
+        this->yaw = -45.0f;
+        this->pitch = -45.0f;
+        this->pos = QVector3D(-1.0f, 1.0f, -1.0f);
+        this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+
+        updateCameraVector();
+    }
 private:
     void updateCameraVector()
     {

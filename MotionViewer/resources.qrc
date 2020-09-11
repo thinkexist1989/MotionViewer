@@ -36,5 +36,10 @@
         <file>res/cube_solid.svg</file>
         <file>res/cube_wire.svg</file>
         <file>res/grid.svg</file>
+        <file>res/fview.png</file>
+        <file>res/rview.png</file>
+        <file>res/tview.png</file>
+        <file>res/fill.png</file>
+        <file>res/line.png</file>
     </qresource>
 </RCC>
