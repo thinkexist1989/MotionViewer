@@ -122,6 +122,7 @@ win32 {
         $$PWD/gl/ndi.stl \
         $$PWD/gl/hololens.stl \
         $$PWD/gl/needle.stl \
+        $$PWD/gl/bonedrill.stl \
         $$PWD/tooldef.xml
     EXTRA_BINFILES_WIN = $${EXTRA_BINFILES}
     EXTRA_BINFILES_WIN ~= s,/,\\,g

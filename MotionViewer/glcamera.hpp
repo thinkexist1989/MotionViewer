@@ -11,7 +11,7 @@ const float YAW         = -45.0f;
 const float PITCH       = -45.0f;
 const float ZOOM        = 1.0f;
 const float FOV         = 45.0f;
-const float SENSITIVITY = 0.002f;
+const float SENSITIVITY = 0.1f;
 const float SPEED       = 0.01f;
 
 
@@ -24,6 +24,8 @@ public:
     QVector3D up;
     QVector3D right;
     QVector3D worldUp;
+
+    QMatrix4x4 model; //为了整体的模型旋转
     //欧拉角
     float yaw;
     float pitch;
@@ -83,9 +85,9 @@ public:
         //        tilt = fmod(tilt - d.y()*fov*0.001, 360);
         //        pitch = fmod(pitch - d.y()*fov*0.001, 360);
 
-        yaw = fmod(yaw + d.x()*zoom*mouseSensitivity, 360.0);
+        yaw = fmod(yaw + d.x()*mouseSensitivity, 360.0);
 
-        pitch -= d.y()*zoom*mouseSensitivity;
+        pitch -= d.y()*mouseSensitivity;
 
         if(constrainPitch)
         {
@@ -120,12 +122,21 @@ public:
         updateCameraVector();
     }
 
+    void modelRot(QPoint d)
+    {
+        model.rotate(d.x()*0.1f, up);
+        model.rotate(d.y()*0.1f, right);
+
+        updateCameraVector();
+    }
+
     void frontView()
     {
         this->yaw = 0;
         this->pitch = 0;
         this->pos = QVector3D(0.0f, 0.0f, -2.0f);
         this->up =  QVector3D(-1.0f, 0.0f, 0.0f);
+        this->model.setToIdentity();
 
         updateCameraVector();
     }
@@ -136,6 +147,7 @@ public:
         this->pitch = 0;
         this->pos = QVector3D(0.0f, -1.0f, 0.0f);
         this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+        this->model.setToIdentity();
 
         updateCameraVector();
     }
@@ -146,6 +158,7 @@ public:
         this->pitch = -89.9f;
         this->pos = QVector3D(-2.0f, 0.0f, 0.0f);
         this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+        this->model.setToIdentity();
 
         updateCameraVector();
     }
@@ -156,6 +169,7 @@ public:
         this->pitch = -45.0f;
         this->pos = QVector3D(-1.0f, 1.0f, -1.0f);
         this->up = QVector3D(-1.0f, 0.0f, 0.0f);
+        this->model.setToIdentity();
 
         updateCameraVector();
     }

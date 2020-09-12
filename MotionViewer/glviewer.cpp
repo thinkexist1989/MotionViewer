@@ -55,7 +55,7 @@ void GLViewer::drawNodes()
     {
         QMatrix4x4 trans;
         trans.translate(node);
-        nodeModel->draw(view, projection, trans);
+        nodeModel->draw(view, projection, camera->model*trans);
     }
 }
 
@@ -140,7 +140,7 @@ void GLViewer::paintGL()
 
     /*** axis ***/
     QMatrix4x4 model;
-    coordinate->draw(view, projection, model);
+    coordinate->draw(view, projection, camera->model* model);
 
 
     /*** nodes ***/
@@ -152,7 +152,7 @@ void GLViewer::paintGL()
 
     /*** ndi ***/
     model.scale(0.001);
-    ndiModel->draw(view, projection, model);
+    ndiModel->draw(view, projection, camera->model*model);
 
     /*** tools ***/
     for(auto& tool : existTools)
@@ -161,12 +161,8 @@ void GLViewer::paintGL()
         model.scale(tool.scale);
         qDebug() << tool.scale;
         model = tool.SetCoordination(tool.getIndexAndCoordinate()) * model;
-        toolModels[tool.name]->draw(view, projection, model);
+        toolModels[tool.name]->draw(view, projection, camera->model* model);
     }
-//    QMatrix4x4 m;
-//    m.scale(0.001);
-////        model = tool.SetCoordination2(tool.getIndexAndCoordinate()) * model;
-//    toolModels["CalibrationNeedle"]->draw(view, projection, m);
 
     /*** status ***/
     QString s1 = QString("Status: Dectected %1 nodes.").arg(nodes.size());
@@ -188,19 +184,23 @@ void GLViewer::mousePressEvent(QMouseEvent *event)
     if(event->button() == Qt::LeftButton)
     {
         _mouse_pos = event->pos(); //store the mouse pos when pressed
-        setCursor(Qt::ClosedHandCursor); //set cursor style
     }
     else if(event->button() == Qt::RightButton)
     {
         _mouse_pos = event->pos();
         setCursor(Qt::SizeAllCursor);
     }
+    else if(event->button() == Qt::MidButton)
+    {
+        _mouse_pos = event->pos();
+        setCursor(Qt::ClosedHandCursor); //set cursor style
+    }
 }
 
 void GLViewer::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton ||
-        event->button() == Qt::RightButton)
+        event->button() == Qt::RightButton || Qt::MidButton)
     {
         unsetCursor(); //reset cursor style
     }
@@ -223,6 +223,10 @@ void GLViewer::mouseMoveEvent(QMouseEvent *event)
     else if(event->buttons() & Qt::RightButton) //right button -> translation
     {
         camera->cameraTranslate(d);
+    }
+    else if(event->buttons() & Qt::MidButton)
+    {
+        camera->modelRot(d);
     }
 
     _mouse_pos = p;

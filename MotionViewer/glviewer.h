@@ -76,6 +76,8 @@ private:
     QMatrix4x4 view; //view matrix
     QMatrix4x4 projection; //projection matrix
 
+    QMatrix4x4 model; //
+
 protected:
     void initializeGL() override; //intialize OpenGL
     void paintGL() override; //draw OpenGL
