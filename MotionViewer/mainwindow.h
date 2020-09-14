@@ -1,3 +1,13 @@
+/**
+ * @file mainwindow.h
+ * @author Yang Luo (luoyang@sia.cn)
+ * @brief Header of class MainWindow
+ * @version 0.1
+ * @date 2020-09-14
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
@@ -16,7 +26,7 @@
 #include "glviewer.h"
 
 
-#include <QMetaType> //register the signal type
+#include <QMetaType> //!< Header for registering the signal type
 
 namespace Ui {
 class MainWindow;

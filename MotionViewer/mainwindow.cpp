@@ -1,3 +1,13 @@
+/**
+ * @file mainwindow.cpp
+ * @author Yang Luo (luoyang@sia.cn)
+ * @brief Source of class MainWindow
+ * @version 0.1
+ * @date 2020-09-14
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "aboutdlg.h"
@@ -9,6 +19,11 @@
 #include <QComboBox>
 #include <QCloseEvent>
 
+/**
+ * @brief Construct a new Main Window:: Main Window object
+ * 
+ * @param parent pointer to the parent QWidget, can be nullptr
+ */
 MainWindow::MainWindow(QWidget *parent) :
                                           QMainWindow(parent),
                                           ui(new Ui::MainWindow),
@@ -23,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    qRegisterMetaType<QMap<QString,QVector<QVector3D>>>("QMap<QString,QVector<QVector3D>>"); //register signal type
+    qRegisterMetaType<QMap<QString,QVector<QVector3D>>>("QMap<QString,QVector<QVector3D>>"); //!< register signal type
     qRegisterMetaType<QVector<QMatrix4x4>>("QVector<QMatrix4x4>");
     qRegisterMetaType<NdiTool>("NdiTool");
     qRegisterMetaType<QVector<NdiTool>>("QVector<NdiTool>");
@@ -84,11 +99,19 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
 }
 
+/**
+ * @brief Destroy the Main Window:: Main Window object
+ * 
+ */
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+/**
+ * @brief Show About Dialog
+ * 
+ */
 void MainWindow::on_actionAbout_triggered()
 {
     setStatusMsg(tr("Open About Dialog"));
@@ -96,11 +119,20 @@ void MainWindow::on_actionAbout_triggered()
     aboutDlg->show();
 }
 
+/**
+ * @brief Show messages on status bar
+ * 
+ * @param msg The message to show
+ */
 void MainWindow::setStatusMsg(QString msg)
 {
     ui->statusBar->showMessage(msg,2000);
 }
 
+/**
+ * @brief Loading settings when the program started
+ * 
+ */
 void MainWindow::loadSettings()
 {
     QSettings settings("settings.ini", QSettings::IniFormat, this);
@@ -120,6 +152,10 @@ void MainWindow::loadSettings()
     cmbBox->setCurrentText(settings.value("Connection Type", "Server").toString());
 }
 
+/**
+ * @brief Saving settings when the program closed
+ * 
+ */
 void MainWindow::saveSettings()
 {
     QSettings settings("settings.ini", QSettings::IniFormat, this);
@@ -140,6 +176,11 @@ void MainWindow::saveSettings()
 
 }
 
+/**
+ * @brief Translating the UI to different language
+ * 
+ * @param event Process QEvent::LanguageChange
+ */
 void MainWindow::changeEvent(QEvent *event)
 {
     if(event->type() == QEvent::LanguageChange) {
@@ -150,6 +191,11 @@ void MainWindow::changeEvent(QEvent *event)
     }
 }
 
+/**
+ * @brief Close Event
+ * 
+ * @param event 
+ */
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     int result = QMessageBox::warning(this, tr("Exit"), tr("Are you sure to close this program?"), QMessageBox::Yes, QMessageBox::No);
@@ -162,6 +208,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
+/**
+ * @brief Process actionNdiViwer toggled
+ * 
+ * @param arg1 Whether the actionNdiViewer is checked (the action name should be actionNdiComm properly)
+ */
 void MainWindow::on_actionNdiViewer_toggled(bool arg1)
 {
     if(!arg1) {
@@ -174,6 +225,11 @@ void MainWindow::on_actionNdiViewer_toggled(bool arg1)
     }
 }
 
+/**
+ * @brief Process action HoloViewer toggled
+ * 
+ * @param arg1 Whether the actionHoloViewer is checked (the action name should be actionHoloComm properly)
+ */
 void MainWindow::on_actionHoloViewer_toggled(bool arg1)
 {
     if(!arg1) {
@@ -186,6 +242,10 @@ void MainWindow::on_actionHoloViewer_toggled(bool arg1)
     }
 }
 
+/**
+ * @brief Change UI language to Chinese
+ * 
+ */
 void MainWindow::on_actionChinese_triggered()
 {
     setStatusMsg(tr("GUI Language Changed"));

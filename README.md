@@ -10,6 +10,9 @@
 
 ![](./MotionViewer/res/mv.gif)
 
+[TOC]
+
+
 #### 依赖库
 
 1. [Qt]( https://www.qt.io/cn) 用于GUI设计
@@ -25,13 +28,14 @@
 
 ![](./MotionViewer/res/ndi-spectra.jpg)
 
-1. HoloLens 1
+2. HoloLens 1
 
-![](./MotionViewer/res/kinect.jpg)
+![](./MotionViewer/res/HoloLens1.jpg)
 
 3. Kinect v2
 
-![](./MotionViewer/res/HoloLens1.jpg)
+
+![](./MotionViewer/res/kinect.jpg)
 
 #### 功能
 

@@ -4,21 +4,22 @@
 <context>
     <name>AboutDlg</name>
     <message>
-        <location filename="aboutdlg.ui" line="23"/>
+        <location filename="aboutdlg.ui" line="29"/>
         <source>About</source>
         <translatorcomment>关于</translatorcomment>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="aboutdlg.ui" line="54"/>
-        <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;SimSun&apos;; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;img src=&quot;:/about/res/zs.jpg&quot; width=&quot;400&quot; /&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Times New Roman&apos;; font-size:36pt; font-weight:600; font-style:italic;&quot;&gt;Motion Viewer&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Times New Roman&apos;; font-size:12pt;&quot;&gt;Author: Yang Luo&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:&apos;Times New Roman&apos;; font-size:12pt;&quot;&gt;Email: yluo@hit.edu.cn&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <location filename="aboutdlg.ui" line="61"/>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:&apos;Times New Roman&apos;; font-size:36pt; font-weight:600; font-style:italic;&quot;&gt;Motion Viewer&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-family:&apos;Times New Roman&apos;; font-size:12pt;&quot;&gt;© 2018-2020 Yang Luo&lt;/span&gt;&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;&lt;a href=&quot;https://github.com/thinkexist1989/MotionViewer&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;https://github.com/thinkexist1989/MotionViewer&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation></translation>
+    </message>
+</context>
+<context>
+    <name>GLViewer</name>
+    <message>
+        <location filename="glviewer.ui" line="16"/>
+        <source>Form</source>
         <translation></translation>
     </message>
 </context>
@@ -124,97 +125,168 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="39"/>
+        <location filename="mainwindow.ui" line="48"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="46"/>
+        <location filename="mainwindow.ui" line="55"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="73"/>
+        <location filename="mainwindow.ui" line="61"/>
+        <source>View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="95"/>
         <source>NDI Comm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="88"/>
+        <location filename="mainwindow.ui" line="113"/>
         <source>HoloLens Comm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="100"/>
-        <location filename="mainwindow.ui" line="166"/>
-        <source>NDI Viewer</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="112"/>
-        <location filename="mainwindow.ui" line="184"/>
-        <source>HoloLens Viewer</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="121"/>
-        <source>Registration</source>
+        <location filename="mainwindow.ui" line="189"/>
+        <location filename="mainwindow.ui" line="192"/>
+        <source>NDI Communication</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="mainwindow.ui" line="207"/>
+        <location filename="mainwindow.ui" line="210"/>
+        <source>HoloLens Communication</source>
+        <translation>HoloLens通信</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="252"/>
+        <source>DisplayMode</source>
+        <translation>显示模式</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="257"/>
+        <source>NDI Spectra</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="262"/>
+        <source>HoloLens</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="267"/>
+        <source>3D Presentation</source>
+        <translation>3D显示</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="276"/>
+        <source>FrontView</source>
+        <translation>前视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="279"/>
+        <source>Front View</source>
+        <translation>前视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="288"/>
+        <source>RightView</source>
+        <translation>右视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="291"/>
+        <source>Right View</source>
+        <translation>右视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="300"/>
+        <source>TopView</source>
+        <translation>上视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="303"/>
+        <source>Top View</source>
+        <translation>上视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="312"/>
+        <source>AxonometricView</source>
+        <translation>等轴测</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="315"/>
+        <source>Axonometric View</source>
+        <translation>等轴测</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="324"/>
+        <source>Projection</source>
+        <translation>投影</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="327"/>
+        <source>Perspective or Orthogonal</source>
+        <translation>透视视图或正交视图</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="125"/>
+        <location filename="mainwindow.ui" line="240"/>
+        <source>Registration</source>
+        <translation>配准</translation>
+    </message>
+    <message>
         <location filename="mainwindow.ui" line="134"/>
+        <source>toolBar</source>
+        <translation>工具栏</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="156"/>
         <source>Chinese</source>
         <translation>中文</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="143"/>
+        <location filename="mainwindow.ui" line="165"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="148"/>
+        <location filename="mainwindow.ui" line="174"/>
         <source>About</source>
         <translation>关于</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="163"/>
-        <source>NdiViewer</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="181"/>
-        <source>HoloViewer</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="196"/>
+        <location filename="mainwindow.ui" line="222"/>
         <source>KinectViewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="199"/>
+        <location filename="mainwindow.ui" line="225"/>
         <source>Kinect Viewer</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="81"/>
+        <location filename="mainwindow.cpp" line="117"/>
         <source>Open About Dialog</source>
         <translation>打开“关于”</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="142"/>
+        <location filename="mainwindow.cpp" line="201"/>
         <source>Exit</source>
-        <translation type="unfinished"></translation>
+        <translation>退出程序</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="142"/>
+        <location filename="mainwindow.cpp" line="201"/>
         <source>Are you sure to close this program?</source>
-        <translation type="unfinished"></translation>
+        <translation>确认退出程序么？</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="178"/>
-        <location filename="mainwindow.cpp" line="184"/>
+        <location filename="mainwindow.cpp" line="251"/>
+        <location filename="mainwindow.cpp" line="257"/>
         <source>GUI Language Changed</source>
-        <translation type="unfinished"></translation>
+        <translation>界面语言更改</translation>
     </message>
 </context>
 <context>
@@ -256,90 +328,90 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="ndicomm.ui" line="182"/>
+        <location filename="ndicomm.cpp" line="192"/>
         <source>Open</source>
         <translation>打开串口</translation>
     </message>
     <message>
         <location filename="ndicomm.ui" line="199"/>
-        <location filename="ndicomm.cpp" line="216"/>
+        <location filename="ndicomm.cpp" line="219"/>
         <source>Start</source>
         <translation>开始</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="48"/>
+        <location filename="ndicomm.cpp" line="51"/>
         <source>Name: </source>
         <translation>串口名称： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="49"/>
+        <location filename="ndicomm.cpp" line="52"/>
         <source>Description: </source>
         <translation>串口描述： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="50"/>
+        <location filename="ndicomm.cpp" line="53"/>
         <source>Manufacturer: </source>
         <translation>生产厂商： </translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="69"/>
-        <location filename="ndicomm.cpp" line="86"/>
-        <location filename="ndicomm.cpp" line="93"/>
-        <location filename="ndicomm.cpp" line="133"/>
+        <location filename="ndicomm.cpp" line="72"/>
+        <location filename="ndicomm.cpp" line="89"/>
+        <location filename="ndicomm.cpp" line="96"/>
+        <location filename="ndicomm.cpp" line="136"/>
         <source>None</source>
         <translation>无</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="69"/>
-        <location filename="ndicomm.cpp" line="95"/>
+        <location filename="ndicomm.cpp" line="72"/>
+        <location filename="ndicomm.cpp" line="98"/>
         <source>Odd</source>
         <translation>奇校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="69"/>
-        <location filename="ndicomm.cpp" line="97"/>
+        <location filename="ndicomm.cpp" line="72"/>
+        <location filename="ndicomm.cpp" line="100"/>
         <source>Even</source>
         <translation>偶校验</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="86"/>
-        <location filename="ndicomm.cpp" line="88"/>
-        <location filename="ndicomm.cpp" line="135"/>
+        <location filename="ndicomm.cpp" line="89"/>
+        <location filename="ndicomm.cpp" line="91"/>
+        <location filename="ndicomm.cpp" line="138"/>
         <source>Hardware</source>
         <translation>硬件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="86"/>
-        <location filename="ndicomm.cpp" line="137"/>
+        <location filename="ndicomm.cpp" line="89"/>
+        <location filename="ndicomm.cpp" line="140"/>
         <source>Software</source>
         <translation>软件流</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="145"/>
+        <location filename="ndicomm.cpp" line="148"/>
         <source> Thread is: </source>
-        <translation type="unfinished"></translation>
+        <translation>线程ID为：</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="172"/>
-        <location filename="ndicomm.cpp" line="189"/>
+        <location filename="ndicomm.cpp" line="175"/>
         <source>Close</source>
         <translation>关闭串口</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="182"/>
+        <location filename="ndicomm.cpp" line="185"/>
         <source>Please stop running first!</source>
-        <translation type="unfinished"></translation>
+        <translation>请先停止运行！</translation>
     </message>
     <message>
         <source>Failed to open serial port</source>
         <translation type="vanished">串口打开失败</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="205"/>
+        <location filename="ndicomm.cpp" line="208"/>
         <source>Stop</source>
         <translation>停止</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="210"/>
+        <location filename="ndicomm.cpp" line="213"/>
         <source>Please Open Serial Port First!</source>
         <translation>请先打开串口！</translation>
     </message>
@@ -347,19 +419,14 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>NdiCommProc</name>
     <message>
-        <location filename="ndicomm.cpp" line="294"/>
+        <location filename="ndicomm.cpp" line="297"/>
         <source>Please Open Serial Port First!</source>
-        <translation type="unfinished">请先打开串口！</translation>
+        <translation>请先打开串口！</translation>
     </message>
     <message>
-        <location filename="ndicomm.cpp" line="303"/>
-        <source>Init NDI failed!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="ndicomm.cpp" line="314"/>
+        <location filename="ndicomm.cpp" line="318"/>
         <source> Thread is: </source>
-        <translation type="unfinished"></translation>
+        <translation>线程ID为：</translation>
     </message>
 </context>
 <context>
@@ -437,7 +504,7 @@ p, li { white-space: pre-wrap; }
         <translation type="vanished">NdiViewer接收到坐标信息，其值为： </translation>
     </message>
     <message>
-        <location filename="ndiviewer.cpp" line="224"/>
+        <location filename="ndiviewer.cpp" line="231"/>
         <source>Open Poind Cloud Registration Matrix File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -445,42 +512,42 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>RegiViewer</name>
     <message>
-        <location filename="regiviewer.ui" line="14"/>
+        <location filename="regiviewer.ui" line="20"/>
         <source>Form</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="20"/>
+        <location filename="regiviewer.ui" line="32"/>
         <source>Point Cloud Registration Matrix</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="54"/>
+        <location filename="regiviewer.ui" line="66"/>
         <source>...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="73"/>
+        <location filename="regiviewer.ui" line="85"/>
         <source>Load</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="87"/>
+        <location filename="regiviewer.ui" line="99"/>
         <source>1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="92"/>
+        <location filename="regiviewer.ui" line="104"/>
         <source>2</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="97"/>
+        <location filename="regiviewer.ui" line="109"/>
         <source>3</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="regiviewer.ui" line="102"/>
+        <location filename="regiviewer.ui" line="114"/>
         <source>4</source>
         <translation type="unfinished"></translation>
     </message>
@@ -515,43 +582,43 @@ p, li { white-space: pre-wrap; }
     <name>XmlParser</name>
     <message>
         <location filename="xmlparser.cpp" line="16"/>
-        <location filename="xmlparser.cpp" line="68"/>
+        <location filename="xmlparser.cpp" line="69"/>
         <source>XmlParser: Can not Open Xml File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="xmlparser.cpp" line="22"/>
-        <location filename="xmlparser.cpp" line="74"/>
+        <location filename="xmlparser.cpp" line="75"/>
         <source>XmlParser: Can not Read Xml File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="xmlparser.cpp" line="30"/>
-        <location filename="xmlparser.cpp" line="82"/>
+        <location filename="xmlparser.cpp" line="83"/>
         <source>XmlParser: The xml must contain &lt;ToolDefinition&gt; as document root </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="xmlparser.cpp" line="38"/>
-        <location filename="xmlparser.cpp" line="90"/>
+        <location filename="xmlparser.cpp" line="91"/>
         <source>XmlParser: Tools </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="xmlparser.cpp" line="38"/>
-        <location filename="xmlparser.cpp" line="90"/>
+        <location filename="xmlparser.cpp" line="91"/>
         <source>=&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="xmlparser.cpp" line="58"/>
-        <location filename="xmlparser.cpp" line="113"/>
+        <location filename="xmlparser.cpp" line="59"/>
+        <location filename="xmlparser.cpp" line="117"/>
         <source>Total find</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="xmlparser.cpp" line="58"/>
-        <location filename="xmlparser.cpp" line="113"/>
+        <location filename="xmlparser.cpp" line="59"/>
+        <location filename="xmlparser.cpp" line="117"/>
         <source>tools</source>
         <translation type="unfinished"></translation>
     </message>
