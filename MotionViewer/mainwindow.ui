@@ -64,9 +64,9 @@
     <addaction name="actionHolo"/>
     <addaction name="action3d"/>
    </widget>
+   <addaction name="menuView"/>
    <addaction name="menuLanguage"/>
    <addaction name="menuHelp"/>
-   <addaction name="menuView"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
