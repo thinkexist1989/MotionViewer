@@ -340,8 +340,8 @@ void Transform::reviseMatrixCalc()
         HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);
      }
      //get the markers' location of Needle this time
-     if(existTools.contains(NdiTool("calibrationNeedle"))){
-         int index = existTools.indexOf(NdiTool("calibrationNeedle"));
+     if(existTools.contains(NdiTool("CalibrationNeedle"))){
+         int index = existTools.indexOf(NdiTool("CalibrationNeedle"));
         calibrationNeedleMarkers=existTools[index].getIndexAndCoordinate();
         calibrationNeedleToNDI=SetCoordination1(calibrationNeedleMarkers);
      }
