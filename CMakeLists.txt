@@ -16,7 +16,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-find_package(Qt5 COMPONENTS Widgets Network Serialport Xml LinguistTools OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Widgets Network SerialPort Xml LinguistTools OpenGL REQUIRED)
 find_package(Assimp REQUIRED)
 find_package(OpenGL REQUIRED)
 
@@ -27,7 +27,8 @@ file(GLOB RES "MotionViewer/*.qrc")
 file(GLOB SHADERS "MotionViewer/gl/*.qrc")
 
 file(GLOB TRANS "MotionViewer/*.ts")
-#qt5_create_translation(QM_FILES ${SRC} de.ts)
+#qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TRANS})
+#set_source_files_properties(${TRANS} PROPERTIES OUTPUT_LOCATION ${CMAKE_SOURCE_DIR})
 qt5_add_translation(QM_FILES ${TRANS})
 
 
@@ -36,7 +37,7 @@ set(LIBS Qt5::Widgets Qt5::Network Qt5::SerialPort Qt5::Xml Qt5::OpenGL ${ASSIMP
 if(WIN32)
     set(LIBS ${LIBS} OpenGL::GL) #注意，windows下import target只有OpenGL::GL
 elseif(UNIX AND NOT APPLE)
-    set(LIBS ${LIBS} OpenGL::OpenGL)
+    set(LIBS ${LIBS} OpenGL::OpenGL m) #Linux下使用<math.h>需要libm.so链接
 else()
     set(LIBS )
 endif(WIN32)

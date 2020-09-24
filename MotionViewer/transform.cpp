@@ -1,5 +1,6 @@
 #include "transform.h"
 #include <QFileDialog>
+#include <math.h>
 
 Transform::Transform(QObject *parent) :
     QObject(parent),

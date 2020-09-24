@@ -8,7 +8,7 @@
 
 ### Introduction
 
-***MotionViewer*** is a data visualization program which integrates binocular positioning system (NDI Spectra), depth camera (Kinect) and mixed reality glasses (HoloLens). ***MotionViewer*** is designed for surgical system based on mixed reality.
+**_MotionViewer_** is a data visualization program which integrates binocular positioning system (NDI Spectra), depth camera (Kinect) and mixed reality glasses (HoloLens). **_MotionViewer_** is designed for surgical system based on mixed reality.
 
 ![mv](./MotionViewer/res/mv.gif)
 
@@ -20,8 +20,8 @@
 
 ### Dependencies
 
-1. [Qt]( https://www.qt.io/cn) Qt GUI libraries
-2. [OpenGL](https://www.opengl.org/)  3D visualization
+1. [Qt](https://www.qt.io/cn) Qt GUI libraries (Need Modules : Widgets Network SerialPort Xml LinguistTools OpenGL )
+2. [OpenGL](https://www.opengl.org/) 3D visualization
 3. [Assimp](https://www.assimp.org/) Loading 3D model format
 4. [OpenCV](https://opencv.org/) Processing RGBD image of Kinect (:warning: unfinished)
 5. [Eigen](http://eigen.tuxfamily.org/index.php?title=Main_Page) Eigen is a C++ template library for linear algebra (:warning: unused)
