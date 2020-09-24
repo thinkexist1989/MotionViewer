@@ -29,6 +29,7 @@ ui_*.h
 *.qmlc
 *.jsc
 Makefile*
+!translation_zh.qm
 *build*/**
 
 # Qt unit tests
