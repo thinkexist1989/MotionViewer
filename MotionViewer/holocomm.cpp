@@ -67,6 +67,7 @@ bool HoloComm::writeMatrix(int command, QVector<QMatrix4x4> matrixList)
     for (int i = 0; i< matrixList.count(); i++) {
         memcpy(&(p[2+i*16*4]), matrixList.at(i).data(), 16*4); //column-major
     }
+    qDebug() << "send message is:" << QString(ba);
     return write(ba);
 }
 
@@ -148,7 +149,7 @@ void HoloComm::dataProc(QByteArray ba)
 {
     if(ba.count() != 16*4)
         return;
-
+    qDebug()<<"receive message"<<QString(ba);
     QMatrix4x4 mat(reinterpret_cast<float*>(ba.data()));
     mat = mat.transposed();
     emit holoMatrixReady(mat);

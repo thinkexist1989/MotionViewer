@@ -28,6 +28,7 @@ public:
 
     GLModel* nodeModel;
     GLModel* ndiModel;
+    GLModel* tipModel;
 
     QVector<NdiTool> tools; //预加载的工具
     QMap<QString, GLModel*> toolModels; //预加载的所有工具3D model，用名称对应

@@ -155,10 +155,18 @@ void Transform::getRegiMat()
 
 void Transform::LoadCalibrationMatrix()
 { QMatrix4x4 HoloLensToHoloLensMarker;
-    HoloLensToHoloLensMarker.setRow(0,QVector4D(0.0975262771988006,-0.0431322212347106,0.994297861179990,0.0705467509747862));
-    HoloLensToHoloLensMarker.setRow(1,QVector4D(0.995227668296462,0.00748157594641098,-0.0972929302598390,0.0132814109105393));
-    HoloLensToHoloLensMarker.setRow(2,QVector4D(-0.00324245476923128,0.999041359260325,0.0436560302175016,-0.0752293725273258));
+   // HoloLensToHoloLensMarker.setRow(0,QVector4D(0.0975262771988006,-0.0431322212347106,0.994297861179990,0.0705467509747862));
+   // HoloLensToHoloLensMarker.setRow(1,QVector4D(0.995227668296462,0.00748157594641098,-0.0972929302598390,0.0132814109105393));
+   // HoloLensToHoloLensMarker.setRow(2,QVector4D(-0.00324245476923128,0.999041359260325,0.0436560302175016,-0.0752293725273258));
+   // HoloLensToHoloLensMarker.setRow(3,QVector4D(0,0,0,1));
+    // ************************************************ 更改部分 ********************************************************************
+    //  下面是影创VR眼睛的矩阵
+    HoloLensToHoloLensMarker.setRow(0,QVector4D(-0.5120346829360241,0.03609803309756499,-0.8582059283628216,-0.02296654291058059));
+    HoloLensToHoloLensMarker.setRow(1,QVector4D(0.8213463298039851,-0.2718636382743777,-0.5014781836747655,0.9793027665416096));
+    HoloLensToHoloLensMarker.setRow(2,QVector4D(-0.2514173621453551,-0.9616585122540671,0.1095546248278274,3.673204007406474));
     HoloLensToHoloLensMarker.setRow(3,QVector4D(0,0,0,1));
+    // *****************************************************************************************************************************
+
     //qDebug()<<"HoloLensToHoloLensMarker"<<HoloLensToHoloLensMarker;
   QMatrix4x4 KinectMarkerToKinect;
 //  KinectMarkerToKinect.setRow(0,QVector4D(0.8169,-0.5766,-0.0114,-0.0521));
@@ -258,6 +266,7 @@ void Transform::modelCalc()
 
 void Transform::calibrationNeedleCalc()
 {
+    qDebug() << "start send calibrationNeedle" <<endl;
     //发送的矩阵是result
     QMatrix4x4 result;
     QMatrix4x4 calibrationNeedleToNDI;
@@ -277,6 +286,7 @@ void Transform::calibrationNeedleCalc()
      //get the markers' location of Needle
     QMap<int,QVector3D> calibrationNeedleMarkers;
     if(existTools.contains(NdiTool("CalibrationNeedle"))){
+        qDebug() << "detected  CalibrationNeedle" <<endl;
         int index = existTools.indexOf(NdiTool("CalibrationNeedle"));
        calibrationNeedleMarkers=existTools[index].getIndexAndCoordinate();
        calibrationNeedleToNDI=SetCoordination2(calibrationNeedleMarkers);
@@ -287,6 +297,7 @@ void Transform::calibrationNeedleCalc()
     //get the markers' location of HoloLens
     QMap<int,QVector3D> HoloLensMarkers;
     if(existTools.contains(NdiTool("HoloLens"))){
+         qDebug() << "detected  HoloLens" <<endl;
         int index = existTools.indexOf(NdiTool("HoloLens"));
       HoloLensMarkers=existTools[index].getIndexAndCoordinate();
        HoloLensMarkerToNDI=SetCoordination1(HoloLensMarkers);

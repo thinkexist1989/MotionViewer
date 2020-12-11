@@ -159,9 +159,25 @@ void GLViewer::paintGL()
     {
         QMatrix4x4 model;
         model.scale(tool.scale);
-        qDebug() << tool.scale;
+        //qDebug() << tool.scale;
         model = tool.SetCoordination(tool.getIndexAndCoordinate()) * model;
+       // qDebug()<<model<<endl;
         toolModels[tool.name]->draw(view, projection, camera->model* model);
+      /*
+        if(tool.name=="CalibrationNeedle"){
+            qDebug()<<"111"<<endl;
+            tipModel = new GLModel(QFileInfo("./sphere.dae").absoluteFilePath().toStdString());
+            QMatrix4x4 tip;
+            QMatrix4x4 tooltip;
+            QVector3D tippos=QVector3D(-205.95f, 0.0f, 0.0f);
+            tipModel->setColor(QVector4D(1.0f, 1.0f, 1.0f, 1.0f));
+            tip.translate(tippos);
+            tooltip=model*tip;
+            tooltip.scale(0.001);
+            qDebug()<<tooltip<<endl;
+            tipModel->draw(view, projection,camera->model*tooltip);
+        }
+        */
     }
 
     /*** status ***/
