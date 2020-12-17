@@ -53,4 +53,4 @@ $ make -j`nproc`
 
 ### Contributor
 
-:bust_in_silhouette:[**Yang Luo**](luoyang@sia.cn), :bust_in_silhouette:[**Shun Su**](sushun@sia.cn)
+:bust_in_silhouette:[**Yang Luo**](mailto:luoyang@sia.cn), :bust_in_silhouette:[**Shun Su**](mailto:sushun@sia.cn)
