@@ -13,7 +13,7 @@ uniform vec4 color;
 void main()
 {
     //FragColor = texture(texture_diffuse1, TexCoords);
-    vec3 lightPos = vec3(12f, 10f, 20f);
+    vec3 lightPos = vec3(12, 10, 20);
 
     vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
     // ambient
