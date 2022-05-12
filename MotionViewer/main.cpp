@@ -18,6 +18,7 @@
  * @param argc numbers of arguments
  * @param argv array of arguments
  * @return int 
+ * 项目入口
  */
 int main(int argc, char *argv[])
 {

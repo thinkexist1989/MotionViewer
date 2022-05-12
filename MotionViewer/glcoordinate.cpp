@@ -1,8 +1,14 @@
 #include "glcoordinate.h"
-
+/**
+ * @brief GLCoordinate::GLCoordinate
+ * opengl 坐标相关
+ *  * GL Viewer里面用到的坐标类
+ */
 GLCoordinate::GLCoordinate()
 {
     initializeOpenGLFunctions(); //必须先调用次函数获取OpenGL上下文
+
+    // 模型着色
     sp.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/gl/coor.vert");
     sp.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/gl/coor.frag");
     sp.link();

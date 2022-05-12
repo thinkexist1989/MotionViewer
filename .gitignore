@@ -412,3 +412,5 @@ MigrationBackup/
 # .idea
 .idea/
 
+*.ts
+MotionViewer/translation_zh.ts

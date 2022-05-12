@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>220</width>
+    <width>299</width>
     <height>202</height>
    </rect>
   </property>
@@ -66,6 +66,9 @@
      </item>
      <item row="1" column="1">
       <widget class="QComboBox" name="cmbType">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
          <horstretch>0</horstretch>

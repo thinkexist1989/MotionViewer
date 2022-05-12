@@ -14,11 +14,21 @@ HoloViewer::~HoloViewer()
     delete ui;
 }
 
+/**
+ * @brief HoloViewer::dataProc
+ * @param data
+ * 把收到的数据打印出来
+ */
 void HoloViewer::dataProc(const QString& data)
 {
-    //qDebug() << "Received data is: " << data;
+    qDebug() << "Received data is: " << data;
 }
 
+/**
+ * @brief HoloViewer::changeEvent
+ * @param event
+ * 头部菜单栏--更换语言事件
+ */
 void HoloViewer::changeEvent(QEvent *event)
 {
     if(event->type() == QEvent::LanguageChange) {
