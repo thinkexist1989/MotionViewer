@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     qRegisterMetaType<NdiTool>("NdiTool");
     qRegisterMetaType<QVector<NdiTool>>("QVector<NdiTool>");
 
+    //翻译器中-英
     chineseTranslator = new QTranslator(this);
     chineseTranslator->load(":/translations/translation_zh.qm");
 
@@ -72,6 +73,16 @@ MainWindow::MainWindow(QWidget *parent) :
     transform->moveToThread(transformThread);
     transformThread->start();
 
+    /**
+     * connect()的参数介绍
+     * connect(sender,sender_signal,receiver,receiver_signal)
+     * sender发送信息者
+     * sender_signal 信号量--告诉sender我准备好了，可以发射了
+     * receiver：接收信息者
+     * receiver_signal：告诉receiver
+     *
+     *
+     */
     connect(ndiComm, &NdiComm::dataReady, ndiViewer, &NdiViewer::dataProc); //ndi msg come
     connect(holoComm, &HoloComm::dataReady,holoViewer, &HoloViewer::dataProc); //holo
 
@@ -110,7 +121,7 @@ MainWindow::~MainWindow()
 
 /**
  * @brief Show About Dialog
- * 
+ * 点击菜单栏的about（关于）显示作者信息ui
  */
 void MainWindow::on_actionAbout_triggered()
 {
@@ -131,7 +142,7 @@ void MainWindow::setStatusMsg(QString msg)
 
 /**
  * @brief Loading settings when the program started
- * 
+ * 当程序启动的时候加载
  */
 void MainWindow::loadSettings()
 {

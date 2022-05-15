@@ -45,6 +45,11 @@ void NdiViewer::init()
     //    ui->cmbSteps->addItems(functionLists);
 }
 
+/**
+ * @brief NdiViewer::refreshMarkersView
+ * @param markersData
+ * 刷新标记试图
+ */
 void NdiViewer::refreshMarkersView(const QVector<QVector3D>& markersData)
 {
 
@@ -117,6 +122,8 @@ void NdiViewer::dataProc(const QVector<QVector3D>& data)
 {
     //qDebug() << data.size()<< endl;
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
+
+    //刷新标记视图
     refreshMarkersView(data);
     existTools=getTools(data);
     /*

@@ -1,12 +1,18 @@
 #include "glbackdrop.h"
 
+/**
+ * @brief GLBackdrop::GLBackdrop
+ * openGL相关 背景绘制
+ */
 GLBackdrop::GLBackdrop()
 {
     initializeOpenGLFunctions();
 
+    // 模型着色
     shader.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/gl/quad.vert");
     shader.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/gl/quad.frag");
     shader.link();
+
 
     float vbuf[] = {
         -1, -1, 0.00, 0.10, 0.15,
@@ -16,6 +22,7 @@ GLBackdrop::GLBackdrop()
 
     vertices.create();
     vertices.bind();
+    //根据大小申请内存
     vertices.allocate(vbuf, sizeof(vbuf));
     vertices.release();
 }

@@ -1,6 +1,13 @@
 #include "glmesh.h"
 #include <iostream>
-
+/**
+ * @brief GLMesh::GLMesh
+ * @param vertices
+ * @param indices
+ * @param textures
+ * opengl 网格绘制
+ * GL Viewer里面用到的环境绘制类
+ */
 GLMesh::GLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
 {
     this->vertices = vertices;

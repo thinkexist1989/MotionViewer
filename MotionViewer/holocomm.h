@@ -44,7 +44,13 @@ private:
     QTcpSocket *tcpSocket;
     QUdpSocket *udpSocket;
 
-    int connectionType; // 0->tcp server  1-> tcp client 2-> udp
+    /**
+     * TCP_SERVER 0
+     * TCP_CLIENT 1
+     * UDP         2
+     * NO_CONNECTION -1
+     */
+    int connectionType;
 
     bool tcpServerInit();
     bool tcpClientInit();
