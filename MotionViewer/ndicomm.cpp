@@ -44,6 +44,11 @@ NdiComm::~NdiComm()
     //ndiThread->quit(); //Not recommand, but can work
 }
 
+/**
+ * @brief NdiComm::initPort
+ * 端口初始化
+ * 设置了NDI中的一些初始值。
+ */
 void NdiComm::initPort()
 {
     //query available ports
@@ -55,42 +60,59 @@ void NdiComm::initPort()
         QSerialPort tempSerial;
         tempSerial.setPort(info);
         if(tempSerial.open(QIODevice::ReadWrite)){
+            //cmbPortName的值为：['com1','com7','com8']
             ui->cmbPortName->addItem(info.portName());
             tempSerial.close();
         }
     }
 
-    //set buadrate combobox
+    //波特率
     QStringList baudList;
     baudList << "9600" << "14400" << "38400"
              << "57600" << "115200" << "921600" << "1228739";
     ui->cmbBuadrate->addItems(baudList);
+    //设置默认值
     ui->cmbBuadrate->setCurrentText("1228739");
 
+
     //set parity combobox
+    //校验位
     QStringList parityList;
     parityList << tr("None") << tr("Odd") << tr("Even");
     ui->cmbParity->addItems(parityList);
+    //设置校验位 默认方式 None
     ui->cmbParity->setCurrentText("None");
 
     //set databits combobox
+    //设置数据位
     QStringList dataBitsList;
     dataBitsList << "5" << "6" << "7" << "8";
     ui->cmbDataBits->addItems(dataBitsList);
+    //数据位默认为8
     ui->cmbDataBits->setCurrentText("8");
 
     //set stopbits combobox
+    //设置停止位
     QStringList stopBitsList;
     stopBitsList << "1" << "1.5" << "2";
     ui->cmbStopBits->addItems(stopBitsList);
+    //停止位默认为1
     ui->cmbStopBits->setCurrentText("1");
 
+    //设置流控制
     QStringList flowCtrlList;
     flowCtrlList << tr("None") << tr("Hardware") << tr("Software");
     ui->cmbFlowCtrl->addItems(flowCtrlList);
+    //流控制默认为硬件控制
     ui->cmbFlowCtrl->setCurrentText(tr("Hardware"));
 }
 
+/**
+ * @brief NdiComm::getParity
+ * @param text
+ * @return
+ * 对NDI校验位做了一个封装
+ */
 QSerialPort::Parity NdiComm::getParity(QString text)
 {
     if(text == tr("None"))
@@ -103,6 +125,12 @@ QSerialPort::Parity NdiComm::getParity(QString text)
         return QSerialPort::NoParity;
 }
 
+/**
+ * @brief NdiComm::getDataBits
+ * @param text
+ * @return
+ * 对数据位做了一个封装
+ */
 QSerialPort::DataBits NdiComm::getDataBits(QString text)
 {
     switch(text.toInt()){
@@ -119,6 +147,12 @@ QSerialPort::DataBits NdiComm::getDataBits(QString text)
     }
 }
 
+/**
+ * @brief NdiComm::getStopBits
+ * @param text
+ * @return
+ * 对停止位做了一个封装
+ */
 QSerialPort::StopBits NdiComm::getStopBits(QString text)
 {
     if(text == "1")
@@ -143,21 +177,39 @@ QSerialPort::FlowControl NdiComm::getFlowCtrl(QString text)
         return QSerialPort::NoFlowControl;
 }
 
+/**
+ * @brief NdiComm::printThread
+ * @param front
+ * 打印当前线程
+ */
 void NdiComm::printThread(QString front)
 {
     qDebug()<< front << tr(" Thread is: ") << QThread::currentThreadId();
 }
 
+/**
+ * @brief NdiComm::recvProc
+ * 空方法
+ */
 void NdiComm::recvProc()
 {
 
 }
 
+/**
+ * @brief NdiComm::on_refreshButton_clicked
+ * 点击刷新按钮时触发该事件
+ * 再次初始化端口信息，或者是reset（重置）
+ */
 void NdiComm::on_refreshButton_clicked()
 {
     initPort(); //refresh available ports
 }
 
+/**
+ * @brief NdiComm::on_openCloseButton_clicked
+ * 点击OPEN按钮时触发该事件
+ */
 void NdiComm::on_openCloseButton_clicked()
 {
     if(!isPortOpened){ // serial not open
@@ -168,6 +220,7 @@ void NdiComm::on_openCloseButton_clicked()
         stopBits = getStopBits(ui->cmbStopBits->currentText());
         flowControl = getFlowCtrl(ui->cmbFlowCtrl->currentText());
 
+        //发出串口打开的信号
         emit serialOpened(true);
 
         if(openSuccess){ // serial open success
@@ -200,6 +253,10 @@ void NdiComm::on_openCloseButton_clicked()
     }
 }
 
+/**
+ * @brief NdiComm::on_startButton_clicked
+ * 点击Start按钮触发该事件
+ */
 void NdiComm::on_startButton_clicked()
 {
     if(!isStarted){ //Not start
@@ -227,6 +284,7 @@ void NdiComm::on_startButton_clicked()
     }
 }
 
+//翻译
 void NdiComm::changeEvent(QEvent *event)
 {
     if(event->type() == QEvent::LanguageChange) {
@@ -360,6 +418,11 @@ bool NdiCommProc::writeReadMsg(QByteArray sendmsg, QByteArray recvmsg, int delay
     }
 }
 
+/**
+ * @brief NdiCommProc::initsensor
+ * @return
+ * 初始化传感器
+ */
 bool NdiCommProc::initsensor()
 {
     //FOR SU SHUN
@@ -442,7 +505,7 @@ void NdiCommProc::get_data()
 //    timer.start();
 
     this->serialPort->clear();
-    QByteArray msg = "BX:18033D6C\r";    //msg = "BX:1000FEAD\r";
+    QByteArray msg = "BX:18033D6C\r";//"BX:18019AC\r";    //msg = "BX:1000FEAD\r";
 
     serialPort->write(msg);
     int index = 0;
@@ -469,7 +532,7 @@ void NdiCommProc::get_data()
             return;
         recvbuf.append(this->serialPort->readAll());
         if(recvbuf.size() < (index + numofpoints*12)){
-            qDebug() <<"NdiCommProc: received data length is wrong!";
+            qDebug() <<"NdiCommProc: received data length is wrong!"<<recvbuf.size();
             return;
         }
     }
@@ -482,6 +545,7 @@ void NdiCommProc::get_data()
 
         for (int j = 0; j < 3; j++) {
             coordinate[j] = getNum<float>(&(p[index]));
+//            qDebug() << "Communication time consuming:" << coordinate[j];
             index += 4;
         }
 

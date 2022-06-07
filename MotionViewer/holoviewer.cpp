@@ -1,7 +1,7 @@
 #include "holoviewer.h"
 #include "ui_holoviewer.h"
 #include <QDebug>
-
+//没开发
 HoloViewer::HoloViewer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::HoloViewer)

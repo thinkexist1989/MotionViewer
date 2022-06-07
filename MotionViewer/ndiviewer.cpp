@@ -6,6 +6,8 @@
 #include <iterator>
 #include <QFileDialog>
 
+
+//判断识别的工具
 NdiViewer::NdiViewer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::NdiViewer)
@@ -119,25 +121,24 @@ void NdiViewer::dataProc(const QVector<QVector3D>& data)
     //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
     existTools=getTools(data);
-    /*
-    if(existTools.count()>0){
-        for(int i=0;i<existTools.count();i++)
-        qDebug() << existTools[i].getName()<<endl;//显示检测出什么工具
-    }
-    else
-    //qDebug() <<"no tools is detected"<<endl; //显示什么也没检测出来
-    */
+
+//    if(existTools.count()>0){
+//        for(int i=0;i<existTools.count();i++)
+//        qDebug() << existTools[i].getName()<<endl;//显示检测出什么工具
+//    }
+//    else
+//    qDebug() <<"no tools is detected"<<endl; //显示什么也没检测出来
+
     refreshToolView(existTools);
     emit toolsReady(existTools);
 
-//    if(!tools.isEmpty())
-//    {
-//        qDebug() <<"total detect"<<tools.length()<<"tool";
-//        for (int i=0;i<tools.length();i++) {
-//                         qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
-//                   }
-//    }
-
+ // if(!tools.isEmpty())
+ //   {
+  //   qDebug() <<"total detect"<<tools.length()<<"tool";
+   //    for (int i=0;i<tools.length();i++) {
+  //                      qDebug() << "detected tools name:" << tools[i].getName() << "count:" << tools[i].coordinates.count() ;
+  //              }
+   // }
 }
 
 void NdiViewer::changeEvent(QEvent *event)
@@ -150,20 +151,26 @@ void NdiViewer::changeEvent(QEvent *event)
     }
 }
 
+
+//execute按钮回调事件
 void NdiViewer::on_btnExec_clicked()
 {
+    //获取当前nidviewer面板所选的Index值。
     const int index = ui->cmbSteps->currentIndex();
+//    qDebug()<<"NdiViewer::on_btnExec_clicked():选项的index"<<index;
     switch (index) {
     case 0://step 1:model
         emit readyForTransform(HOLO_MODEL,existTools);//emit signal to registrate
         break;
     case 1://step 2:calibration needle
+//        qDebug() <<"on_btnExec_clicked():total detect"<<existTools.length()<<"tool";
         emit readyForTransform(HOLO_CALI_NEEDLE,existTools);//emit signal to registrate
+//        qDebug()<<"on_btnExec_clicked():emit 触发了readyForTransform 信号";
         break;
     case 2://step 3:revise matrix
         emit readyForTransform(HOLO_REVISE_MATRIX,existTools);//emit signal to registrate
         break;
-    case 3: //step 4:bone drill
+    case 3://step 4:bone drill
         emit readyForTransform(HOLO_BONE_DRILL,existTools);//emit signal to registrate
         break;
     default:
@@ -220,7 +227,7 @@ QVector<NdiTool> NdiViewer::getTools(const QVector<QVector3D>& data)
                 tool.insertIndexAndCoordinate(toolNameIndex.second, data[i]);
                 detectedTools.push_back(tool);
             }
-            //qDebug() << tr("Find tools: ") << tool.getName();
+            //qDebug() << tr("Find tools: ") << tool.getName()<<endl;
         }
     }
     return detectedTools;
@@ -249,6 +256,7 @@ QPair<QString, int> NdiViewer::judgeTool(QVector<float> &dists)
         {
             toolNameIndex.first = tool.getName();
             toolNameIndex.second = index;
+            //qDebug()  << tr("检测出工具") <<tool.getName() <<tr("的第") <<index <<endl;
             break;
         }
     }
@@ -308,12 +316,12 @@ void NdiViewer::getToolDefination()
 bool NdiViewer::isTool(QVector<float> &dists, NdiTool toolx, int &index)
 {
     QVector<QVector<float>> tool = toolx.getMarkersDistances();
-    float err=2;
-
+    float err=1.5;
     bool istool=false;
     int numberOfMarkers = tool.count();
     QVector<QVector<float>>::iterator i;
     for (i = tool.begin(); i != tool.end(); i++) {
+        bool detectedmarker=false;
         int q= 0;
         QVector<float> markerDists = *i;
         QVector<float>::iterator j;
@@ -332,8 +340,12 @@ bool NdiViewer::isTool(QVector<float> &dists, NdiTool toolx, int &index)
             {
                 istool = true;
                 index = i - tool.begin();
-                break;
+                //qDebug()<<tr("index:")<<index<<endl;
+                detectedmarker=true;
             }
+        }
+        if(detectedmarker){
+            break;
         }
     }
     return istool;
@@ -364,4 +376,106 @@ void NdiViewer::on_lstToolName_currentTextChanged(const QString &currentText)
         int index = existTools.indexOf(temp);
         refreshMarkersInTool(existTools[index]);
     }
+}
+
+/**
+ * @brief NdiViewer::on_pushButton_clicked
+ * 记录needle的刮取操作
+ * 当ndi连接成功之后 and 4号命令发送了之后才触发.
+ */
+void NdiViewer::on_pushButton_clicked()
+{
+    //测试用的数据-可以删掉
+//    QMatrix4x4  TipToNDI={1,2,3,4,
+//                         5,6,7,8,
+//                         9,10,11,12,
+//                         13,14,15,16};
+    this->isStart=!this->isStart;
+
+    if(isStart == false){
+       //开启对针尖数据采集
+       ((QPushButton*)sender())->setText("start");
+       //        this->writeItDown(TipToNDI);
+    }else if(isStart == true){//关闭对针尖数据采集
+       ((QPushButton*)sender())->setText("stop");
+
+    }
+}
+
+//采集针尖信息,并存入txt文本
+void NdiViewer::writeItDown(QMatrix4x4 TipToNDI){
+
+    if(this->isStart==false)
+        return;
+
+
+     //txt文件路径
+    QString file_path = "C:/Users/Ausland/Documents/GitHub/MotionViewer/build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug/debug/1.txt";
+
+    QString data ="";
+    data.append(QString::number(TipToNDI.column(0).x() ,'f',5));
+    data.append(" ");
+    data.append(QString::number(TipToNDI.column(0).y() ,'f',5));
+    data.append(" ");
+    data.append(QString::number(TipToNDI.column(0).z() ,'f',5));
+    qDebug()<<tr("------")<<data;
+
+    // 测试数据
+    //QString data = "0.111111 0.111111 0.111111 0.111111 0.111111 0.111111";
+    // 获取当前执行路径
+   // QString filePath = QCoreApplication::applicationDirPath();
+    // 输出当前路径
+   // qDebug() << filePath;
+    // 创建文件指针
+    QFile *file = new QFile(file_path);
+    // 打开文件，读写与追加
+    bool ok = file->open(QIODevice::ReadWrite | QIODevice::Append);
+    // 如果文件没有被占用可以打开
+    if(ok){
+        // 输出debug信息
+        qDebug() << "write";
+        // 创建stream
+        QTextStream txtOutput(file);
+        // 在stream追加数据，并换行
+        txtOutput << data << endl;
+    }
+    //关闭文件,保存数据
+    file->close();
+}
+
+//测试用的可以删除
+void NdiViewer::test(){
+    // 测试数据
+    QString data = "0.111111 0.111111 0.111111 0.111111 0.111111 0.111111";
+    // 获取当前执行路径
+   // QString filePath = QCoreApplication::applicationDirPath();
+    // 输出当前路径
+   // qDebug() << filePath;
+    // 创建文件指针
+    QFile *file = new QFile( "C:/Users/Ausland/Documents/GitHub/MotionViewer/build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug/debug/1.txt");
+    // 打开文件，读写与追加
+    bool ok = file->open(QIODevice::ReadWrite | QIODevice::Append);
+    // 如果文件没有被占用可以打开
+    if(ok){
+        // 输出debug信息
+        qDebug() << "write";
+        // 创建stream
+        QTextStream txtOutput(file);
+        // 在stream追加数据，并换行
+        txtOutput << data << endl;
+    }
+    //关闭文件,保存数据
+    file->close();
+}
+
+
+/**
+  测试用的可以删除
+ * @brief NdiViewer::on_pushButton_2_clicked
+ * 1>manual_registration.exe
+ * 2>manual_registration.exe test_data\2.ply test_data\3.txt
+ */
+void NdiViewer::on_pushButton_2_clicked()
+{
+
 }

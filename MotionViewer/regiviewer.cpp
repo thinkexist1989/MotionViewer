@@ -4,7 +4,8 @@
 #include <QMessageBox>
 #include <QFile>
 #include <QTextStream>
-
+#include <QProcess>
+//点云配准
 RegiViewer::RegiViewer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::RegiViewer)
@@ -32,6 +33,7 @@ void RegiViewer::showMatrix(const QMatrix4x4 &mat)
 
 void RegiViewer::needRegiMatProc()
 {
+    //试着打开一个*.TXT文本
     QString fileName = QFileDialog::getOpenFileName(nullptr, tr("Open Poind Cloud Registration Matrix File"), QDir::currentPath(), "TXT (*.txt)");
     if(QFile::exists(fileName)){
         ui->ldtPointCloudRegiMatDir->setText(fileName);
@@ -62,7 +64,7 @@ void RegiViewer::on_btnLoad_clicked()
     }
 
     QTextStream ts(&file);
-    while(!ts.readLine().contains("MATRIX"));
+    //while(!ts.readLine().contains("MATRIX"));
     int i = 0;
     while (!ts.atEnd()) {
         QStringList baList = ts.readLine().split(' ',QString::SkipEmptyParts);
@@ -75,4 +77,17 @@ void RegiViewer::on_btnLoad_clicked()
     showMatrix(pointCloudRegiMat);
 
     emit poindCloudRegiMatReady(pointCloudRegiMat);
+}
+
+void RegiViewer::on_pushButton_clicked()
+{
+    QString filename = "1.txt";
+    QProcess process;
+    //指定工作路径  ---注:这里的斜杠必须是双斜杠
+    process.setWorkingDirectory("D:\\Release\\");
+    //执行cmd命令
+    process.start("cmd", QStringList()<<"/c"<<"manual_registration.exe test_data\\MODEL.obj test_data\\1.txt 0 result");
+
+    process.waitForFinished (-1);	//等待进程结束
+    qDebug()<<QString::fromLocal8Bit(process.readAllStandardOutput());
 }

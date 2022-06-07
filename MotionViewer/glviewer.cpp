@@ -311,15 +311,19 @@ void GLViewer::toolProc(const QVector<NdiTool> &data)
 
 void GLViewer::toolsLoaded(const QVector<NdiTool> &tools)
 {
+
     for(auto& tool : tools)
     {
+
         toolModels[tool.name] = new GLModel(QFileInfo(tool.modelPath).absoluteFilePath().toStdString());
         toolModels[tool.name]->setColor(QVector4D(131.0f/255.0,111.0f/255.0, 255.0f/255.0, 1.0f));
+
     }
 }
-
+//加载tooldef.xml文件
 void GLViewer::loadTools()
 {
-    tools = XmlParser::getToolsByDistancesFromXml("./tooldef.xml");
+//    tools = XmlParser::getToolsByDistancesFromXml("./tooldef-hololen2-2.xml");
+    tools = XmlParser::getToolsByDistancesFromXml("./tooldef-hololen2.xml");
     toolsLoaded(tools);
 }

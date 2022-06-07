@@ -27,7 +27,7 @@ public:
 
     void setMarkers(QVector<QVector3D>&);
     void addMarker(QVector3D marker);
-
+    QVector<QVector3D> getMarkers();
     QMap<int,QVector3D> coordinates;
 
     void insertIndexAndCoordinate(int index, QVector3D coordinate);

@@ -65,6 +65,8 @@ private slots:
     void on_connectButton_clicked();
     void on_disconnectButton_clicked();
 
+    void on_ldtAddress_cursorPositionChanged(int arg1, int arg2);
+
 public slots:
     void commandProc(int, const QVector<QMatrix4x4> &);
 

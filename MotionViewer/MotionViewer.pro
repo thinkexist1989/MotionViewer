@@ -81,6 +81,7 @@ RESOURCES += \
     gl/gl.qrc \
     resources.qrc
 
+# 程序logo
 RC_ICONS = viewer.ico
 
 # Add OpenCV config
@@ -123,7 +124,7 @@ win32 {
         $$PWD/gl/hololens.stl \
         $$PWD/gl/needle.stl \
         $$PWD/gl/bonedrill.stl \
-        $$PWD/tooldef.xml
+        $$PWD/1.xml
     EXTRA_BINFILES_WIN = $${EXTRA_BINFILES}
     EXTRA_BINFILES_WIN ~= s,/,\\,g
         DESTDIR_WIN = $${OUT_PWD}

@@ -11,6 +11,7 @@ GLMesh::GLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, 
     std::cout << "Setup Mesh OK!" << std::endl;
 }
 
+
 void GLMesh::setupMesh()
 {
     initializeOpenGLFunctions();

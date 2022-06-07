@@ -26,10 +26,10 @@ void HoloComm::init()
     typeList << tr("Server") << tr("Client");
     ui->cmbType->addItems(typeList);
 
-    ui->ldtAddress->setText("192.168.0.105");
-    ui->ldtPort->setText("12345");
-    ui->ldtLocalAddress->setText("192.168.0.106");
-    ui->ldtLocalPort->setText("12345");
+    ui->ldtAddress->setText("192.168.183.97");
+    ui->ldtPort->setText("1366");
+    ui->ldtLocalAddress->setText("192.168.183.97");
+    ui->ldtLocalPort->setText("1366");
 
     //Default as Tcp Server.
     ui->cmbProtocol->setCurrentText("TCP");
@@ -41,8 +41,10 @@ bool HoloComm::write(QByteArray ba)
     switch(connectionType){
     case TCP_SERVER:
     case TCP_CLIENT:
-        if(tcpSocket->write(ba) == ba.size())
-            return true;
+        if(tcpSocket->write(ba) == ba.size()){
+             return true;
+        }
+
         else
             return false;
     case UDP:
@@ -55,20 +57,43 @@ bool HoloComm::write(QByteArray ba)
     }
 }
 
+//execute按钮点击后会执行调用这里，但是两个形参是【0，无数据】
 bool HoloComm::writeMatrix(int command, QVector<QMatrix4x4> matrixList)
 {
+//    测试用的 后期需要删掉
+//    QMatrix4x4 mat(1,2,3,4,
+//                   0,1,0,0,
+//                   0,0,1,1,
+//                   0,0,0,1);
+//    matrixList.append(mat);
+
+//    qDebug()<<sizeof(mat); //68
+
     QByteArray ba;
     int dataLen = matrixList.count()*16*4; //Every Matrix is 4x4
-    qDebug() << "dataLen is:" << dataLen;
-    ba.resize(dataLen+2);
+
+//  qDebug() <<"HoloComm::writeMatrix():准备发送数据了此时的command是"<<command;
+//    qDebug() <<"发送:此时的matrixList的数据长度是"<<dataLen;
+
+    ba.resize(dataLen+2);//设置字节数组的大小
     char* p = ba.data();
-    ba[0] = static_cast<char>(command);
-    ba[1] = static_cast<char>(dataLen);
-    for (int i = 0; i< matrixList.count(); i++) {
-        memcpy(&(p[2+i*16*4]), matrixList.at(i).data(), 16*4); //column-major
+    //static_casr<type>（target）：将target的数据类型转化为type类型
+    ba[0] = static_cast<char>(command);//封装报头--命令
+    ba[1] = static_cast<char>(dataLen);//封装报头--数据长度
+
+
+
+    //将数据添加到数据包的屁股后面
+    for (int i = 0; i< matrixList.count(); i++) {//将matrixList中的数据拷贝到ba中，ba存的是要发生的数据信息
+        //memcpy（target，resource）讲目标内存的数据拷贝到某个变量
+        // at（i） 返回 i位置元素 所在vector的index
+       memcpy(&(p[2+i*16*4]), matrixList.at(i).data(), 16*4); //column-major
     }
-    qDebug() << "send message is:" << QString(ba);
+
+//    qDebug()<<ba;
+
     return write(ba);
+
 }
 
 void HoloComm::on_cmbProtocol_currentIndexChanged(const QString &arg1)
@@ -110,15 +135,16 @@ bool HoloComm::tcpServerInit()
 
     if(!tcpServer->listen(QHostAddress(ui->ldtLocalAddress->text())
                           ,ui->ldtLocalPort->text().toUShort())) {
-        qDebug() << tr("Tcp Server listen failed!");
+        qDebug() << tr("in holocomm-Tcp Server listen failed!");
         return  false;
     }
     else {
-        qDebug() << tr("Tcp Server listen success!");
+        qDebug() << tr("in holocomm-Tcp Server listen success!");
         return  true;
     }
 }
 
+//初始化TCP-Client
 bool HoloComm::tcpClientInit()
 {
     tcpSocket = new QTcpSocket();
@@ -145,14 +171,18 @@ bool HoloComm::udpInit()
     return  true;
 }
 
+//接收Hololens发送的矩阵信息
 void HoloComm::dataProc(QByteArray ba)
 {
     if(ba.count() != 16*4)
         return;
-    qDebug()<<"receive message"<<QString(ba);
+//    qDebug()<<"HoloComm::dataProc：QT receive message"<<ba;
+    //强制类型转化为float类型
     QMatrix4x4 mat(reinterpret_cast<float*>(ba.data()));
+    //矩阵转置
     mat = mat.transposed();
     emit holoMatrixReady(mat);
+
     qDebug()<<"receive localtoworld"<<mat;
 }
 
@@ -189,6 +219,7 @@ void HoloComm::udpRecvDataProc()
     }
 }
 
+//hololens-ui-Connect按钮回调
 void HoloComm::on_connectButton_clicked()
 {
     if(ui->cmbProtocol->currentText() == "TCP") {
@@ -234,6 +265,7 @@ void HoloComm::on_disconnectButton_clicked()
 
 void HoloComm::commandProc(int command, const QVector<QMatrix4x4>& matrixList)
 {
+    //发送矩阵数据[命令],[矩阵数组]
     writeMatrix(command, matrixList);
 }
 
@@ -245,4 +277,9 @@ void HoloComm::changeEvent(QEvent *event)
     else {
         QWidget::changeEvent(event);
     }
+}
+
+void HoloComm::on_ldtAddress_cursorPositionChanged(int arg1, int arg2)
+{
+
 }

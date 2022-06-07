@@ -7,10 +7,10 @@
                 <Marker x="1.5" y="2.0" z="1.0" dis="137 88 61"/>
         </Tool>
          <Tool name="HoloLens" model="hololens.stl" scale="0.025" color="1.0f 1.0f 1.0f 1.0f" coordination="1">
-                <Marker x="1.0" y="2.0" z="3.0" dis="43.2 57.56 31.28" />
-                <Marker x="3.0" y="2.0" z="2.0" dis="73.28 26.64 31.28"/>
-                <Marker x="1.5" y="2.0" z="1.0" dis="73.28 43.2 98.08"/>
-                <Marker x="1.5" y="2.0" z="1.0" dis="98.08 26.64 57.56"/>
+                <Marker x="1.0" y="2.0" z="3.0" dis="65 103 58" />
+                <Marker x="3.0" y="2.0" z="2.0" dis="115 50 58"/>
+                <Marker x="1.5" y="2.0" z="1.0" dis="115 65 147"/>
+                <Marker x="1.5" y="2.0" z="1.0" dis="148 50 103"/>
         </Tool>
  
 

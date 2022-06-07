@@ -24,6 +24,7 @@ public:
 signals:
     void readyForHololens(int, const QVector<QMatrix4x4>&);
     void needRegiMat();
+    void collectNeedleTipData(const QMatrix4x4 &);
 public slots:
     void transformProc(int, const QVector<NdiTool> &);
     void toolsProc(const QVector<NdiTool> &);
@@ -35,6 +36,7 @@ private:
     QMatrix4x4 calibritionNeedleLastTimeMat;
     QMatrix4x4 holoMat;
     QMatrix4x4 HoloLensToHoloLensMarkerMatrix;
+    QMatrix4x4 NDIToWorldMatrix;
     QMatrix4x4 KinectMarkerToKinectMatrix;
     QMatrix4x4 modelResultLastTimeMat;
     QMatrix4x4 calibritionNeedleResultLastTimeMat;

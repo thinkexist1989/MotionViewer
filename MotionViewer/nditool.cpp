@@ -1,4 +1,5 @@
 #include "nditool.h"
+#include <QDebug>
 
 NdiTool::NdiTool()
 {
@@ -23,6 +24,7 @@ void NdiTool::setMarkersDistances(const QVector<QVector<float> > &markerDistance
 
 void NdiTool::addMarkerDistance(const QVector<float> &markerDistance)
 {
+
     this->markerDistances.push_back(markerDistance);
 }
 
@@ -34,6 +36,11 @@ QVector<QVector<float> > NdiTool::getMarkersDistances()
 void NdiTool::setMarkers(QVector<QVector3D>& markers)
 {
     this->markers = markers;
+}
+
+QVector<QVector3D> NdiTool::getMarkers()
+{
+    return markers;
 }
 
 void NdiTool::addMarker(QVector3D marker)
@@ -67,6 +74,7 @@ void NdiTool::setCoordinateMethod(int method)
 
 QMatrix4x4 NdiTool::SetCoordination(const QMap<int, QVector3D> &markers)
 {
+
     //FOR SU SHUN
     switch (coordinateMethod) {
     case 1:
@@ -83,11 +91,11 @@ QMatrix4x4 NdiTool::SetCoordination1(const QMap<int, QVector3D> &markers)
 {
     QMatrix4x4 mat;
     QVector3D A=markers[0];
-   // qDebug()<<"vector A"<<A;
+    //qDebug()<<"vector A"<<A;
     QVector3D B=markers[1];
-   // qDebug()<<"vector B"<<B;
+    //qDebug()<<"vector B"<<B;
     QVector3D C=markers[2];
-   // qDebug()<<"vector C"<<C;
+    //qDebug()<<"vector C"<<C;
     QVector3D AA=(B+C)/2-A;
     //qDebug()<<"vector AA"<<AA;
     QVector3D BB=B-A;

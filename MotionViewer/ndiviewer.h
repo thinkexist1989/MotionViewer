@@ -28,6 +28,8 @@ public:
     QMap<QString,QVector<QVector3D>> ToolsNumAndPose;
     QVector<NdiTool> ToolStates;
     QVector<NdiTool> toolInfos;
+    //用来控制对针尖数据的采集的
+    bool isStart=false;
 private:
     Ui::NdiViewer *ui;
 
@@ -69,6 +71,13 @@ private slots:
     void on_cmbSteps_currentIndexChanged(int index);
 
     void on_lstToolName_currentTextChanged(const QString &currentText);
+
+    void on_pushButton_clicked();
+    void test();
+    void on_pushButton_2_clicked();
+
+public slots :
+    void writeItDown(QMatrix4x4  TipToNDI);
 };
 
 #endif // NDIVIEWER_H

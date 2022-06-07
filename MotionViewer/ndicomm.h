@@ -43,6 +43,7 @@ private:
 //    QThread *ndiThread;
 //    QSerialPort serialPort; //Serial port
     
+    //标识串口是否打开
     bool isPortOpened;
     bool isStarted;
 

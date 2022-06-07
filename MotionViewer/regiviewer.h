@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QMatrix4x4>
-
+#include <QProcess>
 namespace Ui {
 class RegiViewer;
 }
@@ -27,6 +27,8 @@ private slots:
     void on_btnOpenFile_clicked();
 
     void on_btnLoad_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::RegiViewer *ui;
