@@ -9,7 +9,7 @@
 #include <QMatrix4x4>
 #include <QVector>
 #include <transform.h>
-
+#include "QFile.H"
 #define TCP_SERVER 0
 #define TCP_CLIENT 1
 #define UDP         2
@@ -44,6 +44,7 @@ private:
     QTcpSocket *tcpSocket;
     QUdpSocket *udpSocket;
 
+
     int connectionType; // 0->tcp server  1-> tcp client 2-> udp
 
     bool tcpServerInit();
@@ -51,6 +52,7 @@ private:
     bool udpInit();
 
     void dataProc(QByteArray ba); // process the data from HoloLens
+    void HoloComm::writeHoloLensLocalTOWorld(QMatrix4x4 data);
 
 signals:
     void dataReady(const QString&);

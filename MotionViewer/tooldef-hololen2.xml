@@ -7,15 +7,15 @@
                 <Marker x="1.5" y="2.0" z="1.0" dis="137 88 61"/>
         </Tool>
          <Tool name="HoloLens" model="hololens.stl" scale="0.025" color="1.0f 1.0f 1.0f 1.0f" coordination="1">
-              	<Marker x="1.0" y="2.0" z="3.0" dis="62.57 96.63 57.6"/>
-                <Marker x="3.0" y="2.0" z="2.0" dis="115.93 44.98 57.6"/>
-                <Marker x="1.5" y="2.0" z="1.0" dis="115.93 62.57 146.19"/>
-                <Marker x="1.5" y="2.0" z="1.0" dis="146.19 44.98 96.63"/>
+              	<Marker x="1.0" y="2.0" z="3.0" dis="65.91 115.79 70.36"/>
+                <Marker x="3.0" y="2.0" z="2.0" dis="121.87 52.74 70.36"/>
+                <Marker x="1.5" y="2.0" z="1.0" dis="121.87 65.91 151.43"/>
+                <Marker x="1.5" y="2.0" z="1.0" dis="151.43 52.74 115.79"/>
         </Tool>
 
         <Tool name="BoneDrill" model="bonedrill.stl" scale="0.001" color="1.0f 1.0f 1.0f 1.0f" coordination="2">
                 <Marker x="1.0" y="2.0" z="3.0" dis="60 88 50" />
-                <Marker x="3.0" y="2.0" z="2.0" dis="73 54 50"/>
+                <Marker x="3.0" y="2.0" z="2.0" dis="73 55 50"/>
                 <Marker x="1.5" y="2.0" z="1.0" dis="65 88 55"/>
                 <Marker x="1.5" y="2.0" z="1.0" dis="60 73 65"/>
         </Tool>

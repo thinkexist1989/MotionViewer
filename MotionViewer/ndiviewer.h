@@ -73,8 +73,8 @@ private slots:
     void on_lstToolName_currentTextChanged(const QString &currentText);
 
     void on_pushButton_clicked();
-    void test();
-    void on_pushButton_2_clicked();
+
+
 
 public slots :
     void writeItDown(QMatrix4x4  TipToNDI);

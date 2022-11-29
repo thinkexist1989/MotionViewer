@@ -71,8 +71,14 @@ QVector<NdiTool> XmlParser::getToolsByDistancesFromXml(QString fileName)
      * ../MotionViewer/tooldef.xml
      */
 //    QFile file("../MotionViewer/tooldef.xml");//当前执行路径文件在：C:\Users\Ausland\Documents\GitHub\MotionViewer\build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug
+    //新的HoloLens2
 //    QFile file("../MotionViewer/tooldef-hololen2-2.xml");
-    QFile file("../MotionViewer/tooldef-hololen2.xml");
+    //目前新粘贴过的holoLens2
+   //QFile file("../MotionViewer/tooldef-hololen2.xml");
+    //用泡沫胶粘贴的HoloLens1
+    //QFile file("../MotionViewer/1.xml");
+    QFile file(fileName);
+    qDebug()<<"fileName: "<<fileName;
     if(!file.open(QIODevice::ReadOnly))//以读的方式打开文件
         qDebug()<<file.errorString();
 

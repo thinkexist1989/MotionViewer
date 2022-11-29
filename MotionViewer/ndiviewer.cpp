@@ -118,7 +118,7 @@ void NdiViewer::refreshMarkersInTool(NdiTool tool)
 void NdiViewer::dataProc(const QVector<QVector3D>& data)
 {
     //qDebug() << data.size()<< endl;
-    //qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
+   // qDebug() << tr("Coordinate is received by NdiViewer, value is: ") << data;
     refreshMarkersView(data);
     existTools=getTools(data);
 
@@ -308,8 +308,12 @@ void NdiViewer::getToolDefination()
     //read tool definition from xml file
 //    QString fileName = QCoreApplication::applicationDirPath();
 //    qDebug()<<fileName<<endl;
-    tools = XmlParser::getToolsByDistancesFromXml("./tooldef.xml");
-//    emit toolsLoaded(tools);
+    //改xml路径的时候这个地方也要改
+    //读取HoloLens1代的tooldef.xml文件
+    tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/1.xml");
+//    Ho2-NO1:读取HoloLens2的tooldef.xml；HoloLens2编号为Ho2-NO1
+//    tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/tooldef-hololen2.xml");
+//  emit toolsLoaded(tools);
    // return tools;
 }
 
@@ -410,7 +414,7 @@ void NdiViewer::writeItDown(QMatrix4x4 TipToNDI){
 
 
      //txt文件路径
-    QString file_path = "C:/Users/Ausland/Documents/GitHub/MotionViewer/build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug/debug/1.txt";
+    QString file_path = "D:/Release/test_data/1.txt";
 
     QString data ="";
     data.append(QString::number(TipToNDI.column(0).x() ,'f',5));
@@ -420,12 +424,7 @@ void NdiViewer::writeItDown(QMatrix4x4 TipToNDI){
     data.append(QString::number(TipToNDI.column(0).z() ,'f',5));
     qDebug()<<tr("------")<<data;
 
-    // 测试数据
-    //QString data = "0.111111 0.111111 0.111111 0.111111 0.111111 0.111111";
-    // 获取当前执行路径
-   // QString filePath = QCoreApplication::applicationDirPath();
-    // 输出当前路径
-   // qDebug() << filePath;
+
     // 创建文件指针
     QFile *file = new QFile(file_path);
     // 打开文件，读写与追加
@@ -441,41 +440,4 @@ void NdiViewer::writeItDown(QMatrix4x4 TipToNDI){
     }
     //关闭文件,保存数据
     file->close();
-}
-
-//测试用的可以删除
-void NdiViewer::test(){
-    // 测试数据
-    QString data = "0.111111 0.111111 0.111111 0.111111 0.111111 0.111111";
-    // 获取当前执行路径
-   // QString filePath = QCoreApplication::applicationDirPath();
-    // 输出当前路径
-   // qDebug() << filePath;
-    // 创建文件指针
-    QFile *file = new QFile( "C:/Users/Ausland/Documents/GitHub/MotionViewer/build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug/debug/1.txt");
-    // 打开文件，读写与追加
-    bool ok = file->open(QIODevice::ReadWrite | QIODevice::Append);
-    // 如果文件没有被占用可以打开
-    if(ok){
-        // 输出debug信息
-        qDebug() << "write";
-        // 创建stream
-        QTextStream txtOutput(file);
-        // 在stream追加数据，并换行
-        txtOutput << data << endl;
-    }
-    //关闭文件,保存数据
-    file->close();
-}
-
-
-/**
-  测试用的可以删除
- * @brief NdiViewer::on_pushButton_2_clicked
- * 1>manual_registration.exe
- * 2>manual_registration.exe test_data\2.ply test_data\3.txt
- */
-void NdiViewer::on_pushButton_2_clicked()
-{
-
 }

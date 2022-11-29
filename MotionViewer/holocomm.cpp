@@ -1,6 +1,7 @@
 #include "holocomm.h"
 #include "ui_holocomm.h"
 
+#include <QFileDialog>
 HoloComm::HoloComm(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::HoloComm),
@@ -60,6 +61,8 @@ bool HoloComm::write(QByteArray ba)
 //execute按钮点击后会执行调用这里，但是两个形参是【0，无数据】
 bool HoloComm::writeMatrix(int command, QVector<QMatrix4x4> matrixList)
 {
+
+
 //    测试用的 后期需要删掉
 //    QMatrix4x4 mat(1,2,3,4,
 //                   0,1,0,0,
@@ -81,6 +84,7 @@ bool HoloComm::writeMatrix(int command, QVector<QMatrix4x4> matrixList)
     ba[0] = static_cast<char>(command);//封装报头--命令
     ba[1] = static_cast<char>(dataLen);//封装报头--数据长度
 
+    qDebug() <<"the cmd is"<<ba;
 
 
     //将数据添加到数据包的屁股后面
@@ -176,15 +180,79 @@ void HoloComm::dataProc(QByteArray ba)
 {
     if(ba.count() != 16*4)
         return;
-//    qDebug()<<"HoloComm::dataProc：QT receive message"<<ba;
+    qDebug()<<"HoloComm::dataProc：QT receive message"<<ba.data();
     //强制类型转化为float类型
     QMatrix4x4 mat(reinterpret_cast<float*>(ba.data()));
     //矩阵转置
     mat = mat.transposed();
     emit holoMatrixReady(mat);
 
+    //HoloLens的相对于世界的坐标信息
     qDebug()<<"receive localtoworld"<<mat;
+    //将HoloLens的localhost to world存入到txt文件当中
+
+    this->writeHoloLensLocalTOWorld(mat);
+
 }
+
+//采集HoloLensLocalToWorld,并存入txt文本
+void HoloComm::writeHoloLensLocalTOWorld(QMatrix4x4 HoloLenslocal){
+
+     //txt文件路径
+    QString file_path = "C:/Users/Ausland/Documents/HoloLensLocalToWorld.txt";
+
+    QString data ="";
+    data.append(QString::number(HoloLenslocal.row(0).x() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(0).y() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(0).z() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(0).w() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(1).x() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(1).y() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(1).z() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(1).w() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(2).x() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(2).y() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(2).z() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(2).w() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(3).x() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(3).y() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(3).z() ,'f',10));
+    data.append(" ");
+    data.append(QString::number(HoloLenslocal.row(3).w() ,'f',10));
+
+    qDebug()<<tr("--hololenslocaltoworld----")<<data;
+
+    // 创建文件指针
+    QFile *file = new QFile(file_path);
+    // 打开文件，读写与追加
+    bool ok = file->open(QIODevice::ReadWrite | QIODevice::Append);
+    // 如果文件没有被占用可以打开
+    if(ok){
+        // 输出debug信息
+        qDebug() << "write";
+        // 创建stream
+        QTextStream txtOutput(file);
+        // 在stream追加数据，并换行
+        txtOutput << data << endl;
+    }
+    //关闭文件,保存数据
+    file->close();
+}
+
 
 void HoloComm::tcpNewConnectionProc()
 {

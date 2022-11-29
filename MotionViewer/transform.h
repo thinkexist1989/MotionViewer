@@ -40,6 +40,7 @@ private:
     QMatrix4x4 KinectMarkerToKinectMatrix;
     QMatrix4x4 modelResultLastTimeMat;
     QMatrix4x4 calibritionNeedleResultLastTimeMat;
+    QMatrix4x4 boneDrillResultLastTimeMat;
     QVector<NdiTool> existTools;
     QVector<QMatrix4x4> matrixList;
     void modelCalc();
@@ -51,7 +52,11 @@ private:
     QMatrix4x4 SetCoordination(QMap<int,QVector3D>& markers);
     QMatrix4x4 SetCoordination1(QMap<int,QVector3D>& markers);
     QMatrix4x4 SetCoordination2(QMap<int,QVector3D>& markers);
+    QMatrix4x4 SetCoordination3(QMap<int,QVector3D>& markers);
     void getRegiMat();
+    //采集HoloLens的marks点,并存入txt文本
+    void writeHoloLensMarks(QMap<int, QVector3D> &markers);
+
 };
 
 #endif // TRANSFORM_H

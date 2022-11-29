@@ -140,14 +140,16 @@ void GLViewer::paintGL()
 
     /*** axis ***/
     QMatrix4x4 model;
-    coordinate->draw(view, projection, camera->model* model);
+    //画坐标系网格
+    //coordinate->draw(view, projection, camera->model* model);
 
 
     /*** nodes ***/
 //    nodes.clear();
 //    nodes << QVector3D(0,0,0)<< QVector3D(-0.3,-0.3,-0.3) << QVector3D(0.3,-0.3,-0.3) << QVector3D(-0.3,0.3,-0.3) << QVector3D(-0.3,-0.3,0.3);
 //    nodes << QVector3D((rand()%1000 -500.0)/1000.0, rand()%300/300.0, (rand()%1000 -500.0)/1000.0);
-    drawNodes();
+    //画节点
+    //drawNodes();
 
 
     /*** ndi ***/
@@ -323,7 +325,21 @@ void GLViewer::toolsLoaded(const QVector<NdiTool> &tools)
 //加载tooldef.xml文件
 void GLViewer::loadTools()
 {
+    //新的HoloLens2
 //    tools = XmlParser::getToolsByDistancesFromXml("./tooldef-hololen2-2.xml");
-    tools = XmlParser::getToolsByDistancesFromXml("./tooldef-hololen2.xml");
+    //旧的HoloLens2
+    //tools = XmlParser::getToolsByDistancesFromXml("./tooldef-hololen2.xml");
+    //HoloLens1
+    //    QFile file("../MotionViewer/tooldef.xml");//当前执行路径文件在：C:\Users\Ausland\Documents\GitHub\MotionViewer\build-MotionViewer-Desktop_Qt_5_12_8_MSVC2017_64bit-Debug
+        //新的HoloLens2
+    //    QFile file("../MotionViewer/tooldef-hololen2-2.xml");
+        //目前新粘贴过的holoLens2
+       // QFile file("../MotionViewer/tooldef-hololen2.xml");
+        //用泡沫胶粘贴的HoloLens1
+        //QFile file("../MotionViewer/1.xml");
+
+
+    tools = XmlParser::getToolsByDistancesFromXml("../MotionViewer/1.xml");
+
     toolsLoaded(tools);
 }
